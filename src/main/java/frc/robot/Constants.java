@@ -12,6 +12,9 @@ public final class Constants {
     public static final int FR = 3;
     public static final int BL = 4;
     public static final int BR = 11;
+    // Elevator
+    public static final int LElevator = 100;
+    public static final int RElevator = 101;
     //Intake Motors
     public static final int tRoller = 200;
     public static final int bRoller = 201;
