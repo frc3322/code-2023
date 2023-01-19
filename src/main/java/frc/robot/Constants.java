@@ -18,5 +18,8 @@ public final class Constants {
     //Intake Motors
     public static final int tRoller = 200;
     public static final int bRoller = 201;
+    // Outtake Pistonos
+    public static final int BP = 301;
+    public static final int SP = 302;
   }
 }
