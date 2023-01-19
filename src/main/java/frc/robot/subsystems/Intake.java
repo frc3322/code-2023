@@ -4,10 +4,17 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
+  public final CANSparkMax motorTopRoller = new CANSparkMax(Constants.CAN.bRoller, MotorType.kBrushless);
+  public final CANSparkMax motorBottomRoller = new CANSparkMax(Constants.CAN.tRoller, MotorType.kBrushless);
+
   public Intake() {}
 
   @Override
