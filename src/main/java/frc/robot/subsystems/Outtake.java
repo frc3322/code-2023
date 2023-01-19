@@ -3,12 +3,33 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+//import com.revrobotics.CANSparkMax;
+//import com.revrobotics.CanSparkMaxLowLevel
+import frc.robot.Constants;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Outtake extends SubsystemBase {
   /** Creates a new Outtake. */
-  public Outtake() {}
+  public Outtake() {
+    //create solenoids to grab cones and cubes
+    Solenoid bigPiston = new Solenoid(PneumaticsModuleType.REVPH, Constants.BP);
+    Solenoid smallPiston = new Solenoid(PneumaticsModuleType.REVPH, Constants.SP); 
+
+    }
+    public void  clampCone(){
+      //grab or drop using both solenoids
+      bigPiston.toggle();
+      smallPiston.toggle();
+    }
+    public void clampCube(){
+      //grab or drop using one solenoid
+      smallPiston.toggle();
+    }
+
+
 
   @Override
   public void periodic() {
