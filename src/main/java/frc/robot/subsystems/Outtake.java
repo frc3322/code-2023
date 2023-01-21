@@ -8,18 +8,23 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Outtake extends SubsystemBase {
   /** Creates a new Outtake. */
+  Solenoid bigPiston = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.BP);
+  Solenoid smallPiston = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.SP); 
+
   public Outtake() {
     //create solenoids to grab cones and cubes
-    Solenoid bigPiston = new Solenoid(PneumaticsModuleType.REVPH, Constants.BP);
-    Solenoid smallPiston = new Solenoid(PneumaticsModuleType.REVPH, Constants.SP); 
+    
+    bigPiston.set(false);
+    smallPiston.set(false);
 
     }
-    public void  clampCone(){
+    public void clampCone(){
       //grab or drop using both solenoids
       bigPiston.toggle();
       smallPiston.toggle();

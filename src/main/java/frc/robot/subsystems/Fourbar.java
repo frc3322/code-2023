@@ -14,6 +14,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableValue;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,13 +24,16 @@ import frc.robot.Constants;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Elevator extends SubsystemBase implements Loggable {
-  public final CANSparkMax elevatorL = new CANSparkMax(Constants.CAN.LElevator, MotorType.kBrushless);
-  public final CANSparkMax elevatorR = new CANSparkMax(Constants.CAN.RElevator, MotorType.kBrushless);
+public class Fourbar extends SubsystemBase implements Loggable {
+  // Creates new pneumatic fourbar
+  Solenoid fourBarPH1 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.P1); 
+  Solenoid fourBarPH2 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.P2);
 
-  /** Creates a new Elevator. */
-  public Elevator() {
-
+  /** Creates a new Fourbar */
+  public Fourbar() {
+    // sets the fourbar to false or down by default
+    fourBarPH1.set(false);
+    fourBarPH2.set(false);
   }
 
   @Override
@@ -36,16 +41,18 @@ public class Elevator extends SubsystemBase implements Loggable {
     // This method will be called once per scheduler run
   }
 
-  public void moveElevator(double distance){
+  public void moveFourbar(double distance){
     ;
   }
-  public void elevatorLow(){
+  public void fourbarLow(){
+    // sets fourbar to false or down in low
+    fourBarPH1.set(false);
+    fourBarPH2.set(false);
+  }
+  public void fourbarMid(){
     ;
   }
-  public void elevatorMid(){
-    ;
-  }
-  public void elevatorHigh(){
+  public void fourbarHigh(){
     ;
   }
 }
