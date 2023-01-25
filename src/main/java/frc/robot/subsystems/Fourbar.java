@@ -40,23 +40,24 @@ public class Fourbar extends SubsystemBase implements Loggable {
   public void periodic() {
     // This method will be called once per scheduler run
   }
-
-  public void moveFourbar(double distance){
-    ;
-  }
-  public void fourbarLow(){
+//this function will not work because we are using solenoids.
+  //public void moveFourbar(double distance){
+    //;
+  //}
+  public void fourbarDown(){
     // sets fourbar to false or down in low
     fourBarPH1.set(false);
     fourBarPH2.set(false);
   }
-  public void fourbarMid(){
+  public void fourbarUp(){
+    fourBarPh1.set(true);
+    fourBarPH2.set(true);
+    ;
+  }
+  //this function will not work as there are only two settings.
+  //public void fourbarHigh(){
     //fourBarPh1.set();
     //fourBarPH2.set();
     ;
-  }
-  public void fourbarHigh(){
-    //fourBarPh1.set();
-    //fourBarPH2.set();
-    ;
-  }
+  //}
 }
