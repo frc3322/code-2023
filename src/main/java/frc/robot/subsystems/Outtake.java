@@ -19,18 +19,26 @@ public class Outtake extends SubsystemBase {
 
   public Outtake() {
     //create solenoids to grab cones and cubes
-    
+    //NOTE: this is based on the assumption that true is open and false is closed. may need to be switched when we know more.
     bigPiston.set(false);
     smallPiston.set(false);
 
     }
-    public void clampCone(){
+    public void setOpen(){
+      bigPiston.set(true);
+      smallPiston.set(true);
+    }
+    public void setClosed(){
+      bigPiston.set(false);
+      smallPiston.set(false);
+    }
+    public void toggleCone(){
       //grab or drop using both solenoids
       bigPiston.toggle();
       smallPiston.toggle();
     }
-    public void clampCube(){
-      //grab or drop using one solenoid
+    public void toggleCube(){
+      //grab or drop using one solenoid (cube will be crushed otherwise)
       smallPiston.toggle();
     }
 

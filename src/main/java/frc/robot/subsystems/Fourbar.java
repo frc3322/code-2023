@@ -50,9 +50,13 @@ public class Fourbar extends SubsystemBase implements Loggable {
     fourBarPH2.set(false);
   }
   public void fourbarMid(){
+    //fourBarPh1.set();
+    //fourBarPH2.set();
     ;
   }
   public void fourbarHigh(){
+    //fourBarPh1.set();
+    //fourBarPH2.set();
     ;
   }
 }
