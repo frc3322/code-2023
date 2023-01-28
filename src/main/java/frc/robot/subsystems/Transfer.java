@@ -3,12 +3,34 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Transfer extends SubsystemBase {
   /** Creates a new Transfer. */
-  public Transfer() {}
+  public final CANSparkMax beltMotor = new CANSparkMax(Constants.CAN.T, MotorType.kBrushless);
+  public Transfer() {
+    beltMotor.setIdleMode(IdleMode.kBrake);
+    beltMotor.burnFlash();
+  }
+
+  //either toElevator or reverse will need to be setInversed because they go in opposite directions. Test to see which is which.
+  public void toElevator() {
+    //bring cubes/cones to elevator
+    beltMotor.setInverted(false);
+    beltMotor.setVoltage(12.0);
+  } 
+  public void reverse() {
+    //eject cubes/cones
+    beltMotor.setInverted(true);
+    beltMotor.setVoltage(12.0);
+  }
+  public void stop() {
+    beltMotor.stopMotor();
+  }
 
   @Override
   public void periodic() {

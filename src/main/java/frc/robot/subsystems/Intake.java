@@ -13,21 +13,53 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  public final CANSparkMax motorTopRoller = new CANSparkMax(Constants.CAN.bRoller, MotorType.kBrushless);
-  public final CANSparkMax motorBottomRoller = new CANSparkMax(Constants.CAN.tRoller, MotorType.kBrushless);
-  public final CANSparkMax motorExtendBar = new CANSparkMax(Constants.CAN.extendBar, MotorType.kBrushless);
+  public final CANSparkMax motorTopRoller = new CANSparkMax(Constants.CAN.tRoller, MotorType.kBrushless);
+  public final CANSparkMax motorBottomRoller = new CANSparkMax(Constants.CAN.bRoller, MotorType.kBrushless);
+  public final CANSparkMax motorArm = new CANSparkMax(Constants.CAN.arm, MotorType.kBrushless);
+  //motor arm will need an encoder or limit switch to determine where to stop
   public Intake(){
     //default settings here, right?
     motorTopRoller.setIdleMode(IdleMode.kBrake);
     motorBottomRoller.setIdleMode(IdleMode.kBrake);
-    motorExtendBar.setIdleMode(IdleMode.kBrake);
+    motorArm.setIdleMode(IdleMode.kBrake);
 
     motorTopRoller.burnFlash();
     motorBottomRoller.burnFlash();
-    motorExtendBar.burnFlash();
+    motorArm.burnFlash();
   }
-  public void intakeWheels() {
-    
+  public void intakeSpin() {
+    //the revrobotics website lists 12 as the optimal voltage for NEO brushless motors.
+    //one will need to be setInverted
+    //sets the voltage so it will spin to intake continuously
+    motorTopRoller.setVoltage(12.0);
+    motorBottomRoller.setVoltage(12.0);
+  }
+  public void flipDown() {
+    //move arm to down/intake position
+    ;
+  }
+  public void flipUp() {
+    //move arm to up/transfer/elevator position
+    ;
+  }
+  public void upSpin() {
+    //the revrobotics website lists 12 as the optimal voltage for NEO brushless motors.
+    //if setInverted is clockwise, we will need to set both to normal, otherwise invert
+    //sets the voltage so it will spin continuously while up, which is apparently needed for transfer or elevator or something
+    motorTopRoller.setVoltage(12.0);
+    motorBottomRoller.setVoltage(12.0);
+  }
+  public void outSpin() {
+    //the revrobotics website lists 12 as the optimal voltage for NEO brushless motors.
+    //one will need to be setInverted, the opposite one from intakeSpin
+    //sets the voltage so it will spin to intake continuously in reverse directions from normal
+    motorTopRoller.setVoltage(12.0);
+    motorBottomRoller.setVoltage(12.0);
+  }
+  public void spinToggle() {
+    //turns the rollers on and off
+    motorTopRoller.stopMotor();
+    motorBottomRoller.stopMotor();
 
   }
 

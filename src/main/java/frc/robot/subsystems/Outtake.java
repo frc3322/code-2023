@@ -14,23 +14,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Outtake extends SubsystemBase {
   /** Creates a new Outtake. */
-  Solenoid bigPiston = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.BP);
-  Solenoid smallPiston = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.SP); 
+  public final Solenoid bigPiston = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.BP);
+  public final Solenoid smallPiston = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.SP); 
 
   public Outtake() {
     //create solenoids to grab cones and cubes
-    //NOTE: this is based on the assumption that true is open and false is closed. may need to be switched when we know more.
+    //NOTE: this is based on the assumption that false is open and true is closed. may need to be switched when we know more.
     bigPiston.set(false);
     smallPiston.set(false);
 
     }
     public void setOpen(){
-      bigPiston.set(true);
-      smallPiston.set(true);
-    }
-    public void setClosed(){
       bigPiston.set(false);
       smallPiston.set(false);
+    }
+    public void setClosed(){
+      bigPiston.set(true);
+      smallPiston.set(true);
     }
     public void toggleCone(){
       //grab or drop using both solenoids
@@ -39,6 +39,7 @@ public class Outtake extends SubsystemBase {
     }
     public void toggleCube(){
       //grab or drop using one solenoid (cube will be crushed otherwise)
+      bigPiston.set(false);
       smallPiston.toggle();
     }
 
