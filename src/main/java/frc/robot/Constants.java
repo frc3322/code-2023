@@ -19,7 +19,11 @@ public final class Constants {
     public static final int tRoller = 200;
     public static final int bRoller = 201;
     public static final int extendBar = 202;
-    // Outtake Pistonos
+
+    // Pneumatics Module
+    public static final int pneumaticsMod = 203
+
+    // Outtake Pistons
     public static final int BP = 300;
     public static final int SP = 301;
 

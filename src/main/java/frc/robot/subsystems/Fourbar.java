@@ -16,6 +16,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableValue;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,14 +29,16 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Fourbar extends SubsystemBase implements Loggable {
   // Creates new pneumatic fourbar
-  Solenoid fourBarPH1 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.P1); 
-  Solenoid fourBarPH2 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.P2);
+  DoubleSolenoid fourBar = new DoubleSolenoid(Constants.CAN.pneumaticsMod, PneumaticsModuleType.REVPH, Constants.CAN.P1, Constants.CAN.P2);
+  // Solenoid fourBarPH1 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.P1); 
+  // Solenoid fourBarPH2 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.P2);
 
   /** Creates a new Fourbar */
   public Fourbar() {
     // sets the fourbar to false or down by default
-    fourBarPH1.set(false);
-    fourBarPH2.set(false);
+    // fourBarPH1.set(false);
+    // fourBarPH2.set(false);
+    fourBar.set(Value.kReverse);
   }
 
   @Override
@@ -46,12 +51,14 @@ public class Fourbar extends SubsystemBase implements Loggable {
   //}
   public void fourbarDown(){
     // sets fourbar to false or down in low
-    fourBarPH1.set(false);
-    fourBarPH2.set(false);
+    fourBar.set(Value.kReverse);
+    // fourBarPH1.set(false);
+    // fourBarPH2.set(false);
   }
   public void fourbarUp(){
-    fourBarPh1.set(true);
-    fourBarPH2.set(true);
+    fourBar.set(Value.kForward);
+    // fourBarPh1.set(true);
+    // fourBarPH2.set(true);
     ;
   }
   //this function will not work as there are only two settings.
