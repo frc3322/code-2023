@@ -17,6 +17,8 @@ public class Intake extends SubsystemBase {
   public final CANSparkMax motorBottomRoller = new CANSparkMax(Constants.CAN.bRoller, MotorType.kBrushless);
   public final CANSparkMax motorArm = new CANSparkMax(Constants.CAN.arm, MotorType.kBrushless);
   //motor arm will need an encoder or limit switch to determine where to stop
+  public final RelativeEncoder armEncder = motorArm.getEncoder();
+  
   public Intake(){
     //default settings here, right?
     motorTopRoller.setIdleMode(IdleMode.kBrake);

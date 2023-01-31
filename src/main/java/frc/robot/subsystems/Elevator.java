@@ -10,6 +10,8 @@ import frc.robot.Constants;
 public class Elevator extends SubsystemBase {
     public final CANSparkMax elevatorMotor = new CANSparkMax(Constants.CAN.E, MotorType.kBrushless);
     //will need limit switch or encoder to stop elevator when it reaches top/bottom. Encoder may be easier because might need 2 limit switches?
+    private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
+    
     public Elevator(){
         elevatorMotor.setIdleMode(IdleMode.kBrake);
         elevatorMotor.burnFlash();
@@ -31,7 +33,7 @@ public class Elevator extends SubsystemBase {
 
 
     @Override
-    public void periodic() {
+    public void periodic() {   
       // This method will be called once per scheduler run
     }
 }
