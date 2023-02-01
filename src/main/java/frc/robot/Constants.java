@@ -18,7 +18,7 @@ public final class Constants {
     //Intake Motors
     public static final int tRoller = 200;
     public static final int bRoller = 201;
-    public static final int arm = 202;
+    public static final int extendBar = 202;
 
     // Pneumatics Module
     public static final int pneumaticsMod = 203;
@@ -31,10 +31,11 @@ public final class Constants {
     public static final int P1 = 400;
     public static final int P2 = 401;
 
-    //transfer motor
-    public static final int T = 500;
+    public static final int T = 401;
 
-    //elevator motor
-    public static final int E = 600;
+    public static final int arm = 401;
+
+    public static final int E = 401;
   }
+
 }

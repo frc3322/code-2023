@@ -8,7 +8,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Elevator;
+//mport frc.robot.Elevator;
 public class Transfer extends SubsystemBase {
   /** Creates a new Transfer. */
   public final CANSparkMax beltMotor = new CANSparkMax(Constants.CAN.T, MotorType.kBrushless);
@@ -17,9 +17,9 @@ public class Transfer extends SubsystemBase {
     beltMotor.burnFlash();
   }
   //check if elevator is up or down. Could probably be a lambda in toElevator
-  public getElevator() {
-    Elevator.getPlace();
-
+  public boolean getElevator() {
+    //Elevator.getPlace(); just a placholer for now
+    return false;
   }
   //either toElevator or reverse will need to be setInversed because they go in opposite directions. Test to see which is which.
   public void toElevator() {
