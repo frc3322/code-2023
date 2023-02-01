@@ -41,4 +41,20 @@ public final class Constants {
     public static final int E = 401;
   }
 
+  public static final class speeds{
+    public static final double intakeIn = 0.5;
+    public static final double intakeOut = -0.5;
+
+    public static final double beltForward = 0.5;
+    public static final double beltReverse = -0.5;
+
+    public static enum TransferDirection{
+      FORWARD,
+      REVERSE
+    }
+  
+
+  }
+
+ 
 }

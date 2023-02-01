@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //mport frc.robot.Elevator;
 public class Transfer extends SubsystemBase {
   /** Creates a new Transfer. */
-  public final CANSparkMax beltMotor = new CANSparkMax(Constants.CAN.T, MotorType.kBrushless);
+  public static final CANSparkMax beltMotor = new CANSparkMax(Constants.CAN.T, MotorType.kBrushless);
   public Transfer() {
     beltMotor.setIdleMode(IdleMode.kBrake);
     beltMotor.burnFlash();
@@ -21,15 +21,12 @@ public class Transfer extends SubsystemBase {
     //Elevator.getPlace(); just a placholer for now
     return false;
   }
-  public void beltForward() {
-    //bring cubes/cones to elevator
-    //add check for getElevator
-    beltMotor.setVoltage(12.0);
-  } 
-  public void beltReverse() {
-    //eject cubes/cones
-    beltMotor.setVoltage(-12.0);
+ 
+  public static void setBeltPower(double power){
+    beltMotor.set(power);
   }
+
+
   public void stop() {
     beltMotor.stopMotor();
   }
