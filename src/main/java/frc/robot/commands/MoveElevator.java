@@ -6,24 +6,32 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.subsystems.Elevator;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ElevatorUp extends PIDCommand {
-  /** Creates a new ElevatorUp. */
-  public ElevatorUp() {
+public class MoveElevator extends PIDCommand {
+  
+  /** Creates a new ElevatorDown. */
+  public MoveElevator(Elevator elevator, double targetPosition) {
+   
     super(
+      
         // The controller that the command will use
         new PIDController(0, 0, 0),
         // This should return the measurement
-        () -> 0,
+       elevator::getElevatorPosition,
         // This should return the setpoint (can also be a constant)
-        () -> 0,
+        targetPosition,
         // This uses the output
         output -> {
-          // Use the output here
+          elevator.setPower(output);
         });
+
+    
+
+       
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
   }
@@ -31,6 +39,7 @@ public class ElevatorUp extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(getController().getPositionError())<.2;
+    
   }
 }
