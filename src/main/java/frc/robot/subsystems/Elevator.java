@@ -28,6 +28,9 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.setVoltage(12.0);
         //something about the encoder/limit switch to stop it
     }
+    public void getPlace(){
+        elevatorEncoder.getPosition();
+    }
 
 
 

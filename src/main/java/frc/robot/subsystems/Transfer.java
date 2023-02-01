@@ -8,7 +8,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Elevator;
 public class Transfer extends SubsystemBase {
   /** Creates a new Transfer. */
   public final CANSparkMax beltMotor = new CANSparkMax(Constants.CAN.T, MotorType.kBrushless);
@@ -16,10 +16,16 @@ public class Transfer extends SubsystemBase {
     beltMotor.setIdleMode(IdleMode.kBrake);
     beltMotor.burnFlash();
   }
+  //check if elevator is up or down. Could probably be a lambda in toElevator
+  public getElevator() {
+    Elevator.getPlace();
 
+  }
   //either toElevator or reverse will need to be setInversed because they go in opposite directions. Test to see which is which.
   public void toElevator() {
     //bring cubes/cones to elevator
+    //add check for getElevator
+
     beltMotor.setInverted(false);
     beltMotor.setVoltage(12.0);
   } 
@@ -31,6 +37,7 @@ public class Transfer extends SubsystemBase {
   public void stop() {
     beltMotor.stopMotor();
   }
+
 
   @Override
   public void periodic() {
