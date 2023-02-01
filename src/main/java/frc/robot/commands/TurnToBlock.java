@@ -5,23 +5,26 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
+import frc.robot.Constants.PIDConstraints;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TurnToBlock extends PIDCommand {
+public class TurnToBlock extends ProfiledPIDCommand {
   /** Creates a new TurnToBlock. */
   public TurnToBlock() {
     super(
         // The controller that the command will use
-        new PIDController(0, 0, 0),
+        new ProfiledPIDController(0, 0, 0, PIDConstraints.TTAConstraints),
         // This should return the measurement
         () -> 0,
         // This should return the setpoint (can also be a constant)
         () -> 0,
         // This uses the output
-        output -> {
+        (output, state) -> {
           // Use the output here
         });
     // Use addRequirements() here to declare subsystem dependencies.

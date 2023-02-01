@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -48,11 +50,13 @@ public final class Constants {
     public static final double beltForward = 0.5;
     public static final double beltReverse = -0.5;
 
-    public static enum TransferDirection{
-      FORWARD,
-      REVERSE
-    }
-  
+
+  }
+
+  public static final class PIDConstraints{
+    public static final double TTAVelocity = 0.5;
+    public static final double TTAAcceleration = 0.5;
+    public static final TrapezoidProfile.Constraints TTAConstraints = new TrapezoidProfile.Constraints(TTAVelocity, TTAAcceleration);
 
   }
 

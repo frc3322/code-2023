@@ -4,7 +4,8 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants.speeds.TransferDirection;
+import frc.robot.Constants;
+import frc.robot.Types.*;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Transfer;
 import frc.robot.Constants.*;
