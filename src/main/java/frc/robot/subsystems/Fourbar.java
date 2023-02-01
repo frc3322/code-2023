@@ -29,7 +29,7 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Fourbar extends SubsystemBase implements Loggable {
   // Creates new pneumatic fourbar
-  DoubleSolenoid fourBar = new DoubleSolenoid(Constants.CAN.pneumaticsMod, PneumaticsModuleType.REVPH, Constants.CAN.P1, Constants.CAN.P2);
+  DoubleSolenoid fourBar = new DoubleSolenoid(Constants.CAN.pneumaticsMod, PneumaticsModuleType.REVPH, Constants.CAN.extendFourbar, Constants.CAN.retractFourbar);
   // Solenoid fourBarPH1 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.P1); 
   // Solenoid fourBarPH2 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.P2);
 
