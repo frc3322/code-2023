@@ -45,21 +45,15 @@ public class Intake extends SubsystemBase {
     //move arm to up/transfer/elevator position
     ;
   }
-  public void upSpin() {
-    //the revrobotics website lists 12 as the optimal voltage for NEO brushless motors.
-    //if setInverted is clockwise, we will need to set both to normal, otherwise invert
-    //sets the voltage so it will spin continuously while up, which is apparently needed for transfer or elevator or something
-    motorTopRoller.setVoltage(12.0);
-    motorBottomRoller.setVoltage(12.0);
+ 
+
+  public void spinIntake(double speed){
+    motorTopRoller.set(speed);
+    motorBottomRoller.set(-speed);
   }
-  public void outSpin() {
-    //the revrobotics website lists 12 as the optimal voltage for NEO brushless motors.
-    //one will need to be setInverted, the opposite one from intakeSpin
-    //sets the voltage so it will spin to intake continuously in reverse directions from normal
-    motorTopRoller.setVoltage(12.0);
-    motorBottomRoller.setVoltage(12.0);
-  }
-  public void spinToggle() {
+
+
+  public void stopSpin() {
     //turns the rollers on and off
     motorTopRoller.stopMotor();
     motorBottomRoller.stopMotor();

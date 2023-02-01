@@ -4,9 +4,11 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants.TransferDirection;
+import frc.robot.Constants;
+import frc.robot.Types.*;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Transfer;
+import frc.robot.Constants.*;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SpinTransfer extends CommandBase {
@@ -36,12 +38,12 @@ public class SpinTransfer extends CommandBase {
     //if (elevator.getDown()){
       if(direction == direction.FORWARD){
         while(!colorSensorFoundObject){
-          transfer.beltForward();
+          transfer.setBeltPower(speeds.beltForward);
         }
       }
       else{
         while(!colorSensorFoundObject){
-          transfer.beltReverse();
+          transfer.setBeltPower(speeds.beltReverse);
         }
       }
     //}
