@@ -38,7 +38,7 @@ public final class Constants {
 
     public static final int arm = 401;
 
-   
+    public static final int E = 401;
   }
 
 }
