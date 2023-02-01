@@ -21,18 +21,14 @@ public class Transfer extends SubsystemBase {
     //Elevator.getPlace(); just a placholer for now
     return false;
   }
-  //either toElevator or reverse will need to be setInversed because they go in opposite directions. Test to see which is which.
-  public void toElevator() {
+  public void beltForward() {
     //bring cubes/cones to elevator
     //add check for getElevator
-
-    beltMotor.setInverted(false);
     beltMotor.setVoltage(12.0);
   } 
-  public void reverse() {
+  public void beltReverse() {
     //eject cubes/cones
-    beltMotor.setInverted(true);
-    beltMotor.setVoltage(12.0);
+    beltMotor.setVoltage(-12.0);
   }
   public void stop() {
     beltMotor.stopMotor();
