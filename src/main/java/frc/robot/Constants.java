@@ -28,8 +28,8 @@ public final class Constants {
     public static final int SP = 301;
 
     //Fourbar Pneumatics
-    public static final int P1 = 400;
-    public static final int P2 = 401;
+    public static final int extendFourbar = 400;
+    public static final int retractFourbar = 401;
 
     public static final int T = 401;
 
