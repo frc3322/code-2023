@@ -6,12 +6,16 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.SpinTransfer;
+import frc.robot.commands.IntakeGamePiece;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,6 +28,7 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final Drivetrain drivetrain = new Drivetrain();
+  private final Intake intake = new Intake();
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -41,6 +46,8 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     configureBindings();
+
+
   }
 
   /**
@@ -55,7 +62,16 @@ public class RobotContainer {
   private void configureBindings() {
     
   
-    
+     driverController
+        .x()
+        .whileTrue(new IntakeGamePiece(intake));
+
+      // driverController
+      // .y()
+      // .whileTrue(new EjectGamePiece(intake));
+
+
+
    
   }
 
