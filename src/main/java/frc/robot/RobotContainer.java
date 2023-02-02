@@ -6,11 +6,13 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.SpinTransfer;
@@ -27,6 +29,7 @@ public class RobotContainer {
   
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
+  private final Elevator elevator = new Elevator();
   
  
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -35,6 +38,7 @@ public class RobotContainer {
       () -> {
         double speed = MathUtil.applyDeadband(driverController.getLeftY(), 0.09);
         double turn = MathUtil.applyDeadband(driverController.getRightX(), 0.08);
+
         drivetrain.drive(speed, turn);
       }
       , drivetrain);
@@ -67,9 +71,20 @@ public class RobotContainer {
         .x()
         .whileTrue(new IntakeGamePiece(intake));
 
+      driverController
+      .leftBumper()
+      .whileTrue(new StartEndCommand(() -> {elevator.setPower(.1);}, () -> {elevator.setPower(0);}, elevator));
+
+      driverController
+      .leftBumper()
+      .whileTrue(new StartEndCommand(() -> {elevator.setPower(-.1);}, () -> {elevator.setPower(0);}, elevator));
+
+
+
       // driverController
       // .y()
       // .whileTrue(new EjectGamePiece(intake));
+
    
   }
 
@@ -82,7 +97,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  
+
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return null;
