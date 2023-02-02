@@ -17,20 +17,18 @@ import frc.robot.commands.SpinTransfer;
 import frc.robot.commands.IntakeGamePiece;
 
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
+
+
 public class RobotContainer {
+
+
   // The robot's subsystems and commands are defined here...
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+  
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
   
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+ 
   private final CommandXboxController driverController = new CommandXboxController(0);
 
     private final Command driveCommand = new RunCommand(
@@ -40,6 +38,8 @@ public class RobotContainer {
         drivetrain.drive(speed, turn);
       }
       , drivetrain);
+
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
@@ -59,6 +59,7 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+
   private void configureBindings() {
   
      driverController
@@ -68,9 +69,6 @@ public class RobotContainer {
       // driverController
       // .y()
       // .whileTrue(new EjectGamePiece(intake));
-
-
-
    
   }
 
@@ -83,6 +81,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return null;

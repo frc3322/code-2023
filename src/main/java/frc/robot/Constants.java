@@ -54,6 +54,8 @@ public final class Constants {
   }
 
   public static final class PIDConstraints{
+
+    //random numbers for that
     public static final double TTAVelocity = 0.5;
     public static final double TTAAcceleration = 0.5;
     public static final TrapezoidProfile.Constraints TTAConstraints = new TrapezoidProfile.Constraints(TTAVelocity, TTAAcceleration);
