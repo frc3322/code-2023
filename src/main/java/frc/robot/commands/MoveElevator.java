@@ -15,7 +15,7 @@ public class MoveElevator extends PIDCommand {
   
   /** Creates a new ElevatorDown. */
   public MoveElevator(Elevator elevator, double targetPosition) {
-   
+  
     super(
       
         // The controller that the command will use
@@ -29,7 +29,7 @@ public class MoveElevator extends PIDCommand {
           elevator.setPower(output);
         });
 
-    
+        addRequirements(elevator);
 
        
     // Use addRequirements() here to declare subsystem dependencies.

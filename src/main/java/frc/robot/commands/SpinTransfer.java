@@ -21,6 +21,7 @@ public class SpinTransfer extends CommandBase {
   
   public SpinTransfer(TransferDirection direction, Transfer transfer, Elevator elevator) {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(transfer);
     this.direction = direction;
     this.transfer = transfer;
     this.elevator = elevator;

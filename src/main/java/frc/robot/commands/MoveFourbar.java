@@ -1,25 +1,25 @@
-package frc.robot.commands;
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+package frc.robot.commands;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Types.ClawPosition;
-import frc.robot.subsystems.Claw;
+import frc.robot.Types.FourbarPosition;
+import frc.robot.subsystems.Fourbar;
 
+public class MoveFourbar extends CommandBase {
 
+  private FourbarPosition fourbarPosition;
+  private Fourbar fourbar;
 
-public class MoveClaw extends CommandBase {
-
-  private ClawPosition clawPosition;
-  private Claw claw;
-
-  /** Creates a new MoveClaw. */
-  public MoveClaw(ClawPosition clawPosition, Claw claw) {
+  /** Creates a new MoveForebar. */
+  public MoveFourbar(FourbarPosition fourbarPosition, Fourbar fourbar) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(claw);
-    this.clawPosition = clawPosition;
-    this.claw = claw;
+    addRequirements(fourbar);
+    this.fourbarPosition = fourbarPosition;
+    this.fourbar = fourbar;
+
   }
 
   // Called when the command is initially scheduled.
@@ -29,14 +29,11 @@ public class MoveClaw extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (clawPosition == clawPosition.OPEN) {
-      claw.setOpen();
+    if (fourbarPosition == fourbarPosition.EXTEND) {
+      fourbar.fourbarUp();
     }
-    else if (clawPosition == clawPosition.TOGGLECONE) {
-      claw.toggleCone();
-    }
-    else if (clawPosition == clawPosition.TOGGLECUBE) {
-      claw.toggleCube();
+    else {
+      fourbar.fourbarDown();
     }
   }
 
