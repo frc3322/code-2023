@@ -49,6 +49,7 @@ public class Fourbar extends SubsystemBase implements Loggable {
   //public void moveFourbar(double distance){
     //;
   //}
+  
   public void fourbarDown(){
     // sets fourbar to false or down in low
     fourBar.set(Value.kReverse);

@@ -21,6 +21,7 @@ public class SpinTransfer extends CommandBase {
   
   public SpinTransfer(TransferDirection direction, Transfer transfer, Elevator elevator) {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(transfer);
     this.direction = direction;
     this.transfer = transfer;
     this.elevator = elevator;
@@ -37,14 +38,14 @@ public class SpinTransfer extends CommandBase {
   public void execute() {
     //if (elevator.getDown()){
       if(direction == direction.FORWARD){
-        while(!colorSensorFoundObject){
-          transfer.setBeltPower(speeds.beltForward);
-        }
+        //while(!colorSensorFoundObject){
+        transfer.setBeltPower(speeds.beltForward);
+       // }
       }
       else{
-        while(!colorSensorFoundObject){
+        //while(!colorSensorFoundObject){
           transfer.setBeltPower(speeds.beltReverse);
-        }
+        //}
       }
     //}
 

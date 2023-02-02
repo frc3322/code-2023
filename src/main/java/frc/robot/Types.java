@@ -12,4 +12,15 @@ public final class Types {
       REVERSE
     }
 
+    public enum ClawPosition {
+      OPEN,
+      TOGGLECONE,
+      TOGGLECUBE
+    }
+
+    public enum FourbarPosition {
+      RETRACT,
+      EXTEND
+    }
+
 }
