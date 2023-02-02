@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.SpinTransfer;
-import frc.robot.commands.EjectGamePiece;
 import frc.robot.commands.IntakeGamePiece;
 
 
@@ -28,6 +28,7 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final Drivetrain drivetrain = new Drivetrain();
+  private final Intake intake = new Intake();
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -62,11 +63,11 @@ public class RobotContainer {
   
      driverController
         .x()
-        .whileTrue(new IntakeGamePiece());
+        .whileTrue(new IntakeGamePiece(intake));
 
-      driverController
-      .y()
-      .whileTrue(new EjectGamePiece());
+      // driverController
+      // .y()
+      // .whileTrue(new EjectGamePiece(intake));
 
 
 
