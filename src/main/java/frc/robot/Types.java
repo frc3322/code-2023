@@ -12,4 +12,10 @@ public final class Types {
       REVERSE
     }
 
+    public enum ClawPosition {
+      OPEN,
+      CLOSECONE,
+      CLOSECUBE
+    }
+
 }
