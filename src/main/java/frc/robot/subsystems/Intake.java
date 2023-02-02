@@ -9,16 +9,23 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase implements Loggable {
   /** Creates a new Intake. */
   public final CANSparkMax motorTopRoller = new CANSparkMax(Constants.CAN.tRoller, MotorType.kBrushless);
   public final CANSparkMax motorBottomRoller = new CANSparkMax(Constants.CAN.bRoller, MotorType.kBrushless);
   public final CANSparkMax motorArm = new CANSparkMax(Constants.CAN.arm, MotorType.kBrushless);
   //motor arm will need an encoder or limit switch to determine where to stop
   public final RelativeEncoder armEncder = motorArm.getEncoder();
+  
+  public final DigitalInput proximitySensor = new DigitalInput(0);
+
+  @Log private boolean proximitySensorValue;
   
   public Intake(){
     //default settings here, right?
@@ -51,13 +58,12 @@ public class Intake extends SubsystemBase {
     //turns the rollers on and off
     motorTopRoller.stopMotor();
     motorBottomRoller.stopMotor();
-
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
+    proximitySensorValue = proximitySensor.get();
   }
 }
   
