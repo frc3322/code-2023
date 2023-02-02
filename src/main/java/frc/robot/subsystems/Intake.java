@@ -30,13 +30,7 @@ public class Intake extends SubsystemBase {
     motorBottomRoller.burnFlash();
     motorArm.burnFlash();
   }
-  public void intakeSpin() {
-    //the revrobotics website lists 12 as the optimal voltage for NEO brushless motors.
-    //one will need to be setInverted
-    //sets the voltage so it will spin to intake continuously
-    motorTopRoller.setVoltage(12.0);
-    motorBottomRoller.setVoltage(12.0);
-  }
+  
   public void flipDown() {
     //move arm to down/intake position
     ;
