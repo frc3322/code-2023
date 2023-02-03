@@ -17,13 +17,13 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Intake extends SubsystemBase implements Loggable {
   /** Creates a new Intake. */
-  public final CANSparkMax motorTopRoller = new CANSparkMax(Constants.CAN.tRoller, MotorType.kBrushless);
-  public final CANSparkMax motorBottomRoller = new CANSparkMax(Constants.CAN.bRoller, MotorType.kBrushless);
-  public final CANSparkMax motorArm = new CANSparkMax(Constants.CAN.arm, MotorType.kBrushless);
+  private final CANSparkMax motorTopRoller = new CANSparkMax(Constants.CAN.tRoller, MotorType.kBrushless);
+  private final CANSparkMax motorBottomRoller = new CANSparkMax(Constants.CAN.bRoller, MotorType.kBrushless);
+  private final CANSparkMax motorArm = new CANSparkMax(Constants.CAN.arm, MotorType.kBrushless);
   //motor arm will need an encoder or limit switch to determine where to stop
-  public final RelativeEncoder armEncder = motorArm.getEncoder();
+  private final RelativeEncoder armEncder = motorArm.getEncoder();
   // intake will need a proximity sensor to tell if there is a game piece inside
-  public final DigitalInput proximitySensor = new DigitalInput(0);
+  private final DigitalInput proximitySensor = new DigitalInput(0);
 
   @Log private boolean proximitySensorValue;
   
@@ -45,6 +45,10 @@ public class Intake extends SubsystemBase implements Loggable {
   public void flipUp() {
     //move arm to up/transfer/elevator position
     ;
+  }
+
+  public void setFlipperSpeed(double speed){
+    motorArm.set(speed);
   }
  
   public void spinIntake(double speed){

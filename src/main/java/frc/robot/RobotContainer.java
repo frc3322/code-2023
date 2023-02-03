@@ -77,6 +77,14 @@ public class RobotContainer {
       .x()
       .whileTrue(new IntakeGamePieceCommand(intake));
 
+     driverController
+     .a()
+     .whileTrue(new StartEndCommand(() -> intake.spinIntake(.1), ()->intake.stopSpin(), intake));
+
+     driverController
+     .b()
+     .whileTrue(new StartEndCommand(() -> intake.setFlipperSpeed(.1), () -> intake.setFlipperSpeed(0), intake));
+
     // driverController
     // .leftBumper()
     // .whileTrue(new StartEndCommand(() -> {elevator.setPower(.1);}, () -> {elevator.setPower(0);}, elevator));
