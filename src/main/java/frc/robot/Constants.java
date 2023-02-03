@@ -13,7 +13,7 @@ public final class Constants {
     public static final int FL = 12;
     public static final int FR = 2;
     public static final int BL = 9;
-    public static final int BR = 45;
+    public static final int BR = 17;
     
     // Elevator
     public static final int elevatorMotor = 8;
@@ -30,7 +30,7 @@ public final class Constants {
 
     // Outtake Pistons
     public static final int BP = 16;
-    public static final int SP = 17;
+    public static final int SP = 13;
 
     //Fourbar Pneumatics
     public static final int extendFourbar = 18;
