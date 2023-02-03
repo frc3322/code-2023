@@ -6,10 +6,10 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Fourbar;
+//import frc.robot.subsystems.Elevator;
+//import frc.robot.subsystems.Fourbar;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Claw;
+//import frc.robot.subsystems.Claw;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.SpinTransfer;
+//import frc.robot.commands.SpinTransfer;
 import frc.robot.commands.IntakeGamePiece;
 
 
@@ -31,9 +31,9 @@ public class RobotContainer {
   
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
-  private final Elevator elevator = new Elevator();
-  private final Claw outtake = new Claw();
-  private final Fourbar fourbar = new Fourbar();
+  //private final Elevator elevator = new Elevator();
+  //private final Claw outtake = new Claw();
+ // private final Fourbar fourbar = new Fourbar();
   
  
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -77,13 +77,13 @@ public class RobotContainer {
       .x()
       .whileTrue(new IntakeGamePiece(intake));
 
-    driverController
-    .leftBumper()
-    .whileTrue(new StartEndCommand(() -> {elevator.setPower(.1);}, () -> {elevator.setPower(0);}, elevator));
+    // driverController
+    // .leftBumper()
+    // .whileTrue(new StartEndCommand(() -> {elevator.setPower(.1);}, () -> {elevator.setPower(0);}, elevator));
 
-    driverController
-    .rightBumper()
-    .whileTrue(new StartEndCommand(() -> {elevator.setPower(-.1);}, () -> {elevator.setPower(0);}, elevator));
+    // driverController
+    // .rightBumper()
+    // .whileTrue(new StartEndCommand(() -> {elevator.setPower(-.1);}, () -> {elevator.setPower(0);}, elevator));
 
     
 

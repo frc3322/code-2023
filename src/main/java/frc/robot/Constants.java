@@ -10,37 +10,37 @@ public final class Constants {
 
   public static final class CAN {
     // Drivetrain motors
-    public static final int FL = 2;
-    public static final int FR = 3;
-    public static final int BL = 4;
-    public static final int BR = 11;
+    public static final int FL = 12;
+    public static final int FR = 2;
+    public static final int BL = 9;
+    public static final int BR = 45;
     
     // Elevator
-    public static final int elevatorMotor = 401;
+    public static final int elevatorMotor = 8;
     public static final int topLimit = 0;
     public static final int bottomLimit = 1;
     
     //Intake Motors
-    public static final int tRoller = 200;
-    public static final int bRoller = 201;
-    public static final int extendBar = 202;
+    public static final int tRoller = 13;
+    public static final int bRoller = 3;
+    public static final int extendBar = 45;
 
     // Pneumatics Module
-    public static final int pneumaticsMod = 203;
+    public static final int pneumaticsMod = 15;
 
     // Outtake Pistons
-    public static final int BP = 300;
-    public static final int SP = 301;
+    public static final int BP = 16;
+    public static final int SP = 17;
 
     //Fourbar Pneumatics
-    public static final int extendFourbar = 400;
-    public static final int retractFourbar = 401;
+    public static final int extendFourbar = 18;
+    public static final int retractFourbar = 19;
 
-    public static final int T = 401;
+    public static final int T = 20;
 
-    public static final int arm = 401;
+    public static final int arm = 21;
 
-    public static final int E = 401;
+    public static final int E = 22;
   }
 
   public static final class speeds{
