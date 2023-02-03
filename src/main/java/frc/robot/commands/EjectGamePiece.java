@@ -4,19 +4,28 @@
 
 // Uncomment Later
 
-// package frc.robot.commands;
+package frc.robot.commands;
+import frc.robot.subsystems.Transfer;
+import frc robot.subsystems.Intake;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 
-// import edu.wpi.first.wpilibj2.command.StartEndCommand;
-
-// public class EjectGamePiece extends StartEndCommand {
-//   public EjectGamePiece() {
-//     super(
-//       null,   // Extend intake arm and spin intake motors away from robot
-//       null,   // Return intake arm to rest position
-//       null);  // Uses intake subsystem
-//   }
+public class EjectGamePiece extends StartEndCommand {
+  public EjectGamePiece(Transfer transfer, Intake intake) {
+    addRequirements(transfer, intake);
+     super(
+       () -> {
+        // transfer.setBeltPower(double);
+        //will need to add arm positioning
+        intake.spinIntake(-0.1);
+       },   // Extend intake arm and spin intake motors away from robot
+       () -> {
+        //restore arm position
+        intake.stopSpin();
+       },
+       intake);  // Uses intake subsystem
+   }
 
 //   // Called when the command is initially scheduled.
 //   @Override
 //   public void initialize() {}
-// }
+ }
