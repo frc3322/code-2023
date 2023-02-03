@@ -25,6 +25,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public final CANSparkMax motorBL = new CANSparkMax(Constants.CAN.BL, MotorType.kBrushless);
   
   private final DifferentialDrive robotDrive = new DifferentialDrive(motorFL, motorFR);
+
+  private final AHRS gyro = new AHRS();
   
   private final SlewRateLimiter accelLimit = new SlewRateLimiter(1.2);
   private final SlewRateLimiter turnLimit = new SlewRateLimiter(2);
@@ -34,10 +36,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   
   //gets the limelight table where data is stored from the limelight
   NetworkTable limelightTable = inst.getTable("limelight");
-
-
-  // Create gyro
-  // private final AHRS gyro = new AHRS();
 
   // Create double for logging the yaw of the robot
   // @Log private double heading = -999;
@@ -65,6 +63,45 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     motorBL.burnFlash();
   }
 
+
+  // Getters
+  public double getYaw() {
+    return gyro.getRotation2d().getDegrees();
+  }
+
+  public double getPitch() {
+    return gyro.getPitch();
+  }
+
+  public double getRoll() {
+    return gyro.getRoll();
+  }
+
+  public double getDistance() {
+    return motorFR.getEncoder().getPosition();
+  }
+
+  public void getPose() {
+    // TODO: complete this function
+  }
+
+  // Setters
+  public void resetGyro() {
+    gyro.reset();
+  }
+
+  public void resetEncoders() {
+    motorFL.getEncoder().setPosition(0);
+    motorFR.getEncoder().setPosition(0);
+    motorBL.getEncoder().setPosition(0);
+    motorBR.getEncoder().setPosition(0);
+  }
+
+  public void setPID() {
+    // TODO: compmlete this function
+  }
+
+  // Actions
 
   public void drive(double speed, double turn) {
     //turn = 0.5 * turn + 0.5 * Math.pow(turn, 3);  // Weird math
@@ -98,7 +135,5 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     // This method will be called once per scheduler run during simulation
   }
 
-  // public double getHeading() {
-  //   return gyro.getRotation2d().getDegrees();
-  // }
+
 }
