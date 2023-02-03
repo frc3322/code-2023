@@ -23,24 +23,24 @@ public final class Constants {
     //Intake Motors
     public static final int tRoller = 13;
     public static final int bRoller = 3;
-    public static final int extendBar = 45;
+    public static final int pivotIntake = 45;
 
     // Pneumatics Module
     public static final int pneumaticsMod = 15;
 
     // Outtake Pistons
     public static final int BP = 16;
-    public static final int SP = 13;
+    public static final int SP = 14;
 
     //Fourbar Pneumatics
     public static final int extendFourbar = 18;
     public static final int retractFourbar = 19;
 
-    public static final int T = 20;
+    //transfer can
+    public static final int transfer = 20;
 
-    public static final int arm = 21;
 
-    public static final int E = 22;
+    
   }
 
   public static final class DriveConstants {

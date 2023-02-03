@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //mport frc.robot.Elevator;
 public class Transfer extends SubsystemBase {
   /** Creates a new Transfer. */
-  public static final CANSparkMax beltMotor = new CANSparkMax(Constants.CAN.T, MotorType.kBrushless);
+  public static final CANSparkMax beltMotor = new CANSparkMax(Constants.CAN.transfer, MotorType.kBrushless);
   public Transfer() {
     beltMotor.setIdleMode(IdleMode.kBrake);
     beltMotor.burnFlash();
