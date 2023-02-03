@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -19,10 +20,16 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
-  public final CANSparkMax motorFR = new CANSparkMax(Constants.CAN.FR, MotorType.kBrushless);
-  public final CANSparkMax motorFL = new CANSparkMax(Constants.CAN.FL, MotorType.kBrushless);
-  public final CANSparkMax motorBR = new CANSparkMax(Constants.CAN.BR, MotorType.kBrushless);
-  public final CANSparkMax motorBL = new CANSparkMax(Constants.CAN.BL, MotorType.kBrushless);
+  private final CANSparkMax motorFR = new CANSparkMax(Constants.CAN.FR, MotorType.kBrushless);
+  private final CANSparkMax motorFL = new CANSparkMax(Constants.CAN.FL, MotorType.kBrushless);
+  private final CANSparkMax motorBR = new CANSparkMax(Constants.CAN.BR, MotorType.kBrushless);
+  private final CANSparkMax motorBL = new CANSparkMax(Constants.CAN.BL, MotorType.kBrushless);
+
+  private final RelativeEncoder FLEncoder = motorFL.getEncoder();
+  private final RelativeEncoder FREncoder = motorFR.getEncoder();
+  private final RelativeEncoder BLEncoder = motorBL.getEncoder();
+  private final RelativeEncoder BREncoder = motorBR.getEncoder();
+  
   
   private final DifferentialDrive robotDrive = new DifferentialDrive(motorFL, motorFR);
 
@@ -43,6 +50,19 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   // create double for logging the controller input
   @Log private double speed = -2;
   @Log private double turn = -2;
+
+  //Variables to log voltage
+  @Log double FLVoltageVal;
+  @Log double FRVoltageVal;
+  @Log double BLVoltageVal;
+  @Log double BRVoltageVal;
+
+
+   //Variables to log voltage
+   @Log double FRVelocityVal;
+   @Log double FLVelocityVal;
+   @Log double BLVelocityVal;
+   @Log double BRVelocityVal;
 
   /** Creates a new ExampleSubsystem. */
   public Drivetrain() {
@@ -129,6 +149,17 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   @Override
   public void periodic() {
     // heading = getHeading();
+
+    FLVoltageVal = motorFL.getBusVoltage();
+    FRVoltageVal = motorFR.getBusVoltage();
+    BLVoltageVal = motorBL.getBusVoltage();
+    BRVoltageVal = motorBR.getBusVoltage();
+
+    FLVelocityVal = FLEncoder.getVelocity();
+    FRVelocityVal = FREncoder.getVelocity();
+    BLVelocityVal = BLEncoder.getVelocity();
+    BRVelocityVal = BREncoder.getVelocity();
+
   }
 
   @Override
