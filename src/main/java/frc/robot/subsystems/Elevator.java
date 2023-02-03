@@ -1,42 +1,40 @@
-// package frc.robot.subsystems;
+package frc.robot.subsystems;
 
-// import com.revrobotics.CANSparkMax;
-// import com.revrobotics.RelativeEncoder;
-// import com.revrobotics.CANSparkMax.IdleMode;
-// import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-// import edu.wpi.first.wpilibj.DigitalInput;
-// import edu.wpi.first.wpilibj2.command.SubsystemBase;
-// import frc.robot.Constants;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
-// public class Elevator extends SubsystemBase {
-//     public final CANSparkMax elevatorMotor = new CANSparkMax(Constants.CAN.elevatorMotor, MotorType.kBrushless);
-//     //will need limit switch or encoder to stop elevator when it reaches top/bottom. Encoder may be easier because might need 2 limit switches?
-//     private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
-//     //DigitalInput toplimitSwitch = new DigitalInput(0);
-//     //DigitalInput bottomlimitSwitch = new DigitalInput(1);
+public class Elevator extends SubsystemBase {
+    public final CANSparkMax elevatorMotor = new CANSparkMax(Constants.CAN.elevatorMotor, MotorType.kBrushless);
+    //will need limit switch or encoder to stop elevator when it reaches top/bottom. Encoder may be easier because might need 2 limit switches?
+    private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
+    //DigitalInput toplimitSwitch = new DigitalInput(0);
+    //DigitalInput bottomlimitSwitch = new DigitalInput(1);
     
-//     public Elevator(){
-//         elevatorMotor.setIdleMode(IdleMode.kBrake);
-//         elevatorMotor.burnFlash();
-//     }
+    public Elevator(){
+        elevatorMotor.setIdleMode(IdleMode.kBrake);
+        elevatorMotor.burnFlash();
+    }
 
-   
-//     public void setPower(double power)
-//     {
-//         elevatorMotor.set(power);
-//     }
+    public void setPower(double power)
+    {
+        elevatorMotor.set(power);
+    }
 
+    public double getElevatorPosition(){
+        // gets the current elevator encoder position
+        return elevatorEncoder.getPosition();
+    }
 
-//     public double getElevatorPosition(){
-//         return elevatorEncoder.getPosition();
-//     }
+    //pub
 
-
-
-
-//     @Override
-//     public void periodic() {   
-//       // This method will be called once per scheduler run
-//     }
-// }
+    @Override
+    public void periodic() {   
+      // This method will be called once per scheduler run
+    }
+}

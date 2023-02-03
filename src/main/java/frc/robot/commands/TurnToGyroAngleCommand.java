@@ -13,7 +13,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 
 /** A command that will turn the robot to the specified angle. */
-public class TurnToAngle extends PIDCommand {
+public class TurnToGyroAngleCommand extends PIDCommand {
   /**
    * Turns to robot to the specified angle.
    *
@@ -21,7 +21,7 @@ public class TurnToAngle extends PIDCommand {
    * @param drive The drive subsystem to use
    */
   
-  public TurnToAngle(double targetAngleDegrees, Drivetrain drive) {
+  public TurnToGyroAngleCommand(double targetAngleDegrees, Drivetrain drive) {
     super(
       new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD),
         // Close loop on heading

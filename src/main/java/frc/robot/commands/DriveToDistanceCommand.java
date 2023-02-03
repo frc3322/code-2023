@@ -13,9 +13,9 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 
 /** A command that will turn the robot to the specified angle. */
-public class DriveToDistance extends PIDCommand {
+public class DriveToDistanceCommand extends PIDCommand {
   
-  public DriveToDistance(double targetDistance, Drivetrain drive) {
+  public DriveToDistanceCommand(double targetDistance, Drivetrain drive) {
 
     super(
       new PIDController(DriveConstants.kDriveP, DriveConstants.kDriveI, DriveConstants.kDriveD),

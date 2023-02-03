@@ -22,7 +22,7 @@ public class Intake extends SubsystemBase implements Loggable {
   public final CANSparkMax motorArm = new CANSparkMax(Constants.CAN.arm, MotorType.kBrushless);
   //motor arm will need an encoder or limit switch to determine where to stop
   public final RelativeEncoder armEncder = motorArm.getEncoder();
-  
+  // intake will need a proximity sensor to tell if there is a game piece inside
   public final DigitalInput proximitySensor = new DigitalInput(0);
 
   @Log private boolean proximitySensorValue;
@@ -47,12 +47,10 @@ public class Intake extends SubsystemBase implements Loggable {
     ;
   }
  
-
   public void spinIntake(double speed){
     motorTopRoller.set(speed);
     motorBottomRoller.set(-speed);
   }
-
 
   public void stopSpin() {
     //turns the rollers on and off

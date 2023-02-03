@@ -9,8 +9,8 @@
 // import frc robot.subsystems.Intake;
 // import edu.wpi.first.wpilibj2.command.StartEndCommand;
 
-// public class EjectGamePiece extends StartEndCommand {
-//   public EjectGamePiece(Transfer transfer, Intake intake) {
+// public class EjectGamePieceCommand extends StartEndCommand {
+//   public EjectGamePieceCommand(Transfer transfer, Intake intake) {
 //     addRequirements(transfer, intake);
 //      super(
 //        () -> {

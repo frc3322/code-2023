@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 //import frc.robot.commands.SpinTransfer;
-import frc.robot.commands.IntakeGamePiece;
+import frc.robot.commands.IntakeGamePieceCommand;
 
 
 
@@ -75,7 +75,7 @@ public class RobotContainer {
 
     driverController
       .x()
-      .whileTrue(new IntakeGamePiece(intake));
+      .whileTrue(new IntakeGamePieceCommand(intake));
 
     // driverController
     // .leftBumper()
