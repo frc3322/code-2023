@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase implements Loggable {
   private final CANSparkMax motorBottomRoller = new CANSparkMax(Constants.CAN.bRoller, MotorType.kBrushless);
   private final CANSparkMax motorArm = new CANSparkMax(Constants.CAN.pivotIntake, MotorType.kBrushless);
   //motor arm will need an encoder or limit switch to determine where to stop
-  private final RelativeEncoder armEncder = motorArm.getEncoder();
+  private final RelativeEncoder armEncoder = motorArm.getEncoder();
   // intake will need a proximity sensor to tell if there is a game piece inside
   private final DigitalInput proximitySensor = new DigitalInput(0);
 

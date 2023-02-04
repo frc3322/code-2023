@@ -29,13 +29,13 @@ public class MoveClawCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (clawPosition == clawPosition.OPEN) {
+    if (clawPosition == ClawPosition.OPEN) {
       claw.setOpen();
     }
-    else if (clawPosition == clawPosition.TOGGLECONE) {
+    else if (clawPosition == ClawPosition.TOGGLECONE) {
       claw.toggleCone();
     }
-    else if (clawPosition == clawPosition.TOGGLECUBE) {
+    else if (clawPosition == ClawPosition.TOGGLECUBE) {
       claw.toggleCube();
     }
   }

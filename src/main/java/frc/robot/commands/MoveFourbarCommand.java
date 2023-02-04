@@ -29,7 +29,7 @@ public class MoveFourbarCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (fourbarPosition == fourbarPosition.EXTEND) {
+    if (fourbarPosition == FourbarPosition.EXTEND) {
       fourbar.fourbarUp();
     }
     else {
