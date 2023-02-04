@@ -6,10 +6,20 @@ package frc.robot.commands;
 
 import frc.robot.Constants;
 import frc.robot.Types.*;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Transfer;
 import frc.robot.Constants.*;
+
+import java.lang.reflect.Proxy;
+import java.net.ProxySelector;
+
+import javax.swing.UIDefaults.ProxyLazyValue;
+
+import com.revrobotics.ColorSensorV3.ProximitySensorMeasurementRate;
+
+import edu.wpi.first.wpilibj.DigitalGlitchFilter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 
 public class SpinTransferCommand extends CommandBase {
   /** Creates a new SpinTransfer. */
@@ -17,14 +27,15 @@ public class SpinTransferCommand extends CommandBase {
   private TransferDirection direction;
   private boolean colorSensorFoundObject;
   private Transfer transfer;
-  private Elevator elevator;
   
-  public SpinTransferCommand(TransferDirection direction, Transfer transfer, Elevator elevator) {
+
+
+  
+  public SpinTransferCommand(TransferDirection direction, Transfer transfer) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(transfer);
     this.direction = direction;
     this.transfer = transfer;
-    this.elevator = elevator;
   }
 
   // Called when the command is initially scheduled.
@@ -36,6 +47,11 @@ public class SpinTransferCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    //Guard condition: Exit early if there is nothing to do
+    if (!transfer.shouldRunBelt()) {
+      return;
+    } 
     //if (elevator.getDown()){
       if(direction == TransferDirection.FORWARD){
         //while(!colorSensorFoundObject){
@@ -48,7 +64,7 @@ public class SpinTransferCommand extends CommandBase {
         //}
       }
     //}
-
+    
   }
 
   // Called once the command ends or is interrupted.

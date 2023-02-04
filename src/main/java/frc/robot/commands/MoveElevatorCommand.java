@@ -8,9 +8,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Types.ElevatorPosition;
-import frc.robot.subsystems.Elevator;
 import frc.robot.Constants.ElevatorConstants;
-
+import frc.robot.subsystems.Transfer;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -18,22 +17,22 @@ import frc.robot.Constants.ElevatorConstants;
 public class MoveElevatorCommand extends PIDCommand {
   
   /** Creates a new MoveElevator. */
-  public MoveElevatorCommand(Elevator elevator, ElevatorPosition position) {
+  public MoveElevatorCommand(Transfer transfer, ElevatorPosition targetPosition) {
   
     super(
       
         // The controller that the command will use
         new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd),
         // This should return the measurement
-       elevator::getElevatorPosition,
+       transfer::getElevatorPosition,
         // This should return the setpoint (can also be a constant)
-        elevator.convertEncoderPosition(position),
+        transfer.convertEncoderPosition(targetPosition),
         // This uses the output
         output -> {
-          elevator.setPower(output);
+          transfer.setPower(output);
         });
 
-        addRequirements(elevator);
+        addRequirements(transfer);
         SmartDashboard.putData(this.getController());
        
     // Use addRequirements() here to declare subsystem dependencies.

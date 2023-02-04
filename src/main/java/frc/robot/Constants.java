@@ -87,6 +87,10 @@ public final class Constants {
 
   }
 
+  public static final class DIO {
+    public static final int transferInProximitySensor = 0;
+    public static final int transferOutProximitySensor = 2;
+  }
 
  
 }
