@@ -8,8 +8,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 
-public class Elevator extends SubsystemBase {
+public class Elevator extends SubsystemBase implements Loggable{
     public final CANSparkMax elevatorMotor = new CANSparkMax(Constants.CAN.elevatorMotor, MotorType.kBrushless);
     //will need limit switch or encoder to stop elevator when it reaches top/bottom. Encoder may be easier because might need 2 limit switches?
     private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
@@ -26,7 +28,8 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.set(power);
     }
 
-    @log public double getElevatorPosition(){
+    @Config
+     public double getElevatorPosition(){
         // gets the current elevator encoder position
         return elevatorEncoder.getPosition();
     }

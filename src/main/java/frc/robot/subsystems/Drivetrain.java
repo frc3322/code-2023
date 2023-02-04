@@ -85,23 +85,23 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
 
   // Getters
-  @log
+  @Log
   public double getYaw() {
     return gyro.getRotation2d().getDegrees();
   }
-  @log
+  @Log
   public double getPitch() {
     return gyro.getPitch();
   }
-  @log
+  @Log
   public double getRoll() {
     return gyro.getRoll();
   }
-  @log
+  @Log
   public double getDistance() {
     return motorFR.getEncoder().getPosition();
   }
-  @log
+  @Log
   public void getPose() {
     // TODO: complete this function
   }
