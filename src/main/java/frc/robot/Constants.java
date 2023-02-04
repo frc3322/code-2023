@@ -57,6 +57,12 @@ public final class Constants {
     public static final double encoderTicsPerFoot = 6.84;
   }
 
+  public static final class ElevatorConstants {
+    public static final double bottomEncoderPosition = 0;
+    public static final double topEncoderPosition = 1;
+    
+  }
+
   public static final class IntakeConstants{
     public static final double intakeInSpeed = 0.5;
     public static final double intakeOutSpeed = 0; 
@@ -76,6 +82,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints TTAConstraints = new TrapezoidProfile.Constraints(TTAVelocity, TTAAcceleration);
 
   }
+
 
  
 }

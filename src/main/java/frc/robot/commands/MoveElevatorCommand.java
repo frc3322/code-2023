@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Types.ElevatorPosition;
 import frc.robot.subsystems.Elevator;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -15,7 +16,7 @@ import frc.robot.subsystems.Elevator;
 public class MoveElevatorCommand extends PIDCommand {
   
   /** Creates a new MoveElevator. */
-  public MoveElevatorCommand(Elevator elevator, double targetPosition) {
+  public MoveElevatorCommand(Elevator elevator, ElevatorPosition position) {
   
     super(
       
@@ -24,7 +25,7 @@ public class MoveElevatorCommand extends PIDCommand {
         // This should return the measurement
        elevator::getElevatorPosition,
         // This should return the setpoint (can also be a constant)
-        targetPosition,
+        elevator.convertEncoderPosition(position),
         // This uses the output
         output -> {
           elevator.setPower(output);

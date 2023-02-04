@@ -23,4 +23,9 @@ public final class Types {
       EXTEND
     }
 
+    public enum ElevatorPosition {
+      BOTTOM,
+      TOP
+    }
+
 }
