@@ -58,8 +58,12 @@ public final class Constants {
   }
 
   public static final class ElevatorConstants {
-    public static final double bottomEncoderPosition = 0;
-    public static final double topEncoderPosition = 1;
+    public static final double kBottomEncoderPosition = 0;
+    public static final double kTopEncoderPosition = 1;
+    public static final double kp = 0;
+    public static final double ki = 0;
+    public static final double kd = 0;
+
     
   }
 

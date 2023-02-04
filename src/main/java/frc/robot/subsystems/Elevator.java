@@ -33,10 +33,10 @@ public class Elevator extends SubsystemBase implements Loggable{
     public double convertEncoderPosition(ElevatorPosition position){
         double encoderPosition;
         if (position == ElevatorPosition.BOTTOM){
-            encoderPosition = ElevatorConstants.bottomEncoderPosition;
+            encoderPosition = ElevatorConstants.kBottomEncoderPosition;
         }
         else{
-            encoderPosition = ElevatorConstants.topEncoderPosition;
+            encoderPosition = ElevatorConstants.kTopEncoderPosition;
         }
         return encoderPosition;
     }

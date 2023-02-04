@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Types.ElevatorPosition;
 import frc.robot.subsystems.Elevator;
+import frc.robot.Constants.ElevatorConstants;
+
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -21,7 +23,7 @@ public class MoveElevatorCommand extends PIDCommand {
     super(
       
         // The controller that the command will use
-        new PIDController(0, 0, 0),
+        new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd),
         // This should return the measurement
        elevator::getElevatorPosition,
         // This should return the setpoint (can also be a constant)
