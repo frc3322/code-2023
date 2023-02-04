@@ -26,7 +26,7 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.set(power);
     }
 
-    public double getElevatorPosition(){
+    @log public double getElevatorPosition(){
         // gets the current elevator encoder position
         return elevatorEncoder.getPosition();
     }
