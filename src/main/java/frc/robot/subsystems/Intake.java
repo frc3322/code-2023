@@ -69,7 +69,7 @@ public class Intake extends SubsystemBase implements Loggable {
   }
 
   public void stopSpin() {
-    //turns the rollers on and off
+    //turns rollers on and off
     motorTopRoller.stopMotor();
     motorBottomRoller.stopMotor();
   }
