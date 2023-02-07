@@ -37,25 +37,29 @@ public class Intake extends SubsystemBase implements Loggable {
     motorBottomRoller.burnFlash();
     motorArm.burnFlash();
   }
-  /*
-  @log public void flipDown() {
+  
+  public void flipDown() {
     //move arm to down/intake position
-    while proximitySensor.get()==true{
+    while (proximitySensor.get()==true){
       setFlipperSpeed(Constants.IntakeConstants.armDownSpeed);
+    }
     motorArm.stopMotor();
   }
-  */
 
-  @log public void flipUp() {
-    //move arm to up/transfer/elevator position
-    while armEncoder.get()==true{
+
+  public void flipUp() {
+    //move arm to up/transfer/elevator position. encoders don't do get. Switching this to while proximity is false, may need to be changed later.
+    /*while (armEncoder.get()==true){
       setFlipperSpeed(Constants.IntakeConstants.armUpSpeed);
     }
-    motorArm.stopMotor();
+    motorArm.stopMotor();*/
+    while (proximitySensor.get()==true){
+      setFlipperSpeed(Constants.IntakeConstants.armUpSpeed);
+    }
 
     }
 
-  @log public void setFlipperSpeed(double speed){
+  public void setFlipperSpeed(double speed){
     motorArm.set(speed);
   }
  

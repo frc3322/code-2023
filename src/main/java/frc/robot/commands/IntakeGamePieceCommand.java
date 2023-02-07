@@ -15,6 +15,7 @@ public class IntakeGamePieceCommand extends StartEndCommand {
       },
       () -> {
         intake.stopSpin();
+        intake.flipUp();
       },
       intake);
   }
