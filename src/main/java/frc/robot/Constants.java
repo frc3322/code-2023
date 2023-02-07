@@ -16,17 +16,18 @@ public final class Constants {
     public static final int BR = 17;
     
     // Elevator
-    public static final int elevatorMotor = 8;
+
+    public static final int elevatorMotor = 36;
     public static final int topLimit = 0;
     public static final int bottomLimit = 1;
     
     //Intake Motors
     public static final int tRoller = 13;
     public static final int bRoller = 3;
-    public static final int pivotIntake = 45;
+    public static final int pivotIntake = 7;
 
     // Pneumatics Module
-    public static final int pneumaticsMod = 15;
+    public static final int pneumaticsMod = 0;
 
     // Outtake Pistons
     public static final int BP = 16;
@@ -37,7 +38,7 @@ public final class Constants {
     public static final int retractFourbar = 19;
 
     //transfer can
-    public static final int transfer = 20;
+    public static final int transfer = 5;
 
 
     

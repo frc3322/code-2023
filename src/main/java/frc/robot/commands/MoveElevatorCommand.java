@@ -29,7 +29,7 @@ public class MoveElevatorCommand extends PIDCommand {
         transfer.convertEncoderPosition(targetPosition),
         // This uses the output
         output -> {
-          transfer.setPower(output);
+          transfer.setElevatorPower(output);
         });
 
         addRequirements(transfer);

@@ -6,17 +6,19 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Drivetrain;
-//import frc.robot.subsystems.Elevator;
 //import frc.robot.subsystems.Fourbar;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Transfer;
 //import frc.robot.subsystems.Claw;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.EjectGamePieceCommand;
 //import frc.robot.commands.SpinTransfer;
 import frc.robot.commands.IntakeGamePieceCommand;
 
@@ -31,12 +33,13 @@ public class RobotContainer {
   
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
-  //private final Elevator elevator = new Elevator();
-  //private final Claw outtake = new Claw();
+  // private final Claw claw = new Claw();
  // private final Fourbar fourbar = new Fourbar();
+  private final Transfer transfer = new Transfer();
   
  
   private final CommandXboxController driverController = new CommandXboxController(0);
+  private final CommandXboxController secondaryController = new CommandXboxController(1);
 
     private final Command driveCommand = new RunCommand(
       () -> {
@@ -73,31 +76,55 @@ public class RobotContainer {
   
     drivetrain.setDefaultCommand(driveCommand);
 
+    //driver controller (0) commands
+
     driverController
       .x()
-      .whileTrue(new IntakeGamePieceCommand(intake));
+      .whileTrue(new StartEndCommand (() -> intake.spinIntake(.3), () -> intake.stopSpin(), intake));
 
      driverController
      .a()
-     .whileTrue(new StartEndCommand(() -> intake.spinIntake(.1), ()->intake.stopSpin(), intake));
+     .whileTrue(new EjectGamePieceCommand(transfer, intake));
 
      driverController
      .b()
-     .whileTrue(new StartEndCommand(() -> intake.setFlipperSpeed(.1), () -> intake.setFlipperSpeed(0), intake));
+     .whileTrue(new StartEndCommand(() -> intake.setFlipperSpeed(.2), () -> intake.setFlipperSpeed(0), intake));
 
-    // driverController
-    // .leftBumper()
-    // .whileTrue(new StartEndCommand(() -> {elevator.setPower(.1);}, () -> {elevator.setPower(0);}, elevator));
+    //up
+     driverController
+     .y()
+     .whileTrue(new StartEndCommand(()-> intake.setFlipperSpeed(-.2), ()-> intake.setFlipperSpeed(0), intake));
 
-    // driverController
-    // .rightBumper()
-    // .whileTrue(new StartEndCommand(() -> {elevator.setPower(-.1);}, () -> {elevator.setPower(0);}, elevator));
+    driverController
+    .leftBumper()
+    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(.2);}, () -> {transfer.setElevatorPower(0);}, transfer));
+
+   //up
+    driverController
+    .rightBumper()
+    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(-.2);}, () -> {transfer.setElevatorPower(0);}, transfer));
 
     
+    //secondary controller commands
+    secondaryController
+    .rightBumper()
+    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(0.1), () -> transfer.setBeltPower(0), transfer));
 
-    // driverController
-    // .y()
-    // .whileTrue(new EjectGamePiece(intake));
+    secondaryController
+    .leftBumper()
+    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(-0.1), () -> transfer.setBeltPower(0), transfer));
+
+  //   secondaryController
+  //   .a()
+  //   .onTrue(new InstantCommand(() -> claw.setClosed(), claw));
+
+  //   secondaryController
+  //   .b()
+  //   .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
+
+  //   secondaryController
+  //   .y()
+  //   .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
    
   }
