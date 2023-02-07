@@ -37,17 +37,25 @@ public class Intake extends SubsystemBase implements Loggable {
     motorBottomRoller.burnFlash();
     motorArm.burnFlash();
   }
-  
-  public void flipDown() {
+  /*
+  @log public void flipDown() {
     //move arm to down/intake position
-    ;
+    while proximitySensor.get()==true{
+      setFlipperSpeed(Constants.IntakeConstants.armDownSpeed);
+    motorArm.stopMotor();
   }
-  public void flipUp() {
-    //move arm to up/transfer/elevator position
-    ;
-  }
+  */
 
-  public void setFlipperSpeed(double speed){
+  @log public void flipUp() {
+    //move arm to up/transfer/elevator position
+    while armEncoder.get()==true{
+      setFlipperSpeed(Constants.IntakeConstants.armUpSpeed);
+    }
+    motorArm.stopMotor();
+
+    }
+
+  @log public void setFlipperSpeed(double speed){
     motorArm.set(speed);
   }
  
