@@ -22,6 +22,7 @@ public class EjectGamePieceCommand extends StartEndCommand {
        () -> {
         //restore arm position
         intake.stopSpin();
+        intake.flipUp();
        },
        transfer, intake);  // Uses intake subsystem
    }

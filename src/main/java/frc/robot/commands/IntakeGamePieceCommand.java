@@ -2,25 +2,32 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+// Uncomment Later
 
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
+package frc.robot.commands;
+import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 
 public class IntakeGamePieceCommand extends StartEndCommand {
-  public IntakeGamePieceCommand(Intake intake) {
-    super(
-      () -> {
-        intake.spinIntake(0.1);
-      },
-      () -> {
+  public IntakeGamePieceCommand(Transfer transfer, Intake intake) {
+     super(
+       () -> {
+        // transfer.setBeltPower(double);
+        //will need to add arm positioning
+        intake.flipDown();
+        transfer.setBeltPower(0.3);
+        intake.spinIntake(0.3);
+       }, 
+       () -> {
+        //restore arm position
         intake.stopSpin();
         intake.flipUp();
-      },
-      intake);
-  }
+       },
+       transfer, intake);  // Uses intake subsystem
+   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-}
+//   // Called when the command is initially scheduled.
+//   @Override
+//   public void initialize() {}
+ }
