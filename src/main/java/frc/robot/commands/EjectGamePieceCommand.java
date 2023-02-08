@@ -15,11 +15,14 @@ public class EjectGamePieceCommand extends StartEndCommand {
        () -> {
         // transfer.setBeltPower(double);
         //will need to add arm positioning
+        intake.flipDown();
+        transfer.setBeltPower(-0.3);
         intake.spinIntake(-0.3);
        },   // Extend intake arm and spin intake motors away from robot
        () -> {
         //restore arm position
         intake.stopSpin();
+        intake.flipUp();
        },
        transfer, intake);  // Uses intake subsystem
    }

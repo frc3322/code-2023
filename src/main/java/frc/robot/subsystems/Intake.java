@@ -40,12 +40,24 @@ public class Intake extends SubsystemBase implements Loggable {
   
   public void flipDown() {
     //move arm to down/intake position
-    ;
+    while (proximitySensor.get()==true){
+      setFlipperSpeed(Constants.IntakeConstants.armDownSpeed);
+    }
+    motorArm.stopMotor();
   }
+
+
   public void flipUp() {
-    //move arm to up/transfer/elevator position
-    ;
-  }
+    //move arm to up/transfer/elevator position. encoders don't do get. Switching this to while proximity is false, may need to be changed later.
+    /*while (armEncoder.get()==true){
+      setFlipperSpeed(Constants.IntakeConstants.armUpSpeed);
+    }
+    motorArm.stopMotor();*/
+    while (proximitySensor.get()==true){
+      setFlipperSpeed(Constants.IntakeConstants.armUpSpeed);
+    }
+
+    }
 
   public void setFlipperSpeed(double speed){
     motorArm.set(speed);
@@ -57,7 +69,7 @@ public class Intake extends SubsystemBase implements Loggable {
   }
 
   public void stopSpin() {
-    //turns the rollers on and off
+    //turns rollers on and off
     motorTopRoller.stopMotor();
     motorBottomRoller.stopMotor();
   }
