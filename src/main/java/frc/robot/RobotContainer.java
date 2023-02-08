@@ -6,10 +6,10 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Drivetrain;
-//import frc.robot.subsystems.Fourbar;
+import frc.robot.subsystems.Fourbar;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Transfer;
-//import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Claw;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,8 +33,8 @@ public class RobotContainer {
   
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
-  // private final Claw claw = new Claw();
- // private final Fourbar fourbar = new Fourbar();
+   private final Claw claw = new Claw();
+  private final Fourbar fourbar = new Fourbar();
   private final Transfer transfer = new Transfer();
   
  
@@ -114,18 +114,25 @@ public class RobotContainer {
     .leftBumper()
     .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(-0.1), () -> transfer.setBeltPower(0), transfer));
 
-  //   secondaryController
-  //   .a()
-  //   .onTrue(new InstantCommand(() -> claw.setClosed(), claw));
+    secondaryController
+    .a()
+    .onTrue(new InstantCommand(() -> claw.setClosed(), claw));
 
-  //   secondaryController
-  //   .b()
-  //   .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
+    secondaryController
+    .b()
+    .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
-  //   secondaryController
-  //   .y()
-  //   .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
+    secondaryController
+    .y()
+    .onTrue(new InstantCommand(() -> claw.setCubeClosed(), claw));
 
+    secondaryController
+    .povDown()
+    .onTrue(new InstantCommand(() -> fourbar.fourbarDown()));
+
+    secondaryController
+    .povUp()
+    .onTrue(new InstantCommand(() -> fourbar.fourbarUp()));
    
   }
 
