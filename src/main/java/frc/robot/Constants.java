@@ -93,5 +93,12 @@ public final class Constants {
     public static final int transferOutProximitySensor = 2;
   }
 
+  public static final class IntakeZoneLimits{
+    
+    public static final double slowZoneStart = 0;
+    
+    
+  }
+
  
 }

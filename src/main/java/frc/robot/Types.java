@@ -28,4 +28,9 @@ public final class Types {
       TOP
     }
 
+    public enum IntakePosition {
+      BOTTOM,
+      TOP
+    }
+
 }

@@ -161,6 +161,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     BLVelocityVal = BLEncoder.getVelocity();
     BRVelocityVal = BREncoder.getVelocity();
 
+    robotDrive.feed();
+
   }
 
   @Override
