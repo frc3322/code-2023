@@ -14,23 +14,24 @@ import frc.robot.subsystems.Transfer;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+
 public class MoveElevatorCommand extends PIDCommand {
   
-  /** Creates a new MoveElevator. */
+  /* Creates a new MoveElevator. */
   public MoveElevatorCommand(Transfer transfer, ElevatorPosition targetPosition) {
   
     super(
       
-        // The controller that the command will use
-        new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd),
+        //The controller that the command will use
+      new PIDController(ElevatorConstants.kp, ElevatorConstants.ki, ElevatorConstants.kd),
         // This should return the measurement
-       transfer::getElevatorPosition,
+        ()->{return transfer.convertEncoderPosition(transfer.getElevatorPosition());},
         // This should return the setpoint (can also be a constant)
         transfer.convertEncoderPosition(targetPosition),
         // This uses the output
         output -> {
           transfer.setElevatorPower(output);
-        });
+  });
 
         addRequirements(transfer);
         SmartDashboard.putData(this.getController());

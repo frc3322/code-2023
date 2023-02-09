@@ -24,8 +24,12 @@ public final class Types {
     }
 
     public enum ElevatorPosition {
+
       BOTTOM,
-      TOP
+      TOP,
+      MIDDLE
+
+
     }
 
 }
