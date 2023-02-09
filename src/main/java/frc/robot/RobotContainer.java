@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.EjectGamePieceCommand;
 //import frc.robot.commands.SpinTransfer;
 import frc.robot.commands.IntakeGamePieceCommand;
+import frc.robot.commands.MoveElevatorCommand;
 
 
 
@@ -113,6 +114,10 @@ public class RobotContainer {
     secondaryController
     .leftBumper()
     .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(-0.1), () -> transfer.setBeltPower(0), transfer));
+
+    secondaryController
+    .a()
+    .onTrue(new MoveElevatorCommand(transfer, transfer.getDestination()));
 
   //   secondaryController
   //   .a()
