@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public final class Constants {
   public static class OperatorConstants {
@@ -27,15 +28,15 @@ public final class Constants {
     public static final int pivotIntake = 7;
 
     // Pneumatics Module
-    public static final int pneumaticsMod = 0;
+    public static final int pneumaticsMod = 1;
 
     // Outtake Pistons
-    public static final int BP = 16;
-    public static final int SP = 14;
+    public static final int clawExtend = 6;
+    public static final int clawRetract = 7;
 
     //Fourbar Pneumatics
-    public static final int extendFourbar = 18;
-    public static final int retractFourbar = 19;
+    public static final int extendFourbar = 0;
+    public static final int retractFourbar = 3;
 
     //transfer can
     public static final int transfer = 5;
@@ -71,7 +72,8 @@ public final class Constants {
   public static final class IntakeConstants{
     public static final double intakeInSpeed = 0.5;
     public static final double intakeOutSpeed = 0; 
-    public static final double armUpSpeed = 0.5;
+    public static final double armUpSpeed = 0.2;
+    public static final double armUpSlowSpeed = 0.1;
     public static final double armDownSpeed = 0; 
     public static final double beltForwardSpeed = 0.5;
     public static final double beltReverseSpeed = -0.5;
@@ -96,7 +98,8 @@ public final class Constants {
   public static final class IntakeZoneLimits{
     
     public static final double slowZoneStart = 0;
-    
+    public static final double topLimitOff = 0;
+    public static final double bottomLimitOff = 0;
     
   }
 

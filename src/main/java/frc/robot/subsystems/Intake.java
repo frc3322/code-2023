@@ -26,6 +26,7 @@ public class Intake extends SubsystemBase implements Loggable {
   private final DigitalInput proximitySensor = new DigitalInput(0);
 
   @Log private boolean proximitySensorValue;
+  @Log private double armpos;
   
   public Intake(){
     //default settings here, right?
@@ -59,8 +60,19 @@ public class Intake extends SubsystemBase implements Loggable {
 
     }
 
+
   public void setFlipperSpeed(double speed){
     motorArm.set(speed);
+  }
+
+  public double calculateIntakeFlipUp(){
+    if ((armEncoder.getPosition() > Constants.IntakeZoneLimits.topLimitOff)|| (armEncoder.getPosition() < Constants.IntakeZoneLimits.bottomLimitOff)){
+      return 0;
+    }else if(armEncoder.getPosition() > Constants.IntakeZoneLimits.slowZoneStart){
+      return Constants.IntakeConstants.armUpSlowSpeed;
+    }else{
+      return Constants.IntakeConstants.armUpSpeed;
+    }
   }
  
   public void spinIntake(double speed){
@@ -73,11 +85,15 @@ public class Intake extends SubsystemBase implements Loggable {
     motorTopRoller.stopMotor();
     motorBottomRoller.stopMotor();
   }
+  public void resetArmEncoder(){
+    armEncoder.setPosition(0);
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     proximitySensorValue = proximitySensor.get();
+    armpos = armEncoder.getPosition();
   }
 }
   
