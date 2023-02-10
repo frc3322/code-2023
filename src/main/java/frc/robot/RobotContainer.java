@@ -80,11 +80,11 @@ public class RobotContainer {
 
     driverController
       .x()
-      .whileTrue(new StartEndCommand (() -> intake.spinIntake(.6), () -> intake.stopSpin(), intake));
+      .whileTrue(new StartEndCommand (() -> intake.spinIntake(.8), () -> intake.stopSpin(), intake));
 
       driverController
       .a()
-      .whileTrue(new StartEndCommand (() -> intake.spinIntake(-.6), () -> intake.stopSpin(), intake));
+      .whileTrue(new StartEndCommand (() -> intake.spinIntake(-.8), () -> intake.stopSpin(), intake));
 
    
       //  driverController
@@ -106,12 +106,12 @@ public class RobotContainer {
 
     driverController
     .leftBumper()
-    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(.2);}, () -> {transfer.setElevatorPower(0);}, transfer));
+    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(.3);}, () -> {transfer.setElevatorPower(0);}, transfer));
 
    //up
     driverController
     .rightBumper()
-    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(-.2);}, () -> {transfer.setElevatorPower(0);}, transfer));
+    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(-.3);}, () -> {transfer.setElevatorPower(0);}, transfer));
 
     
     //secondary controller commands
