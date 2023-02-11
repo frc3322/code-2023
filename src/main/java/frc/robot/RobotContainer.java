@@ -87,6 +87,7 @@ public class RobotContainer {
       .whileTrue(new StartEndCommand (() -> intake.spinIntake(-.8), () -> intake.stopSpin(), intake));
 
 
+
      driverController
      .povDown()
      .onTrue(intake.flipDown());
@@ -108,14 +109,14 @@ public class RobotContainer {
      .y()
      .whileTrue(new StartEndCommand(()-> intake.setFlipperSpeed(-.2), ()-> intake.setFlipperSpeed(0), intake));
 
-  //   driverController
-  //   .leftBumper()
-  //   .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(.3);}, () -> {transfer.setElevatorPower(0);}, transfer));
+    driverController
+    .leftBumper()
+    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(.3);}, () -> {transfer.setElevatorPower(0);}, transfer));
 
-  //  //up
-  //   driverController
-  //   .rightBumper()
-  //   .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(-.3);}, () -> {transfer.setElevatorPower(0);}, transfer));
+   //up
+    driverController
+    .rightBumper()
+    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(-.3);}, () -> {transfer.setElevatorPower(0);}, transfer));
 
     
     //secondary controller commands
