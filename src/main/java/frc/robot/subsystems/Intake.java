@@ -4,22 +4,26 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.*;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Intake extends SubsystemBase implements Loggable {
   /** Creates a new Intake. */
-  private final CANSparkMax motorTopRoller = new CANSparkMax(Constants.CAN.tRoller, MotorType.kBrushless);
-  private final CANSparkMax motorBottomRoller = new CANSparkMax(Constants.CAN.bRoller, MotorType.kBrushless);
-  private final CANSparkMax motorArm = new CANSparkMax(Constants.CAN.pivotIntake, MotorType.kBrushless);
+  private final CANSparkMax motorTopRoller = new CANSparkMax(CAN.tRoller, MotorType.kBrushless);
+  private final CANSparkMax motorBottomRoller = new CANSparkMax(CAN.bRoller, MotorType.kBrushless);
+  private final CANSparkMax motorArm = new CANSparkMax(CAN.pivotIntake, MotorType.kBrushless);
   //motor arm will need an encoder or limit switch to determine where to stop
   private final RelativeEncoder armEncoder = motorArm.getEncoder();
   // intake will need a proximity sensor to tell if there is a game piece inside
@@ -38,32 +42,31 @@ public class Intake extends SubsystemBase implements Loggable {
     motorBottomRoller.burnFlash();
     motorArm.burnFlash();
   }
+
+  public Boolean atTop(){
+    return armEncoder.getPosition() < 0.1;
+  }    
   
-  public void flipDown() {
-    //move arm to down/intake position
-    while (proximitySensor.get()==true){
-      setFlipperSpeed(Constants.IntakeConstants.armDownSpeed);
-    }
-    motorArm.stopMotor();
-  }
+  public Boolean atBottom(){
+    return armEncoder.getPosition() > IntakeZoneLimits.bottomLimitOff;
+  }  
+  
 
-
-  public void flipUp() {
-    //move arm to up/transfer/elevator position. encoders don't do get. Switching this to while proximity is false, may need to be changed later.
-    /*while (armEncoder.get()==true){
-      setFlipperSpeed(Constants.IntakeConstants.armUpSpeed);
-    }
-    motorArm.stopMotor();*/
-    while (proximitySensor.get()==true){
-      setFlipperSpeed(Constants.IntakeConstants.armUpSpeed);
+    public Command flipUp(){
+      return new RunCommand(
+        () -> setFlipperSpeed(calculateIntakeFlipUp())
+      )
+      .until(()->atTop());
+      
     }
 
-    }
-
-    public void encoderFlipUp(){
-      while(armEncoder.getPosition() > 0.1){
-        motorArm.set(calculateIntakeFlipUp());
-      }
+    
+    public Command flipDown(){
+      return new RunCommand(
+        () -> setFlipperSpeed(calculateIntakeFlipDown())
+      )
+      .until(()->atBottom());
+      
     }
 
 
@@ -72,12 +75,20 @@ public class Intake extends SubsystemBase implements Loggable {
   }
 
   public double calculateIntakeFlipUp(){
-    if ((armEncoder.getPosition() < Constants.IntakeZoneLimits.topLimitOff)|| (armEncoder.getPosition() > Constants.IntakeZoneLimits.bottomLimitOff)){
+    if ((armEncoder.getPosition() < IntakeZoneLimits.topLimitOff)){
       return 0;
-    }else if(armEncoder.getPosition() < Constants.IntakeZoneLimits.slowZoneStart){
-      return Constants.IntakeConstants.armUpSlowSpeed;
+    }else if(armEncoder.getPosition() < IntakeZoneLimits.slowZoneStart){
+      return IntakeConstants.armUpSlowSpeed;
     }else{
-      return Constants.IntakeConstants.armUpSpeed;
+      return IntakeConstants.armUpSpeed;
+    }
+  }
+
+  public double calculateIntakeFlipDown(){
+    if ((armEncoder.getPosition() > IntakeZoneLimits.bottomLimitOff)){
+      return 0;  
+    }else{
+      return IntakeConstants.armDownSpeed;
     }
   }
  

@@ -86,18 +86,18 @@ public class RobotContainer {
       .a()
       .whileTrue(new StartEndCommand (() -> intake.spinIntake(-.8), () -> intake.stopSpin(), intake));
 
-   
-      //  driverController
-    //  .a()
-    //  .whileTrue(new EjectGamePieceCommand(transfer, intake));
 
      driverController
      .povDown()
-     .onTrue(new InstantCommand(()->intake.resetArmEncoder()));
+     .onTrue(intake.flipDown());
 
      driverController
      .povUp()
-     .onTrue(new InstantCommand(()->intake.encoderFlipUp()));
+     .onTrue(intake.flipUp());
+
+     driverController
+     .povLeft()
+     .onTrue(new InstantCommand(() -> intake.resetArmEncoder()));
   
      driverController
      .b()
