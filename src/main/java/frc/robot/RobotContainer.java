@@ -94,6 +94,10 @@ public class RobotContainer {
      driverController
      .povDown()
      .onTrue(new InstantCommand(()->intake.resetArmEncoder()));
+
+     driverController
+     .povUp()
+     .onTrue(new InstantCommand(()->intake.encoderFlipUp()));
   
      driverController
      .b()
@@ -104,14 +108,14 @@ public class RobotContainer {
      .y()
      .whileTrue(new StartEndCommand(()-> intake.setFlipperSpeed(-.2), ()-> intake.setFlipperSpeed(0), intake));
 
-    driverController
-    .leftBumper()
-    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(.3);}, () -> {transfer.setElevatorPower(0);}, transfer));
+  //   driverController
+  //   .leftBumper()
+  //   .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(.3);}, () -> {transfer.setElevatorPower(0);}, transfer));
 
-   //up
-    driverController
-    .rightBumper()
-    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(-.3);}, () -> {transfer.setElevatorPower(0);}, transfer));
+  //  //up
+  //   driverController
+  //   .rightBumper()
+  //   .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(-.3);}, () -> {transfer.setElevatorPower(0);}, transfer));
 
     
     //secondary controller commands
@@ -133,13 +137,13 @@ public class RobotContainer {
 
    
 
-    secondaryController
-    .povDown()
-    .onTrue(new InstantCommand(() -> fourbar.fourbarDown()));
+    // secondaryController
+    // .povDown()
+    // .onTrue(new InstantCommand(() -> fourbar.fourbarDown()));
 
-    secondaryController
-    .povUp()
-    .onTrue(new InstantCommand(() -> fourbar.fourbarUp()));
+    // secondaryController
+    // .povUp()
+    // .onTrue(new InstantCommand(() -> fourbar.fourbarUp()));
    
   }
 

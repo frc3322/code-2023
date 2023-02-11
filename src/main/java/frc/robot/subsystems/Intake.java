@@ -60,15 +60,21 @@ public class Intake extends SubsystemBase implements Loggable {
 
     }
 
+    public void encoderFlipUp(){
+      while(armEncoder.getPosition() > 0.1){
+        motorArm.set(calculateIntakeFlipUp());
+      }
+    }
+
 
   public void setFlipperSpeed(double speed){
     motorArm.set(speed);
   }
 
   public double calculateIntakeFlipUp(){
-    if ((armEncoder.getPosition() > Constants.IntakeZoneLimits.topLimitOff)|| (armEncoder.getPosition() < Constants.IntakeZoneLimits.bottomLimitOff)){
+    if ((armEncoder.getPosition() < Constants.IntakeZoneLimits.topLimitOff)|| (armEncoder.getPosition() > Constants.IntakeZoneLimits.bottomLimitOff)){
       return 0;
-    }else if(armEncoder.getPosition() > Constants.IntakeZoneLimits.slowZoneStart){
+    }else if(armEncoder.getPosition() < Constants.IntakeZoneLimits.slowZoneStart){
       return Constants.IntakeConstants.armUpSlowSpeed;
     }else{
       return Constants.IntakeConstants.armUpSpeed;
