@@ -83,11 +83,11 @@ public class RobotContainer {
 
     driverController
       .x()
-      .whileTrue(new StartEndCommand (() -> intake.spinIntake(.8), () -> intake.stopSpin(), intake));
+      .whileTrue(new StartEndCommand (() -> intake.spinIntake(.4), () -> intake.stopSpin(), intake));
 
       driverController
       .a()
-      .whileTrue(new StartEndCommand (() -> intake.spinIntake(-.8), () -> intake.stopSpin(), intake));
+      .whileTrue(new StartEndCommand (() -> intake.spinIntake(-.4), () -> intake.stopSpin(), intake));
 
 
 
