@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //mport frc.robot.Elevator;
 
 public class Transfer extends SubsystemBase {
-  // private final DigitalInput transferInProximitySensor = new DigitalInput(DIO.transferInProximitySensor);
-  // private final DigitalInput transferOutProximitySensor = new DigitalInput(DIO.transferOutProximitySensor);
+  private final DigitalInput transferInProximitySensor = new DigitalInput(DIO.transferInProximitySensor);
+  private final DigitalInput transferOutProximitySensor = new DigitalInput(DIO.transferOutProximitySensor);
 
 
   /** Creates a new Transfer. */
@@ -36,22 +36,22 @@ public class Transfer extends SubsystemBase {
   //   return !isTransferEmpty();
   // }
 
-  // // private boolean isTransferEmpty() {
-  // //   return transferInProximitySensor.get() && transferOutProximitySensor.get();
-  // // }
+  private boolean isTransferEmpty() {
+    return transferInProximitySensor.get() && transferOutProximitySensor.get();
+  }
 
-  // public boolean shouldRunBelt() {
-  //   //If there is nothing in transfer, return false immediately
-  //   if (isTransferEmpty()) {
-  //     return false;
-  //   }
-  //   //If first sensor is empty and second sensor is not empty, return false immediately
-  //   if (transferInProximitySensor.get() && !transferOutProximitySensor.get()) {
-  //     return false;
-  //   }
-  //   //Assumption: If both sensors are occupied, run the belt
-  //   return true;
-  // }
+  public boolean shouldRunBelt() {
+    //If there is nothing in transfer, return false immediately
+    if (isTransferEmpty()) {
+      return false;
+    }
+    //If first sensor is empty and second sensor is not empty, return false immediately
+    if (transferInProximitySensor.get() && !transferOutProximitySensor.get()) {
+      return false;
+    }
+    //Assumption: If both sensors are occupied, run the belt
+    return true;
+  }
 
   //check if elevator is up or down. Could probably be a lambda in toElevator
   public boolean getElevator() {
