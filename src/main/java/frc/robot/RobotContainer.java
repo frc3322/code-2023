@@ -12,6 +12,7 @@ import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Claw;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -36,6 +37,8 @@ public class RobotContainer {
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
   private final Transfer transfer = new Transfer();
+
+  private Field2d fieldSim = new Field2d();
   
  
   private final CommandXboxController driverController = new CommandXboxController(0);
