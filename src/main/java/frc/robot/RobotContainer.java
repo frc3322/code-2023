@@ -125,11 +125,11 @@ public class RobotContainer {
     //secondary controller commands
     secondaryController
     .rightBumper()
-    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(0.25), () -> transfer.setBeltPower(0), transfer));
+    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(0.4), () -> transfer.setBeltPower(0), transfer));
 
     secondaryController
     .leftBumper()
-    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(-0.25), () -> transfer.setBeltPower(0), transfer));
+    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(-0.4), () -> transfer.setBeltPower(0), transfer));
 
     secondaryController
     .a()
