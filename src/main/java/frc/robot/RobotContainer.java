@@ -14,6 +14,7 @@ import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.EjectGamePieceCommand;
 //import frc.robot.commands.SpinTransfer;
 import frc.robot.commands.IntakeGamePieceCommand;
+import frc.robot.Constants.*;
 
 
 
@@ -37,8 +39,6 @@ public class RobotContainer {
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
   private final Transfer transfer = new Transfer();
-
-  private Field2d fieldSim = new Field2d();
   
  
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -83,13 +83,19 @@ public class RobotContainer {
 
     driverController
       .x()
-      .whileTrue(new StartEndCommand (() -> intake.spinIntake(.4), () -> intake.stopSpin(), intake));
+      .whileTrue(new StartEndCommand (() -> intake.spinIntake(IntakeConstants.intakeInSpeed), () -> intake.stopSpin(), intake));
 
       driverController
       .a()
-      .whileTrue(new StartEndCommand (() -> intake.spinIntake(-.4), () -> intake.stopSpin(), intake));
+      .whileTrue(new StartEndCommand (() -> intake.spinIntake(-IntakeConstants.intakeInSpeed), () -> intake.stopSpin(), intake));
 
+      driverController
+      .b()
+      .whileTrue(new StartEndCommand (() -> intake.setFlipperSpeed(0.2), () -> intake.setFlipperSpeed(0), intake));
 
+      driverController
+      .y()
+      .whileTrue(new StartEndCommand (() -> intake.setFlipperSpeed(-0.2), () -> intake.setFlipperSpeed(0), intake));
 
      driverController
      .povDown()
@@ -102,34 +108,25 @@ public class RobotContainer {
      driverController
      .povLeft()
      .onTrue(new InstantCommand(() -> intake.resetArmEncoder()));
-  
-     driverController
-     .b()
-     .whileTrue(new StartEndCommand(() -> intake.setFlipperSpeed(.2), () -> intake.setFlipperSpeed(0), intake));
-
-    //up
-     driverController
-     .y()
-     .whileTrue(new StartEndCommand(()-> intake.setFlipperSpeed(-.2), ()-> intake.setFlipperSpeed(0), intake));
 
     driverController
     .leftBumper()
-    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(.3);}, () -> {transfer.setElevatorPower(0);}, transfer));
+    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(ElevatorConstants.elevatorSpeed);}, () -> {transfer.setElevatorPower(0);}, transfer));
 
    //up
     driverController
     .rightBumper()
-    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(-.3);}, () -> {transfer.setElevatorPower(0);}, transfer));
+    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(-ElevatorConstants.elevatorSpeed);}, () -> {transfer.setElevatorPower(0);}, transfer).until(transfer.elevatorAtTop()));
 
     
     //secondary controller commands
     secondaryController
     .rightBumper()
-    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(0.4), () -> transfer.setBeltPower(0), transfer));
+    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(TransferConstants.transerSpeed), () -> transfer.setBeltPower(0), transfer));
 
     secondaryController
     .leftBumper()
-    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(-0.4), () -> transfer.setBeltPower(0), transfer));
+    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(-TransferConstants.transerSpeed), () -> transfer.setBeltPower(0), transfer));
 
     secondaryController
     .a()
@@ -141,13 +138,13 @@ public class RobotContainer {
 
    
 
-    // secondaryController
-    // .povDown()
-    // .onTrue(new InstantCommand(() -> fourbar.fourbarDown()));
+    secondaryController
+    .povDown()
+    .onTrue(new InstantCommand(() -> fourbar.fourbarDown()));
 
-    // secondaryController
-    // .povUp()
-    // .onTrue(new InstantCommand(() -> fourbar.fourbarUp()));
+    secondaryController
+    .povUp()
+    .onTrue(new InstantCommand(() -> fourbar.fourbarUp()));
    
   }
 

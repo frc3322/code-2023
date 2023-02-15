@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -11,6 +13,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.DIO;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Types.ElevatorPosition;
+import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //mport frc.robot.Elevator;
@@ -18,10 +21,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Transfer extends SubsystemBase {
   // private final DigitalInput transferInProximitySensor = new DigitalInput(DIO.transferInProximitySensor);
   // private final DigitalInput transferOutProximitySensor = new DigitalInput(DIO.transferOutProximitySensor);
-
+  //private final DigitalInput elevatorTopProx = new DigitalInput(DIO.elevatorTop);
+ 
 
   /** Creates a new Transfer. */
   public static final CANSparkMax beltMotor = new CANSparkMax(Constants.CAN.transfer, MotorType.kBrushless);
+  public final CANSparkMax elevatorMotor = new CANSparkMax(Constants.CAN.elevatorMotor, MotorType.kBrushless);
+
+  private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
+
+  @Log
+  private double elevatorPos = elevatorEncoder.getPosition();
+
+
   public Transfer() {
     //Initialize Belt
     beltMotor.setIdleMode(IdleMode.kBrake);
@@ -53,32 +65,29 @@ public class Transfer extends SubsystemBase {
   //   return true;
   // }
 
-  //check if elevator is up or down. Could probably be a lambda in toElevator
-  public boolean getElevator() {
-    //Elevator.getPlace(); just a placholer for now
-    return false;
-  }
- 
-  public void setBeltPower(double power){
-    beltMotor.set(power);
-  }
-
-
-  public void stop() {
-    beltMotor.stopMotor();
-  }
-
+  
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    elevatorPos = elevatorEncoder.getPosition();
+    if(elevatorAtTop().getAsBoolean()){
+      elevatorPos = 0;
+    }
+
   }
-    //ELEVATOR CODE
-  public final CANSparkMax elevatorMotor = new CANSparkMax(Constants.CAN.elevatorMotor, MotorType.kBrushless);
-    //will need limit switch or encoder to stop elevator when it reaches top/bottom. Encoder may be easier because might need 2 limit switches?
-    private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
-    //DigitalInput toplimitSwitch = new DigitalInput(0);
-    //DigitalInput bottomlimitSwitch = new DigitalInput(1);
+
+  public void setBeltPower(double power){
+    beltMotor.set(power);
+  }
+
+  public BooleanSupplier elevatorAtTop(){
+    return ()->false;
+  }
+
+  public BooleanSupplier elevatorShouldRun(){
+    return ()-> (!elevatorAtTop().getAsBoolean()) && (!(elevatorPos > ElevatorConstants.kBottomEncoderPosition));
+  }
   
     public void setElevatorPower(double power)
     {
@@ -98,6 +107,6 @@ public class Transfer extends SubsystemBase {
 
     public double getElevatorPosition(){
         // gets the current elevator encoder position
-        return elevatorEncoder.getPosition();
+        return elevatorPos;
     }
 }

@@ -60,18 +60,18 @@ public final class Constants {
   }
 
   public static final class ElevatorConstants {
-    public static final double kBottomEncoderPosition = 0;
-    public static final double kTopEncoderPosition = 1;
+    public static final double kBottomEncoderPosition = 2;
+    public static final double kTopEncoderPosition = 0;
     public static final double kp = 0;
     public static final double ki = 0;
     public static final double kd = 0;
+    public static final double elevatorSpeed = .5;
 
     
   }
 
   public static final class IntakeConstants{
-    public static final double intakeInSpeed = 0.5;
-    public static final double intakeOutSpeed = 0; 
+    public static final double intakeInSpeed = 0.4;
     public static final double armUpSpeed = -0.2;
     public static final double armUpSlowSpeed = -0.1;
     public static final double armDownSpeed = 0.1; 
@@ -79,6 +79,10 @@ public final class Constants {
     public static final double beltReverseSpeed = -0.5;
 
 
+  }
+
+  public static final class TransferConstants{
+    public static final double transerSpeed = 0.8;
   }
 
   public static final class PIDConstraints{
@@ -91,7 +95,8 @@ public final class Constants {
   }
 
   public static final class DIO {
-    public static final int transferInProximitySensor = 0;
+    public static final int transferInProximitySensor = 1;
+    public static final int elevatorTop = 0;
     public static final int transferOutProximitySensor = 2;
   }
 
