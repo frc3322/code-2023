@@ -8,6 +8,7 @@ package frc.robot.commands;
 import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.robot.Constants.*;
 
 public class IntakeGamePieceCommand extends StartEndCommand {
   public IntakeGamePieceCommand(Transfer transfer, Intake intake) {
@@ -16,8 +17,7 @@ public class IntakeGamePieceCommand extends StartEndCommand {
         // transfer.setBeltPower(double);
         //will need to add arm positioning
         intake.flipDown();
-        transfer.setBeltPower(0.3);
-        intake.spinIntake(0.3);
+        intake.spinIntake(IntakeConstants.beltForwardSpeed);
        }, 
        () -> {
         //restore arm position

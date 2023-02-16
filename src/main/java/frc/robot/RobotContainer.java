@@ -87,7 +87,7 @@ public class RobotContainer {
 
     driverController
       .x()
-      .whileTrue(new StartEndCommand (() -> intake.spinIntake(IntakeConstants.intakeInSpeed), () -> intake.stopSpin(), intake));
+      .whileTrue(new IntakeGamePieceCommand(transfer, intake));
 
       driverController
       .a()
