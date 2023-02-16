@@ -46,6 +46,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     CommandScheduler.getInstance().run();
     m_robotContainer.updateLogger();
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
