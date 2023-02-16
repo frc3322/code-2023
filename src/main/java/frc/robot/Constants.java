@@ -19,8 +19,7 @@ public final class Constants {
     // Elevator
 
     public static final int elevatorMotor = 36;
-    public static final int topLimit = 0;
-    public static final int bottomLimit = 1;
+    
     
     //Intake Motors
     public static final int tRoller = 13;
@@ -95,9 +94,9 @@ public final class Constants {
   }
 
   public static final class DIO {
-    public static final int transferInProximitySensor = 1;
+    public static final int transferInProximitySensor = 3;
     public static final int elevatorTop = 0;
-    public static final int transferOutProximitySensor = 2;
+    public static final int transferOutProximitySensor = 1;
   }
 
   public static final class IntakeZoneLimits{

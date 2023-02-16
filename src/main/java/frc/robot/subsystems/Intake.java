@@ -27,9 +27,9 @@ public class Intake extends SubsystemBase implements Loggable {
   //motor arm will need an encoder or limit switch to determine where to stop
   private final RelativeEncoder armEncoder = motorArm.getEncoder();
   // intake will need a proximity sensor to tell if there is a game piece inside
-  private final DigitalInput proximitySensor = new DigitalInput(0);
+ 
 
-  @Log private boolean proximitySensorValue;
+  
   @Log private double armpos;
   
   public Intake(){
@@ -109,7 +109,7 @@ public class Intake extends SubsystemBase implements Loggable {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    proximitySensorValue = proximitySensor.get();
+    
     armpos = armEncoder.getPosition();
   }
 }

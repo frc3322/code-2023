@@ -11,6 +11,9 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Claw;
 import io.github.oblarg.oblog.Logger;
+
+import javax.swing.text.html.HTMLDocument.BlockElement;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -78,6 +81,7 @@ public class RobotContainer {
 
   
     drivetrain.setDefaultCommand(driveCommand);
+    transfer.setDefaultCommand(transfer.beltRunCommand());
 
     //driver controller (0) commands
 

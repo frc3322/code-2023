@@ -12,16 +12,19 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import frc.robot.Constants.DIO;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.TransferConstants;
 import frc.robot.Types.ElevatorPosition;
 import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //mport frc.robot.Elevator;
 
 public class Transfer extends SubsystemBase {
-  // private final DigitalInput transferInProximitySensor = new DigitalInput(DIO.transferInProximitySensor);
-  // private final DigitalInput transferOutProximitySensor = new DigitalInput(DIO.transferOutProximitySensor);
-  //private final DigitalInput elevatorTopProx = new DigitalInput(DIO.elevatorTop);
+  private final DigitalInput transferInProximitySensor = new DigitalInput(DIO.transferInProximitySensor);
+  private final DigitalInput transferOutProximitySensor = new DigitalInput(DIO.transferOutProximitySensor);
+  private final DigitalInput elevatorTopProx = new DigitalInput(DIO.elevatorTop);
  
 
   /** Creates a new Transfer. */
@@ -44,28 +47,6 @@ public class Transfer extends SubsystemBase {
     elevatorMotor.burnFlash();
   }
 
-  // private boolean isTransferOccupied() {
-  //   return !isTransferEmpty();
-  // }
-
-  // private boolean isTransferEmpty() {
-  //   return transferInProximitySensor.get() && transferOutProximitySensor.get();
-  // }
-
-  // public boolean shouldRunBelt() {
-  //   //If there is nothing in transfer, return false immediately
-  //   if (isTransferEmpty()) {
-  //     return false;
-  //   }
-  //   //If first sensor is empty and second sensor is not empty, return false immediately
-  //   if (transferInProximitySensor.get() && !transferOutProximitySensor.get()) {
-  //     return false;
-  //   }
-  //   //Assumption: If both sensors are occupied, run the belt
-  //   return true;
-  // }
-
-  
 
   @Override
   public void periodic() {
@@ -75,6 +56,37 @@ public class Transfer extends SubsystemBase {
       elevatorPos = 0;
     }
 
+  }
+
+  private boolean isTransferOccupied() {
+    return !isTransferEmpty();
+  }
+
+  private boolean isTransferEmpty() {
+    return transferInProximitySensor.get() && transferOutProximitySensor.get();
+  }
+
+  public boolean shouldRunBelt() {
+    //If there is nothing in transfer, return false immediately
+    if (isTransferEmpty()) {
+      return false;
+    }
+    //If first sensor is empty and second sensor is not empty, return false immediately
+    if (transferInProximitySensor.get() && !transferOutProximitySensor.get()) {
+      return false;
+    }
+    //Assumption: If both sensors are occupied, run the belt
+    return true;
+  }
+
+  public Command beltRunCommand(){
+    return new RunCommand(() -> {
+      if(shouldRunBelt()){
+        setBeltPower(TransferConstants.transerSpeed);
+      }else{
+        setBeltPower(0);
+      }
+    }, this);
   }
 
   public void setBeltPower(double power){
