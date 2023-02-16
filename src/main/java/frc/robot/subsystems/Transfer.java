@@ -58,11 +58,18 @@ public class Transfer extends SubsystemBase {
 
   }
 
-  private boolean isTransferOccupied() {
-    //checks that both are occupied
-    return (!transferInProximitySensor.get() && !transferOutProximitySensor.get());
+  private boolean isFrontOccupied() {
+    //checks that first is occupied
+    return (!transferInProximitySensor.get());
+
+
+
     
     //return !isTransferEmpty();
+  }
+  private boolean isBackOccupied(){
+    //checks that back is not detecting
+    return (!transferOutProximitySensor.get());
   }
 
   // private boolean isTransferEmpty() {
@@ -82,7 +89,10 @@ public class Transfer extends SubsystemBase {
     // //Assumption: If both sensors are occupied, run the belt
     // return true;
     //if transfer is occupied, return true
-    if (isTransferOccupied()) {
+    // if (isBackOccupied()){
+    //   return false;
+    // }
+    if (isFrontOccupied()) {
       return true;
     }
     else {
