@@ -144,15 +144,53 @@ public class Transfer extends SubsystemBase {
 
     }
     public void elevatorStop(){
-      if ((toplimitSwitch.get()==true) || (bottomlimitSwitch.get()==true) || (convertEncoderPosition(getElevatorPosition()) == ElevatorConstants.kBottomEncoderPosition)){
+      if (
+        /*if elevator is moving in positive direction (assuming up is positive) 
+        and either the limit switch or encoder value is tripped*/
+        ((elevatorMotor.get()<0) &&
+        (toplimitSwitch.get()==true) || 
+        (convertEncoderPosition(getElevatorPosition())== ElevatorConstants.kTopEncoderPosition))
+        ||
+        /*or if the elevator is going in negative direction (if down negative)
+         and limit switch or encoder value is tripped*/
+        ((elevatorMotor.get()>0) &&
+        (bottomlimitSwitch.get()==true) || 
+        (convertEncoderPosition(getElevatorPosition()) == ElevatorConstants.kBottomEncoderPosition))
+        ){
+          //turn off motor
         elevatorMotor.stopMotor();
         /*elevatorEncoder.reset();
         elevatorEncoder.setReverseDirection(true);*/
-
       }
-
-
     }
+
+
+    public Command ElevatorStopCommand(){
+      return new RunCommand(()->{
+
+        if (
+        /*if elevator is moving in positive direction (assuming up is positive) 
+        and either the limit switch or encoder value is tripped*/
+        ((elevatorMotor.get()>0) &&
+        (toplimitSwitch.get()==true) || 
+        (convertEncoderPosition(getElevatorPosition())== ElevatorConstants.kTopEncoderPosition))
+        ||
+        /*or if the elevator is going in negative direction (if down negative)
+         and limit switch or encoder value is tripped*/
+        ((elevatorMotor.get()<0) &&
+        (bottomlimitSwitch.get()==true) || 
+        (convertEncoderPosition(getElevatorPosition()) == ElevatorConstants.kBottomEncoderPosition))
+        ){
+          elevatorMotor.stopMotor();
+        }
+      }
+      
+      
+      )
+    }
+
+
+
     public ElevatorPosition getDestination(){
       ElevatorPosition currentPosition=getElevatorPosition();
       if (currentPosition==ElevatorPosition.BOTTOM){

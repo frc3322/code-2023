@@ -64,6 +64,8 @@ public final class Constants {
 
 //the idea of the change is that top and bottom are reversible, so only one k-constants should be needed for both
    // public static final double kEdgeEncoderPosition = 1;
+
+   
     public static final double kp = 0;
     public static final double ki = 0;
     public static final double kd = 0;

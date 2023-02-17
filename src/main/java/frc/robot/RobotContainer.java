@@ -76,6 +76,8 @@ public class RobotContainer {
 
   
     drivetrain.setDefaultCommand(driveCommand);
+    transfer.setDefaultCommand(transfer.ElevatorStopCommand());
+
 
     //driver controller (0) commands
 
