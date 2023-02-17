@@ -25,6 +25,7 @@ public class Transfer extends SubsystemBase {
   private final DigitalInput transferInProximitySensor = new DigitalInput(DIO.transferInProximitySensor);
   private final DigitalInput transferOutProximitySensor = new DigitalInput(DIO.transferOutProximitySensor);
   private final DigitalInput elevatorTopProx = new DigitalInput(DIO.elevatorTop);
+  private final DigitalInput elevatorBottomProx = new DigitalInput(DIO.elevatorBottom);
  
 
   /** Creates a new Transfer. */
@@ -101,13 +102,14 @@ public class Transfer extends SubsystemBase {
   }
 
   public Command beltRunCommand(){
-    return new RunCommand(() -> {
-      if(shouldRunBelt()){
-        setBeltPower(TransferConstants.transerSpeed);
-      }else{
-        setBeltPower(0);
-      }
-    }, this);
+   return new RunCommand(() ->{
+    if(isFrontOccupied()){
+      setBeltPower(TransferConstants.transerSpeed);
+    }
+    if(isBackOccupied()){
+      setBeltPower(0);
+    }
+   }, this);
   }
 
   public void setBeltPower(double power){
@@ -115,11 +117,15 @@ public class Transfer extends SubsystemBase {
   }
 
   public BooleanSupplier elevatorAtTop(){
-    return ()->false;
+    return ()-> !elevatorTopProx.get();
   }
 
-  public BooleanSupplier elevatorShouldRun(){
-    return ()-> (!elevatorAtTop().getAsBoolean()) && (!(elevatorPos > ElevatorConstants.kBottomEncoderPosition));
+  public BooleanSupplier elevatorAtBottom(){
+    return ()-> !elevatorBottomProx.get();
+  }
+
+  public BooleanSupplier elevatorShouldntRun(){
+    return ()-> (elevatorAtTop().getAsBoolean()) || (elevatorAtBottom().getAsBoolean());
   }
   
     public void setElevatorPower(double power)

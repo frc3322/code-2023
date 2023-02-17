@@ -81,7 +81,7 @@ public class RobotContainer {
 
   
     drivetrain.setDefaultCommand(driveCommand);
-    transfer.setDefaultCommand(transfer.beltRunCommand());
+   // transfer.setDefaultCommand(transfer.beltRunCommand());
 
     //driver controller (0) commands
 
@@ -115,12 +115,14 @@ public class RobotContainer {
 
     driverController
     .leftBumper()
-    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(ElevatorConstants.elevatorSpeed);}, () -> {transfer.setElevatorPower(0);}, transfer));
+    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(ElevatorConstants.elevatorSpeed);}, () -> {transfer.setElevatorPower(0);}, transfer)
+    );
 
    //up
     driverController
     .rightBumper()
-    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(-ElevatorConstants.elevatorSpeed);}, () -> {transfer.setElevatorPower(0);}, transfer).until(transfer.elevatorAtTop()));
+    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(-ElevatorConstants.elevatorSpeed);}, () -> {transfer.setElevatorPower(0);}, transfer).until(transfer.elevatorAtTop())
+    );
 
     
     //secondary controller commands

@@ -70,7 +70,7 @@ public final class Constants {
   }
 
   public static final class IntakeConstants{
-    public static final double intakeInSpeed = 0.4;
+    public static final double intakeInSpeed = 0.8;
     public static final double armUpSpeed = -0.2;
     public static final double armUpSlowSpeed = -0.1;
     public static final double armDownSpeed = 0.1; 
@@ -94,8 +94,9 @@ public final class Constants {
   }
 
   public static final class DIO {
-    public static final int transferInProximitySensor = 3;
+    public static final int transferInProximitySensor = 2;
     public static final int elevatorTop = 0;
+    public static final int elevatorBottom = 3;
     public static final int transferOutProximitySensor = 1;
   }
 
