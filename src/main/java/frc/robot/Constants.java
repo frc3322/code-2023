@@ -71,9 +71,9 @@ public final class Constants {
 
   public static final class IntakeConstants{
     public static final double intakeInSpeed = 0.8;
-    public static final double armUpSpeed = -0.2;
-    public static final double armUpSlowSpeed = -0.1;
-    public static final double armDownSpeed = 0.1; 
+    public static final double armUpSpeed = -0.3;
+    public static final double armUpSlowSpeed = -0.2;
+    public static final double armDownSpeed = 0.2; 
     public static final double beltForwardSpeed = 0.5;
     public static final double beltReverseSpeed = -0.5;
 
@@ -81,7 +81,7 @@ public final class Constants {
   }
 
   public static final class TransferConstants{
-    public static final double transerSpeed = 0.8;
+    public static final double transferSpeed = 0.8;
   }
 
   public static final class PIDConstraints{

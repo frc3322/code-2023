@@ -21,7 +21,7 @@ public class EjectGamePieceCommand extends StartEndCommand {
        },   // Extend intake arm and spin intake motors away from robot
        () -> {
         //restore arm position
-        intake.stopSpin();
+        intake.spinIntake(0);;
         intake.flipUp();
        },
        transfer, intake);  // Uses intake subsystem

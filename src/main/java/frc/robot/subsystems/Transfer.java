@@ -14,14 +14,15 @@ import frc.robot.Constants.DIO;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.TransferConstants;
 import frc.robot.Types.ElevatorPosition;
+import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-//mport frc.robot.Elevator;
 
-public class Transfer extends SubsystemBase {
+
+public class Transfer extends SubsystemBase implements Loggable{
   private final DigitalInput transferInProximitySensor = new DigitalInput(DIO.transferInProximitySensor);
   private final DigitalInput transferOutProximitySensor = new DigitalInput(DIO.transferOutProximitySensor);
   private final DigitalInput elevatorTopProx = new DigitalInput(DIO.elevatorTop);
@@ -59,15 +60,13 @@ public class Transfer extends SubsystemBase {
 
   }
 
+  @Log
   private boolean isFrontOccupied() {
     //checks that first is occupied
     return (!transferInProximitySensor.get());
-
-
-
-    
-    //return !isTransferEmpty();
   }
+
+  @Log
   private boolean isBackOccupied(){
     //checks that back is not detecting
     return (!transferOutProximitySensor.get());
@@ -104,7 +103,7 @@ public class Transfer extends SubsystemBase {
   public Command beltRunCommand(){
    return new RunCommand(() ->{
     if(isFrontOccupied()){
-      setBeltPower(TransferConstants.transerSpeed);
+      setBeltPower(TransferConstants.transferSpeed);
     }
     if(isBackOccupied()){
       setBeltPower(0);

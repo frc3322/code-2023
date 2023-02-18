@@ -81,17 +81,19 @@ public class RobotContainer {
 
   
     drivetrain.setDefaultCommand(driveCommand);
-   // transfer.setDefaultCommand(transfer.beltRunCommand());
+    transfer.setDefaultCommand(transfer.beltRunCommand());
 
     //driver controller (0) commands
 
     driverController
       .x()
-      .whileTrue(new IntakeGamePieceCommand(transfer, intake));
+      .whileTrue(intake.flipDownSpin())
+      .whileFalse(intake.flipUpStop());
+
 
       driverController
       .a()
-      .whileTrue(new StartEndCommand (() -> intake.spinIntake(-IntakeConstants.intakeInSpeed), () -> intake.stopSpin(), intake));
+      .whileTrue(new StartEndCommand (() -> intake.spinIntake(-IntakeConstants.intakeInSpeed), () -> intake.spinIntake(0), intake));
 
       driverController
       .b()
@@ -128,11 +130,11 @@ public class RobotContainer {
     //secondary controller commands
     secondaryController
     .rightBumper()
-    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(TransferConstants.transerSpeed), () -> transfer.setBeltPower(0), transfer));
+    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(TransferConstants.transferSpeed), () -> transfer.setBeltPower(0), transfer));
 
     secondaryController
     .leftBumper()
-    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(-TransferConstants.transerSpeed), () -> transfer.setBeltPower(0), transfer));
+    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(-TransferConstants.transferSpeed), () -> transfer.setBeltPower(0), transfer));
 
     secondaryController
     .a()

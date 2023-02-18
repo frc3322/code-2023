@@ -31,6 +31,7 @@ public class Intake extends SubsystemBase implements Loggable {
 
   
   @Log private double armpos;
+  @Log private double armPower;
   
   public Intake(){
     //default settings here, right?
@@ -43,10 +44,12 @@ public class Intake extends SubsystemBase implements Loggable {
     motorArm.burnFlash();
   }
 
+  @Log
   public Boolean atTop(){
     return armEncoder.getPosition() < 0.1;
   }    
   
+  @Log
   public Boolean atBottom(){
     return armEncoder.getPosition() > IntakeZoneLimits.bottomLimitOff;
   }  
@@ -55,6 +58,24 @@ public class Intake extends SubsystemBase implements Loggable {
     public Command flipUp(){
       return new RunCommand(
         () -> setFlipperSpeed(calculateIntakeFlipUp())
+      )
+      .until(()->atTop());
+      
+    }
+
+    public Command flipDownSpin(){
+      return new RunCommand(
+        () -> {setFlipperSpeed(calculateIntakeFlipDown());
+        spinIntake(IntakeConstants.intakeInSpeed);}
+      )
+      .until(()->atBottom());
+      
+    }
+
+    public Command flipUpStop(){
+      return new RunCommand(
+        () -> {setFlipperSpeed(calculateIntakeFlipUp());
+        spinIntake(0);}
       )
       .until(()->atTop());
       
@@ -74,6 +95,7 @@ public class Intake extends SubsystemBase implements Loggable {
     motorArm.set(speed);
   }
 
+  @Log
   public double calculateIntakeFlipUp(){
     if ((armEncoder.getPosition() < IntakeZoneLimits.topLimitOff)){
       return 0;
@@ -84,6 +106,7 @@ public class Intake extends SubsystemBase implements Loggable {
     }
   }
 
+  @Log
   public double calculateIntakeFlipDown(){
     if ((armEncoder.getPosition() > IntakeZoneLimits.bottomLimitOff)){
       return 0;  
@@ -98,11 +121,6 @@ public class Intake extends SubsystemBase implements Loggable {
     //multiply by .8
   }
 
-  public void stopSpin() {
-    //turns rollers on and off
-    motorTopRoller.stopMotor();
-    motorBottomRoller.stopMotor();
-  }
   public void resetArmEncoder(){
     armEncoder.setPosition(0);
   }
@@ -112,6 +130,7 @@ public class Intake extends SubsystemBase implements Loggable {
     // This method will be called once per scheduler run
     
     armpos = armEncoder.getPosition();
+    armPower = motorArm.getAppliedOutput();
   }
 }
   
