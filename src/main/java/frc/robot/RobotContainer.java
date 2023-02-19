@@ -87,8 +87,9 @@ public class RobotContainer {
 
     driverController
       .x()
-      .whileTrue(intake.flipDownSpin())
-      .whileFalse(intake.flipUpStop());
+      .whileTrue(new StartEndCommand (() -> intake.spinIntake(IntakeConstants.intakeInSpeed), () -> intake.spinIntake(0), intake));
+      // .onTrue(intake.flipDownSpin())
+      // .onFalse(intake.flipUpStop());
 
 
       driverController
