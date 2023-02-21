@@ -58,7 +58,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   @Log double BLVoltageVal;
   @Log double BRVoltageVal;
 
-
+  
    //Variables to log voltage
    @Log double FRVelocityVal;
    @Log double FLVelocityVal;

@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.EjectGamePieceCommand;
@@ -49,8 +50,8 @@ public class RobotContainer {
 
     private final Command driveCommand = new RunCommand(
       () -> {
-        double speed = MathUtil.applyDeadband(driverController.getLeftY()/3, 0.09);
-        double turn = MathUtil.applyDeadband(driverController.getRightX()/3, 0.08);
+        double speed = MathUtil.applyDeadband(driverController.getLeftY(), 0.09);
+        double turn = MathUtil.applyDeadband(driverController.getRightX(), 0.08);
 
         drivetrain.drive(speed, turn);
       }
@@ -87,9 +88,9 @@ public class RobotContainer {
 
     driverController
       .x()
-      .whileTrue(new StartEndCommand (() -> intake.spinIntake(IntakeConstants.intakeInSpeed), () -> intake.spinIntake(0), intake));
-      // .onTrue(intake.flipDownSpin())
-      // .onFalse(intake.flipUpStop());
+      //.whileTrue(new StartEndCommand (() -> intake.spinIntake(IntakeConstants.intakeInSpeed), () -> intake.spinIntake(0), intake));
+      .onTrue(intake.flipDownSpin())
+      .onFalse(intake.flipUpStop());
 
 
       driverController
@@ -118,8 +119,8 @@ public class RobotContainer {
 
     driverController
     .leftBumper()
-    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(ElevatorConstants.elevatorSpeed);}, () -> {transfer.setElevatorPower(0);}, transfer)
-    );
+    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(ElevatorConstants.elevatorSpeed);}, () -> {transfer.setElevatorPower(0);}, transfer).until(transfer.elevatorAtBottom()
+    ));
 
    //up
     driverController
@@ -139,23 +140,46 @@ public class RobotContainer {
 
     secondaryController
     .a()
-    .onTrue(new InstantCommand(() -> claw.setClosed(), claw));
+    .onTrue(new InstantCommand(() -> claw.setClosed(), claw)
+    .andThen(new WaitCommand(1))
+    .andThen(transfer.elevatorToBottom())
+    );
+  
 
     secondaryController
     .b()
     .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
-   
+    secondaryController
+    .povLeft()
+    .onTrue(transfer.elevatorToBottom());
+
+    secondaryController
+    .povRight()
+    .onTrue(transfer.elevatorToTop());
+
 
     secondaryController
     .povDown()
-    .onTrue(new InstantCommand(() -> fourbar.fourbarDown()));
+    .onTrue(
+      new InstantCommand(() -> claw.setClosed(), claw)
+    .andThen(new WaitCommand(.75))
+    .andThen(
+      new InstantCommand(() -> fourbar.fourbarDown())
+    ));
+   
+  
 
     secondaryController
     .povUp()
-    .onTrue(new InstantCommand(() -> fourbar.fourbarUp()));
+    .onTrue(
+      new InstantCommand(() -> claw.setClosed(), claw)
+    .andThen(new WaitCommand(.75))
+    .andThen(
+      new InstantCommand(() -> fourbar.fourbarUp())
+    ));
    
-  }
+}
 
   public void updateLogger(){
     Logger.updateEntries();

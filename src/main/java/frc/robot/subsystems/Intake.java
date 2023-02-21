@@ -46,7 +46,7 @@ public class Intake extends SubsystemBase implements Loggable {
 
   @Log
   public Boolean atTop(){
-    return armEncoder.getPosition() < 0.1;
+    return armEncoder.getPosition() < 1;
   }    
   
   @Log

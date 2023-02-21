@@ -18,6 +18,7 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -37,6 +38,9 @@ public class Transfer extends SubsystemBase implements Loggable{
 
   @Log
   private double elevatorPos = elevatorEncoder.getPosition();
+  @Log private boolean elevatorTop = elevatorAtTop().getAsBoolean();
+  @Log private boolean elevatorBotom = elevatorAtBottom().getAsBoolean();
+  @Log private boolean elevatorShouldntRunlogg = elevatorShouldntRun().getAsBoolean();
 
 
   public Transfer() {
@@ -57,6 +61,9 @@ public class Transfer extends SubsystemBase implements Loggable{
     if(elevatorAtTop().getAsBoolean()){
       elevatorPos = 0;
     }
+    elevatorTop = elevatorTopProx.get();
+    elevatorBotom = elevatorBottomProx.get();
+    elevatorShouldntRunlogg = elevatorShouldntRun().getAsBoolean();
 
   }
 
@@ -115,16 +122,30 @@ public class Transfer extends SubsystemBase implements Loggable{
     beltMotor.set(power);
   }
 
+
   public BooleanSupplier elevatorAtTop(){
     return ()-> !elevatorTopProx.get();
   }
 
+  
   public BooleanSupplier elevatorAtBottom(){
     return ()-> !elevatorBottomProx.get();
   }
 
   public BooleanSupplier elevatorShouldntRun(){
     return ()-> (elevatorAtTop().getAsBoolean()) || (elevatorAtBottom().getAsBoolean());
+  }
+
+  public Command elevatorToTop(){
+    return new RunCommand(()-> setElevatorPower(-.5))
+    .until(elevatorAtTop())
+    .andThen(()-> setElevatorPower(0));
+  }
+
+  public Command elevatorToBottom(){
+    return new RunCommand(()-> setElevatorPower(.5))
+    .until(elevatorAtBottom())
+    .andThen(()-> setElevatorPower(0));
   }
   
     public void setElevatorPower(double power)
@@ -136,6 +157,8 @@ public class Transfer extends SubsystemBase implements Loggable{
       double encoderPosition;
       if (position == ElevatorPosition.BOTTOM){
           encoderPosition = ElevatorConstants.kBottomEncoderPosition;
+      }else if (position == ElevatorPosition.MID){
+        encoderPosition = ElevatorConstants.kMidEncoderPosition;
       }
       else{
           encoderPosition = ElevatorConstants.kTopEncoderPosition;
