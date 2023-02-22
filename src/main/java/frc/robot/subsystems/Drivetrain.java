@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 import frc.robot.Constants;
+import frc.robot.commands.DriveToBalance;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
@@ -34,6 +36,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   private final AHRS gyro = new AHRS();
   
+
+  private final DriveToBalance driveyBalancey = new DriveToBalance(this);
+
   //private final SlewRateLimiter accelLimit = new SlewRateLimiter(1.2);
   //private final SlewRateLimiter turnLimit = new SlewRateLimiter(2);
 
@@ -62,6 +67,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
    @Log double FLVelocityVal;
    @Log double BLVelocityVal;
    @Log double BRVelocityVal;
+
+  public double balancekP;
+  public double balancekI;
+  public double balancekD;
 
   /** Creates a new ExampleSubsystem. */
   public Drivetrain() {
@@ -110,6 +119,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     gyro.reset();
   }
 
+  @Config
+  public void setBalancePID(double p, double i, double d){
+    balancekP = p;
+    balancekI = i;
+    balancekD = d;
+  }
+
   public void resetEncoders() {
     motorFL.getEncoder().setPosition(0);
     motorFR.getEncoder().setPosition(0);
@@ -135,6 +151,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     robotDrive.feed();
   }
 
+  public void tankDriveVolts(double l, double r){
+    motorFL.setVoltage(l);
+    motorFR.setVoltage(r);
+  }
+
   // Limelight Functions Start
 
   public void setPipeline(int pipelineNum){
@@ -143,6 +164,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       .getEntry("pipeline")
       //sets the value of the pipeline entry to the parameter of the function
       .setNumber(pipelineNum);
+  }
+
+  @Log
+  public double balanceError(){
+    return driveyBalancey.getController().getPositionError();
   }
 
 
