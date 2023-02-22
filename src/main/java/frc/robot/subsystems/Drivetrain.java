@@ -36,17 +36,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   private final AHRS gyro = new AHRS();
   
-  //private final SlewRateLimiter accelLimit = new SlewRateLimiter(1.2);
-  //private final SlewRateLimiter turnLimit = new SlewRateLimiter(2);
+  private final SlewRateLimiter accelLimit = new SlewRateLimiter(1.2);
+  private final SlewRateLimiter turnLimit = new SlewRateLimiter(2);
 
   //gets the default instance of NetworkTables that is automatically created
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   
   //gets the limelight table where data is stored from the limelight
   NetworkTable limelightTable = inst.getTable("limelight");
-
-  // Create double for logging the yaw of the robot
-  // @Log private double heading = -999;
 
   // create double for logging the controller input
   @Log private double speed = -2;
@@ -126,13 +123,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   // Actions
 
   public void drive(double speed, double turn) {
-    //turn = 0.5 * turn + 0.5 * Math.pow(turn, 3);  // Weird math
+    turn = 0.5 * turn + 0.5 * Math.pow(turn, 3);  // Weird math
 
     this.speed = speed;
     this.turn = turn;
 
-    //robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
-    robotDrive.arcadeDrive(speed, turn, false);
+    robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
+   // robotDrive.arcadeDrive(speed, turn, false);
 
     robotDrive.feed();
   }
