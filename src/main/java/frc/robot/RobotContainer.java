@@ -57,6 +57,15 @@ public class RobotContainer {
       }
       , drivetrain);
 
+      //Working on elevator joystick command below
+
+    // private final Command elevatorCommand = new RunCommand(
+    //   () -> {
+    //     double power = MathUtil.applyDeadband(secondaryController.getLeftY()/2, 0.09);
+
+    //     transfer.setElevatorPower(power);
+    //   }
+    //   , transfer);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -83,6 +92,7 @@ public class RobotContainer {
   
     drivetrain.setDefaultCommand(driveCommand);
     transfer.setDefaultCommand(transfer.beltRunCommand());
+    //transfer.setDefaultCommand(elevatorCommand);
 
     //driver controller (0) commands
 
@@ -95,7 +105,7 @@ public class RobotContainer {
 
       driverController
       .a()
-      .whileTrue(new StartEndCommand (() -> intake.spinIntake(-IntakeConstants.intakeInSpeed), () -> intake.spinIntake(0), intake));
+      .onTrue(fourbar.fourbarToggle());
 
       driverController
       .b()
