@@ -79,33 +79,6 @@ public class Transfer extends SubsystemBase implements Loggable{
     return (!transferOutProximitySensor.get());
   }
 
-  // private boolean isTransferEmpty() {
-  //   //if both true, true
-  //   return transferInProximitySensor.get() && transferOutProximitySensor.get();
-  // }
-
-  public boolean shouldRunBelt() {
-    // //If there is nothing in transfer, return false immediately
-    // if (isTransferEmpty()) {
-    //   return false;
-    // }
-    // //If first sensor is empty and second sensor is not empty, return false immediately
-    // if (transferInProximitySensor.get() && !transferOutProximitySensor.get()) {
-    //   return false;
-    // }
-    // //Assumption: If both sensors are occupied, run the belt
-    // return true;
-    //if transfer is occupied, return true
-    // if (isBackOccupied()){
-    //   return false;
-    // }
-    if (isFrontOccupied()) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
 
   public Command beltRunCommand(){
    return new RunCommand(() ->{

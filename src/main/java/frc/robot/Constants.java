@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public final class Constants {
   public static class OperatorConstants {
