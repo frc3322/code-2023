@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+import frc.robot.Types.FourbarPosition;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -55,4 +56,14 @@ public class Fourbar extends SubsystemBase implements Loggable {
    // }
     
   }
+  public FourbarPosition getFourBarPosition(){
+      if (fourBar.get()==Value.kReverse){
+        return FourbarPosition.EXTEND;
+      }
+      else if (fourBar.get()==Value.kForward){
+        return FourbarPosition.RETRACT;
+      }
+      //I don't know if closed should be the default position, but it shuld work for not.
+      return FourbarPosition.RETRACT;
+    }
 }
