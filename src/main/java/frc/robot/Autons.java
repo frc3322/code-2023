@@ -17,7 +17,7 @@ public class Autons {
     Fourbar fourbar = new Fourbar();
 
     public class PlaceAndLeave extends SequentialCommandGroup {
-        private PlaceAndLeave() {
+        public PlaceAndLeave() {
             addCommands(
             //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
                 new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
