@@ -205,6 +205,7 @@ public class RobotContainer {
   private class PlaceAndLeave extends SequentialCommandGroup {
     private PlaceAndLeave() {
         addCommands(
+          //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
             new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
             new WaitCommand(0.5),
             new MoveClawCommand(Types.ClawPosition.OPEN, claw),

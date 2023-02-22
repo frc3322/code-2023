@@ -44,6 +44,10 @@ public class MoveClawCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    //make same change to fourbar as well
+    if (clawDestination==claw.getClawPosition()){
+        return true;
+    }
     return false;
   }
 }
