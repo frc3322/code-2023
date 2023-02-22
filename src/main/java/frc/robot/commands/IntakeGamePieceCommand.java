@@ -17,7 +17,7 @@ public class IntakeGamePieceCommand extends SequentialCommandGroup {
      super(
       intake.flipDown(),
       (new StartEndCommand(() ->{
-        intake.spinIntake(IntakeConstants.intakeInSpeed);
+        intake.spinIntake(IntakeConstants.coneIntakeInSpeed);
       },
         () -> {
         intake.spinIntake(0);

@@ -66,7 +66,7 @@ public class Intake extends SubsystemBase implements Loggable {
     public Command flipDownSpin(){
       return new RunCommand(
         () -> {setFlipperSpeed(calculateIntakeFlipDown());
-        spinIntake(IntakeConstants.intakeInSpeed);}
+        spinIntake(IntakeConstants.coneIntakeInSpeed);}
       )
       .until(()->atBottom());
       
