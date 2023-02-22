@@ -107,6 +107,10 @@ public final class Constants {
     public static final double topLimitOff = 2;
     public static final double bottomLimitOff = 7;
     
+  } 
+  public static final class PWM{
+    //NEED ACTUAL PORT VALUE
+    public static final int S1 = 16;
   }
 
  

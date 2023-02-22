@@ -151,6 +151,10 @@ public class RobotContainer {
     .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
     secondaryController
+    .x()
+    .whileTrue(new StartEndCommand(() -> claw.runServo(), ()-> claw.stopServo(), claw));
+
+    secondaryController
     .povLeft()
     .onTrue(transfer.elevatorToBottom());
 
