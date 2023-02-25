@@ -73,8 +73,8 @@ public final class Constants {
   }
 
   public static final class IntakeConstants{
-    public static final double coneIntakeInSpeed = 0.6;
-    public static final double cubeIntakeInSpeed = 0.3;
+    public static final double coneIntakeInSpeed = 0.3;
+    public static final double cubeIntakeInSpeed = 0.1;
 
     public static final double armUpSpeed = -0.3;
     public static final double armUpSlowSpeed = -0.2;
@@ -86,8 +86,8 @@ public final class Constants {
   }
 
   public static final class TransferConstants{
-    public static final double coneTransferSpeed = 0.5;
-    public static final double cubeTransferSpeed = 0.3;
+    public static final double coneTransferSpeed = 0.3;
+    public static final double cubeTransferSpeed = 0.1;
   }
 
   public static final class PIDConstraints{

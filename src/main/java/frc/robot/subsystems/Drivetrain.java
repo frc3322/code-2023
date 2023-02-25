@@ -123,13 +123,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   // Actions
 
   public void drive(double speed, double turn) {
-    turn = 0.5 * turn + 0.5 * Math.pow(turn, 3);  // Weird math
+    turn = 0.5 * turn + 0.5 * Math.pow(turn, 3) + turn/10;  // Weird math
 
     this.speed = speed;
     this.turn = turn;
 
-    robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
-   // robotDrive.arcadeDrive(speed, turn, false);
+   // robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
+   robotDrive.arcadeDrive(speed, turn, false);
 
     robotDrive.feed();
   }

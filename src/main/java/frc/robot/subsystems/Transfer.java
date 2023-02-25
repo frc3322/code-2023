@@ -41,7 +41,7 @@ public class Transfer extends SubsystemBase implements Loggable{
 
   @Log private boolean elevatorShouldntRunlogg = elevatorShouldntRun().getAsBoolean();
 
-  @Log private double activeBeltSpeed = TransferConstants.coneTransferSpeed;
+  @Log public double activeBeltSpeed = TransferConstants.coneTransferSpeed;
 
 
 
@@ -71,13 +71,13 @@ public class Transfer extends SubsystemBase implements Loggable{
   }
 
   @Log
-  private boolean isFrontOccupied() {
+  public boolean isFrontOccupied() {
     //checks that first is occupied
     return (!transferInProximitySensor.get());
   }
 
   @Log
-  private boolean isBackOccupied(){
+  public boolean isBackOccupied(){
     //checks that back is not detecting
     return (!transferOutProximitySensor.get());
   }
