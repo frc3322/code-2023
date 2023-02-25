@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -57,7 +58,30 @@ public class RobotContainer {
       }
       , drivetrain);
 
+     private final Command elevatorCommand = new RunCommand(
+      () -> {
+        double elevatorPower = MathUtil.applyDeadband(secondaryController.getLeftY()/2, 0.09);
+        double transferPower = -MathUtil.applyDeadband(secondaryController.getRightY()/2, 0.09);
 
+        transfer.setElevatorPower(elevatorPower);
+        transfer.setBeltPower(transferPower);
+
+        
+       
+          // if(transfer.isFrontOccupied()){
+          //   transfer.setBeltPower(transfer.activeBeltSpeed);
+          // }
+          // if(transfer.isBackOccupied()){
+          //   transfer.setBeltPower(0);
+          // }
+    
+
+        
+      }
+      , transfer);
+ 
+
+  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
@@ -80,104 +104,155 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-  
+    //default commands
     drivetrain.setDefaultCommand(driveCommand);
     transfer.setDefaultCommand(transfer.beltRunCommand());
+    //transfer.setDefaultCommand(elevatorCommand);
 
     //driver controller (0) commands
 
     driverController
-      .x()
-      //.whileTrue(new StartEndCommand (() -> intake.spinIntake(IntakeConstants.intakeInSpeed), () -> intake.spinIntake(0), intake));
-      .onTrue(intake.flipDownSpin())
-      .onFalse(intake.flipUpStop());
-
-
-      driverController
-      .a()
-      .whileTrue(new StartEndCommand (() -> intake.spinIntake(-IntakeConstants.intakeInSpeed), () -> intake.spinIntake(0), intake));
-
-      driverController
-      .b()
-      .whileTrue(new StartEndCommand (() -> intake.setFlipperSpeed(0.2), () -> intake.setFlipperSpeed(0), intake));
-
-      driverController
-      .y()
-      .whileTrue(new StartEndCommand (() -> intake.setFlipperSpeed(-0.2), () -> intake.setFlipperSpeed(0), intake));
-
-     driverController
-     .povDown()
-     .onTrue(intake.flipDown());
-
-     driverController
-     .povUp()
-     .onTrue(intake.flipUp());
-
-     driverController
-     .povLeft()
-     .onTrue(new InstantCommand(() -> intake.resetArmEncoder()));
-
-    driverController
     .leftBumper()
-    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(ElevatorConstants.elevatorSpeed);}, () -> {transfer.setElevatorPower(0);}, transfer).until(transfer.elevatorAtBottom()
-    ));
+    .onTrue(intake.flipDownSpin())
+    .onFalse(intake.flipUpStop());
 
-   //up
     driverController
-    .rightBumper()
-    .whileTrue(new StartEndCommand(() -> {transfer.setElevatorPower(-ElevatorConstants.elevatorSpeed);}, () -> {transfer.setElevatorPower(0);}, transfer).until(transfer.elevatorAtTop())
+    .leftTrigger()
+    .whileTrue(new EjectGamePieceCommand(transfer, intake));
+
+    driverController
+    .a()
+    .onTrue(
+
+
+    new SequentialCommandGroup(
+      new InstantCommand(() -> claw.setClosed(), claw)
+    .andThen(new WaitCommand(.5))
+    .andThen(
+      fourbar.fourbarToggle()
+    )
+    
+    
+    )
+    
     );
 
+    // driverController
+    // .rightBumper()
+    // .onTrue(
+    //   new InstantCommand(() -> claw.setClosed(), claw)
+    // .andThen(new WaitCommand(.5))
+    // .andThen(
+    //   fourbar.fourbarToggle()
+    // ));
+
+
+    driverController
+    .povUp()
+    .whileTrue(new StartEndCommand (() -> intake.setFlipperSpeed(-0.2), () -> intake.setFlipperSpeed(0), intake));
+
+    driverController
+    .povDown()
+    .whileTrue(new StartEndCommand (() -> intake.setFlipperSpeed(0.2), () -> intake.setFlipperSpeed(0), intake));
+
+    driverController
+    .povLeft()
+    .onTrue(new InstantCommand(() -> intake.resetArmEncoder()));
+
+    driverController
+    .b()
+    .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
+
+    //x for align cube
+    driverController
+    .x()
+    .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.cubeTransferSpeed)));
+
+    //y for align cone
+    driverController
+    .y()
+    .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.coneTransferSpeed)));
     
-    //secondary controller commands
-    secondaryController
-    .rightBumper()
-    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(TransferConstants.transferSpeed), () -> transfer.setBeltPower(0), transfer));
+    // driverController
+    // .a()
+    // .onTrue(
+    //   new InstantCommand(() -> claw.setClosed(), claw)
+    // .andThen(new WaitCommand(.75))
+    // .andThen(
+    //   new InstantCommand(() -> fourbar.fourbarDown())
+    // ));
+    
+   //secondary controls
 
     secondaryController
-    .leftBumper()
-    .whileTrue(new StartEndCommand(() -> transfer.setBeltPower(-TransferConstants.transferSpeed), () -> transfer.setBeltPower(0), transfer));
-
-    secondaryController
-    .a()
+    .y()
     .onTrue(new InstantCommand(() -> claw.setClosed(), claw)
     .andThen(new WaitCommand(1))
     .andThen(transfer.elevatorToBottom())
     );
   
-
     secondaryController
     .b()
     .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
     secondaryController
-    .povLeft()
+    .x()
+    .onTrue(new InstantCommand(()-> transfer.setBeltPower(0)));
+
+    secondaryController
+    .leftBumper()
     .onTrue(transfer.elevatorToBottom());
 
     secondaryController
-    .povRight()
+    .rightBumper()
     .onTrue(transfer.elevatorToTop());
 
-
     secondaryController
-    .povDown()
-    .onTrue(
+      .povDown()
+      .onTrue(
       new InstantCommand(() -> claw.setClosed(), claw)
-    .andThen(new WaitCommand(.75))
+    .andThen(new WaitCommand(.5))
     .andThen(
       new InstantCommand(() -> fourbar.fourbarDown())
-    ));
+    )
+    .andThen(new WaitCommand(.75))
+    .andThen(new InstantCommand(() -> claw.setOpen(), claw))
+    
+    );
+
+      secondaryController
+      .povUp()
+      .onTrue(
+        new InstantCommand(() -> claw.setClosed(), claw)
+      .andThen(new WaitCommand(.5))
+      .andThen(
+        new InstantCommand(() -> fourbar.fourbarUp())
+      ));
+
+
    
-  
+    secondaryController
+    .axisGreaterThan(5, 0)
+    .whileTrue(new RunCommand(() -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY()/2, 0.09)), transfer));
+   
 
     secondaryController
-    .povUp()
-    .onTrue(
-      new InstantCommand(() -> claw.setClosed(), claw)
-    .andThen(new WaitCommand(.75))
-    .andThen(
-      new InstantCommand(() -> fourbar.fourbarUp())
-    ));
+    .axisLessThan(5, 0)
+    .whileTrue(new RunCommand(() -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY()/2, 0.09)), transfer));
+
+    secondaryController
+    .axisGreaterThan(1, 0)
+    .whileTrue(new RunCommand(() -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY()/2, 0.09)), transfer));
+   
+
+    secondaryController
+    .axisLessThan(1, 0)
+    .whileTrue(new RunCommand(() -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY()/2, 0.09)), transfer));
+    
+    
+  
+
+//down trasfer reversed
    
 }
 

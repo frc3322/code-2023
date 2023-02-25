@@ -61,27 +61,32 @@ public final class Constants {
     public static final double kBottomEncoderPosition = 2;
     public static final double kMidEncoderPosition = 1;
     public static final double kTopEncoderPosition = 0;
+
     public static final double kp = 0;
     public static final double ki = 0;
     public static final double kd = 0;
+
     public static final double elevatorSpeed = .5;
 
     
   }
 
   public static final class IntakeConstants{
-    public static final double intakeInSpeed = 0.4;
+    public static final double coneIntakeInSpeed = 0.3;
+    public static final double cubeIntakeInSpeed = 0.1;
+
     public static final double armUpSpeed = -0.3;
     public static final double armUpSlowSpeed = -0.2;
+
     public static final double armDownSpeed = 0.2; 
-    public static final double beltForwardSpeed = 0.5;
-    public static final double beltReverseSpeed = -0.5;
+    
 
 
   }
 
   public static final class TransferConstants{
-    public static final double transferSpeed = 0.5;
+    public static final double coneTransferSpeed = 0.3;
+    public static final double cubeTransferSpeed = 0.1;
   }
 
   public static final class PIDConstraints{

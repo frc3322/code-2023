@@ -9,13 +9,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.Constants;
-import frc.robot.Constants.DIO;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.TransferConstants;
+import frc.robot.Constants.*;
 import frc.robot.Types.ElevatorPosition;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -31,16 +29,21 @@ public class Transfer extends SubsystemBase implements Loggable{
  
 
   /** Creates a new Transfer. */
-  public static final CANSparkMax beltMotor = new CANSparkMax(Constants.CAN.transfer, MotorType.kBrushless);
-  public final CANSparkMax elevatorMotor = new CANSparkMax(Constants.CAN.elevatorMotor, MotorType.kBrushless);
+  public static final CANSparkMax beltMotor = new CANSparkMax(CAN.transfer, MotorType.kBrushless);
+  public static final CANSparkMax elevatorMotor = new CANSparkMax(CAN.elevatorMotor, MotorType.kBrushless);
 
   private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
 
-  @Log
-  private double elevatorPos = elevatorEncoder.getPosition();
+  @Log private double elevatorPos = elevatorEncoder.getPosition();
+
   @Log private boolean elevatorTop = elevatorAtTop().getAsBoolean();
   @Log private boolean elevatorBotom = elevatorAtBottom().getAsBoolean();
+
   @Log private boolean elevatorShouldntRunlogg = elevatorShouldntRun().getAsBoolean();
+
+  @Log public double activeBeltSpeed = TransferConstants.coneTransferSpeed;
+
+
 
 
   public Transfer() {
@@ -68,13 +71,13 @@ public class Transfer extends SubsystemBase implements Loggable{
   }
 
   @Log
-  private boolean isFrontOccupied() {
+  public boolean isFrontOccupied() {
     //checks that first is occupied
     return (!transferInProximitySensor.get());
   }
 
   @Log
-  private boolean isBackOccupied(){
+  public boolean isBackOccupied(){
     //checks that back is not detecting
     return (!transferOutProximitySensor.get());
   }
@@ -83,7 +86,7 @@ public class Transfer extends SubsystemBase implements Loggable{
   public Command beltRunCommand(){
    return new RunCommand(() ->{
     if(isFrontOccupied()){
-      setBeltPower(TransferConstants.transferSpeed);
+      setBeltPower(activeBeltSpeed);
     }
     if(isBackOccupied()){
       setBeltPower(0);
@@ -93,6 +96,10 @@ public class Transfer extends SubsystemBase implements Loggable{
 
   public void setBeltPower(double power){
     beltMotor.set(power);
+  }
+
+  public void setActiveBeltSpeed(double speed){
+    activeBeltSpeed = speed;
   }
 
 
@@ -120,6 +127,7 @@ public class Transfer extends SubsystemBase implements Loggable{
     .until(elevatorAtBottom())
     .andThen(()-> setElevatorPower(0));
   }
+
   
     public void setElevatorPower(double power)
     {
