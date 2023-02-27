@@ -172,6 +172,10 @@ public class RobotContainer {
     driverController
     .y()
     .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.coneTransferSpeed)));
+
+    driverController
+    .rightBumper()
+    .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed), ()-> intake.spinIntake(0)));
     
     // driverController
     // .a()
@@ -249,7 +253,13 @@ public class RobotContainer {
     .axisLessThan(1, 0)
     .whileTrue(new RunCommand(() -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY()/2, 0.09)), transfer));
     
-    
+    // secondaryController
+    // .axisGreaterThan(2, 0)
+    // .whileTrue(new RunCommand(()-> transfer.setElevatorPower(secondaryController.getLeftTriggerAxis()/2), transfer));
+
+    // secondaryController
+    // .axisGreaterThan(3, 0)
+    // .whileTrue(new RunCommand(()-> transfer.setElevatorPower(-secondaryController.getRightTriggerAxis()/2), transfer));
   
 
 //down trasfer reversed

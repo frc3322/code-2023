@@ -68,7 +68,9 @@ public class Intake extends SubsystemBase implements Loggable {
         () -> {setFlipperSpeed(calculateIntakeFlipDown());
         spinIntake(IntakeConstants.coneIntakeInSpeed);}
       )
-      .until(()->atBottom());
+      .until(()->atBottom()
+    )
+    .withTimeout(2);
       
     }
 
@@ -77,7 +79,8 @@ public class Intake extends SubsystemBase implements Loggable {
         () -> {setFlipperSpeed(calculateIntakeFlipUp());
         spinIntake(0);}
       )
-      .until(()->atTop());
+      .until(()->atTop()
+      ).withTimeout(2);
       
     }
 
