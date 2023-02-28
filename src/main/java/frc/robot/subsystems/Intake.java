@@ -93,6 +93,16 @@ public class Intake extends SubsystemBase implements Loggable {
       
     }
 
+    public Command flipDownEject(){
+      return new RunCommand(
+        () -> {setFlipperSpeed(calculateIntakeFlipDown());
+        spinIntake(-IntakeConstants.coneIntakeInSpeed);}
+      )
+      .until(()->atBottom()
+      ).withTimeout(2);
+      
+    }
+
 
   public void setFlipperSpeed(double speed){
     motorArm.set(speed);

@@ -118,7 +118,8 @@ public class RobotContainer {
 
     driverController
     .leftTrigger()
-    .whileTrue(new EjectGamePieceCommand(transfer, intake));
+    .onTrue(intake.flipDownEject())
+    .onFalse(intake.flipUpStop());
 
     driverController
     .a()
