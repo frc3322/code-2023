@@ -6,16 +6,20 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 import frc.robot.Constants;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
@@ -46,6 +50,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   // create double for logging the controller input
   @Log private double speed = -2;
   @Log private double turn = -2;
+
+  @Config private static double jankDriveMultiplier = 1.2;
 
   //Variables to log voltage
   @Log double FLVoltageVal;
@@ -130,6 +136,62 @@ public class Drivetrain extends SubsystemBase implements Loggable {
    robotDrive.arcadeDrive(speed, turn, false);
 
     robotDrive.feed();
+  }
+
+  public void jankDrive(double speed, double turn) {
+
+    turn = 0.5 * turn + 0.5 * Math.pow(turn, 3);  // Weird math
+
+    this.speed = speed;
+    this.turn = turn;
+
+    HAL.report(
+      31, 7, 2);
+      speed = MathUtil.applyDeadband(speed, 0.02);
+      turn = MathUtil.applyDeadband(turn, 0.02);
+  
+      var speeds = jankArcadeDriveIK(speed, turn, false);
+  
+      motorFL.set(speeds.left * 1);
+      motorFR.set(speeds.right * 1);
+  
+    
+
+   // robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
+   
+
+    robotDrive.feed();
+  }
+
+  
+
+  public static WheelSpeeds jankArcadeDriveIK(double xSpeed, double zRotation, boolean squareInputs) {
+    xSpeed = MathUtil.clamp(xSpeed, -1.0, 1.0);
+    zRotation = MathUtil.clamp(zRotation, -1.0, 1.0);
+
+    // Square the inputs (while preserving the sign) to increase fine control
+    // while permitting full power.
+    if (squareInputs) {
+      xSpeed = Math.copySign(xSpeed * xSpeed, xSpeed);
+      zRotation = Math.copySign(zRotation * zRotation, zRotation);
+    }
+
+    double leftSpeed = xSpeed - zRotation;
+    double rightSpeed = xSpeed + zRotation;
+    leftSpeed *= jankDriveMultiplier;
+
+    // Find the maximum possible value of (throttle + turn) along the vector
+    // that the joystick is pointing, then desaturate the wheel speeds
+    double greaterInput = Math.max(Math.abs(xSpeed), Math.abs(zRotation));
+    double lesserInput = Math.min(Math.abs(xSpeed), Math.abs(zRotation));
+    if (greaterInput == 0.0) {
+      return new WheelSpeeds(0.0, 0.0);
+    }
+    double saturatedInput = (greaterInput + lesserInput) / greaterInput;
+    leftSpeed /= saturatedInput;
+    rightSpeed /= saturatedInput;
+
+    return new WheelSpeeds(leftSpeed, rightSpeed);
   }
 
   // Limelight Functions Start
