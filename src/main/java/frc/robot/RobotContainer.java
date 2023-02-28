@@ -162,6 +162,14 @@ public class RobotContainer {
     .onTrue(new InstantCommand(() -> intake.resetArmEncoder()));
 
     driverController
+    .axisGreaterThan(2, 0)
+    .whileTrue(new RunCommand(()-> intake.spinIntake(IntakeConstants.coneIntakeInSpeed), intake));
+
+    driverController
+    .axisGreaterThan(3, 0)
+    .whileTrue(new RunCommand(()-> intake.spinIntake(-IntakeConstants.coneIntakeInSpeed), intake));
+
+    driverController
     .b()
     .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
