@@ -31,252 +31,249 @@ import frc.robot.commands.IntakeGamePieceCommand;
 import frc.robot.Constants.*;
 //arooshwashere
 
-
-
 public class RobotContainer {
-
 
   // The robot's subsystems and commands are defined here...
 
-  
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
   private final Transfer transfer = new Transfer();
-  
- 
+
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController secondaryController = new CommandXboxController(1);
 
-    private final Command driveCommand = new RunCommand(
+  private final Command driveCommand = new RunCommand(
       () -> {
         double speed = MathUtil.applyDeadband(driverController.getLeftY(), 0.09);
         double turn = MathUtil.applyDeadband(driverController.getRightX(), 0.08);
 
         drivetrain.drive(speed, turn);
-      }
-      , drivetrain);
+      }, drivetrain);
 
-     private final Command elevatorCommand = new RunCommand(
+  private final Command elevatorCommand = new RunCommand(
       () -> {
-        double elevatorPower = MathUtil.applyDeadband(secondaryController.getLeftY()/2, 0.09);
-        double transferPower = -MathUtil.applyDeadband(secondaryController.getRightY()/2, 0.09);
+        double elevatorPower = MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09);
+        double transferPower = -MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09);
 
         transfer.setElevatorPower(elevatorPower);
         transfer.setBeltPower(transferPower);
 
-        
-       
-          // if(transfer.isFrontOccupied()){
-          //   transfer.setBeltPower(transfer.activeBeltSpeed);
-          // }
-          // if(transfer.isBackOccupied()){
-          //   transfer.setBeltPower(0);
-          // }
-    
+        // if(transfer.isFrontOccupied()){
+        // transfer.setBeltPower(transfer.activeBeltSpeed);
+        // }
+        // if(transfer.isBackOccupied()){
+        // transfer.setBeltPower(0);
+        // }
 
-        
-      }
-      , transfer);
- 
+      }, transfer);
 
-  
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
 
     // Configure the trigger bindings
     configureBindings();
 
-
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
 
   private void configureBindings() {
 
-    //default commands
+    // default commands
     drivetrain.setDefaultCommand(driveCommand);
     transfer.setDefaultCommand(transfer.beltRunCommand());
     intake.setDefaultCommand(intake.spinIntakeWhileUp(transfer.isBeltRunning()));
-    //transfer.setDefaultCommand(elevatorCommand);
+    // transfer.setDefaultCommand(elevatorCommand);
 
-    //driver controller (0) commands
-
-    driverController
-    .leftBumper()
-    .onTrue(intake.flipDownSpin())
-    .onFalse(intake.flipUpStop());
+    // driver controller (0) commands
 
     driverController
-    .leftTrigger()
-    .onTrue(intake.flipDownEject())
-    .onFalse(intake.flipUpStop());
+        .leftBumper()
+        .onTrue(intake.flipDownSpin())
+        .onFalse(intake.flipUpStop());
 
     driverController
-    .a()
-    .onTrue(
+        .leftTrigger()
+        .onTrue(intake.flipDownEject()
+        .andThen(new InstantCommand(() -> fourbar.fourbarDown()))
+        )
+        .onFalse(intake.flipUpStop());
 
+    driverController
+        .a()
+        .onTrue(
 
-    new SequentialCommandGroup(
-      new InstantCommand(() -> claw.setClosed(), claw)
-    .andThen(new WaitCommand(.5))
-    .andThen(
-      fourbar.fourbarToggle()
-    )
-    
-    
-    )
-    
-    );
+            new SequentialCommandGroup(
+                new InstantCommand(() -> claw.setClosed(), claw)
+                    .andThen(new WaitCommand(.5))
+                    .andThen(
+                        fourbar.fourbarToggle())
+
+            )
+
+        );
 
     // driverController
     // .rightBumper()
     // .onTrue(
-    //   new InstantCommand(() -> claw.setClosed(), claw)
+    // new InstantCommand(() -> claw.setClosed(), claw)
     // .andThen(new WaitCommand(.5))
     // .andThen(
-    //   fourbar.fourbarToggle()
+    // fourbar.fourbarToggle()
     // ));
 
+    driverController
+        .povUp()
+        .whileTrue(new StartEndCommand(() -> intake.setFlipperSpeed(-0.4), () -> intake.setFlipperSpeed(0), intake));
 
     driverController
-    .povUp()
-    .whileTrue(new StartEndCommand (() -> intake.setFlipperSpeed(-0.4), () -> intake.setFlipperSpeed(0), intake));
+        .povDown()
+        .whileTrue(new StartEndCommand(() -> intake.setFlipperSpeed(0.3), () -> intake.setFlipperSpeed(0), intake));
 
     driverController
-    .povDown()
-    .whileTrue(new StartEndCommand (() -> intake.setFlipperSpeed(0.3), () -> intake.setFlipperSpeed(0), intake));
+        .povLeft()
+        .onTrue(new InstantCommand(() -> intake.resetArmEncoder()));
 
     driverController
-    .povLeft()
-    .onTrue(new InstantCommand(() -> intake.resetArmEncoder()));
+        .axisGreaterThan(2, 0)
+        .whileTrue(new RunCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed), intake));
 
     driverController
-    .axisGreaterThan(2, 0)
-    .whileTrue(new RunCommand(()-> intake.spinIntake(IntakeConstants.coneIntakeInSpeed), intake));
+        .axisGreaterThan(3, 0)
+        .whileTrue(new RunCommand(() -> intake.spinIntake(-IntakeConstants.coneIntakeInSpeed), intake));
 
     driverController
-    .axisGreaterThan(3, 0)
-    .whileTrue(new RunCommand(()-> intake.spinIntake(-IntakeConstants.coneIntakeInSpeed), intake));
+        .b()
+        .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
+
+    // x for align cube
+    driverController
+        .x()
+        .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.cubeTransferSpeed)));
+
+    // y for align cone
+    driverController
+        .y()
+        .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.coneTransferSpeed)));
 
     driverController
-    .b()
-    .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
+        .rightBumper()
+        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed),
+            () -> intake.spinIntake(0)));
 
-    //x for align cube
-    driverController
-    .x()
-    .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.cubeTransferSpeed)));
-
-    //y for align cone
-    driverController
-    .y()
-    .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.coneTransferSpeed)));
-
-    driverController
-    .rightBumper()
-    .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed), ()-> intake.spinIntake(0)));
-    
     // driverController
     // .a()
     // .onTrue(
-    //   new InstantCommand(() -> claw.setClosed(), claw)
+    // new InstantCommand(() -> claw.setClosed(), claw)
     // .andThen(new WaitCommand(.75))
     // .andThen(
-    //   new InstantCommand(() -> fourbar.fourbarDown())
+    // new InstantCommand(() -> fourbar.fourbarDown())
     // ));
-    
-   //secondary controls
+
+    // secondary controls
 
     secondaryController
-    .y()
-    .onTrue(new InstantCommand(() -> claw.setClosed(), claw)
-    .andThen(new WaitCommand(1))
-    .andThen(transfer.elevatorToBottom())
-    );
-  
-    secondaryController
-    .b()
-    .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
+        .y()
+        .onTrue(new InstantCommand(() -> claw.setClosed(), claw)
+            .andThen(new WaitCommand(1))
+            .andThen(transfer.elevatorToBottom()));
 
     secondaryController
-    .x()
-    .onTrue(new InstantCommand(()-> transfer.setBeltPower(0)));
+        .b()
+        .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
     secondaryController
-    .leftBumper()
-    .onTrue(transfer.elevatorToBottom());
+        .x()
+        .onTrue(
+          new InstantCommand(() -> transfer.setBeltPower(0))
+        );
 
     secondaryController
-    .rightBumper()
-    .onTrue(transfer.elevatorToTop());
+        .leftBumper()
+        .onTrue(transfer.elevatorToBottom());
 
     secondaryController
-      .povDown()
-      .onTrue(
-      new InstantCommand(() -> claw.setClosed(), claw)
-    .andThen(new WaitCommand(.5))
-    .andThen(
-      new InstantCommand(() -> fourbar.fourbarDown())
-    )
-    .andThen(new WaitCommand(.75))
-    .andThen(new InstantCommand(() -> claw.setOpen(), claw))
-    
-    );
-
-      secondaryController
-      .povUp()
-      .onTrue(
-        new InstantCommand(() -> claw.setClosed(), claw)
-      .andThen(new WaitCommand(.5))
-      .andThen(
-        new InstantCommand(() -> fourbar.fourbarUp())
-      ));
-
-
-   
-    secondaryController
-    .axisGreaterThan(5, 0)
-    .whileTrue(new RunCommand(() -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY()/2, 0.09)), transfer));
-   
+        .rightBumper()
+        .onTrue(transfer.elevatorToTop());
 
     secondaryController
-    .axisLessThan(5, 0)
-    .whileTrue(new RunCommand(() -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY()/2, 0.09)), transfer));
+        .povDown()
+        .onTrue(
+            new InstantCommand(() -> claw.setClosed(), claw)
+                .andThen(new WaitCommand(.5))
+                .andThen(
+                    new InstantCommand(() -> fourbar.fourbarDown()))
+                .andThen(new WaitCommand(.75))
+                .andThen(new InstantCommand(() -> claw.setOpen(), claw))
+
+        );
 
     secondaryController
-    .axisGreaterThan(1, 0)
-    .whileTrue(new RunCommand(() -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY()/2, 0.09)), transfer));
-   
+        .povUp()
+        .onTrue(
+            new InstantCommand(() -> claw.setClosed(), claw)
+                .alongWith(intake.flipUp())
+                .andThen(new WaitCommand(.5))
+                .andThen(
+                    new InstantCommand(() -> fourbar.fourbarUp())));
 
     secondaryController
-    .axisLessThan(1, 0)
-    .whileTrue(new RunCommand(() -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY()/2, 0.09)), transfer));
-    
+        .axisGreaterThan(5, 0)
+        .whileTrue(new RunCommand(
+            () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
+
+    secondaryController
+        .axisLessThan(5, 0)
+        .whileTrue(new RunCommand(
+            () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
+
+    secondaryController
+        .axisGreaterThan(1, 0)
+        .whileTrue(new RunCommand(
+            () -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09)),
+            transfer));
+
+    secondaryController
+        .axisLessThan(1, 0)
+        .whileTrue(new RunCommand(
+            () -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09)),
+            transfer));
+
     // secondaryController
     // .axisGreaterThan(2, 0)
-    // .whileTrue(new RunCommand(()-> transfer.setElevatorPower(secondaryController.getLeftTriggerAxis()/2), transfer));
+    // .whileTrue(new RunCommand(()->
+    // transfer.setElevatorPower(secondaryController.getLeftTriggerAxis()/2),
+    // transfer));
 
     // secondaryController
     // .axisGreaterThan(3, 0)
-    // .whileTrue(new RunCommand(()-> transfer.setElevatorPower(-secondaryController.getRightTriggerAxis()/2), transfer));
-  
+    // .whileTrue(new RunCommand(()->
+    // transfer.setElevatorPower(-secondaryController.getRightTriggerAxis()/2),
+    // transfer));
 
-//down trasfer reversed
-   
-}
+    // down trasfer reversed
 
-  public void updateLogger(){
+  }
+
+  public void updateLogger() {
     Logger.updateEntries();
   }
 
