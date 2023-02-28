@@ -57,6 +57,17 @@ public class Intake extends SubsystemBase implements Loggable {
   }  
   
 
+    public Command spinIntakeWhileUp(boolean transferRunning){
+      return new RunCommand(() ->{
+        if(transferRunning){
+          spinIntakeSameWay(.1);
+        }
+        else{
+          spinIntakeSameWay(armPower);
+        }
+       }, this);
+    }
+
     public Command flipUp(){
       return new RunCommand(
         () -> setFlipperSpeed(calculateIntakeFlipUp())
@@ -95,6 +106,16 @@ public class Intake extends SubsystemBase implements Loggable {
       
     }
 
+    public Command flipDownEject(){
+      return new RunCommand(
+        () -> {setFlipperSpeed(calculateIntakeFlipDown());
+        spinIntake(-IntakeConstants.coneIntakeInSpeed);}
+      )
+      .until(()->atBottom()
+      ).withTimeout(2);
+      
+    }
+
 
   public void setFlipperSpeed(double speed){
     motorArm.set(speed);
@@ -124,6 +145,11 @@ public class Intake extends SubsystemBase implements Loggable {
     motorTopRoller.set(speed);
     motorBottomRoller.set(speed);
     //multiply by .8
+  }
+
+  public void spinIntakeSameWay(double speed){
+    motorTopRoller.set(speed);
+    motorBottomRoller.set(-speed);
   }
 
   public void resetArmEncoder(){
