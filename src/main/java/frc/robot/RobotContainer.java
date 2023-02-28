@@ -48,6 +48,10 @@ public class RobotContainer {
       () -> {
         double speed = MathUtil.applyDeadband(driverController.getLeftY(), 0.09);
         double turn = MathUtil.applyDeadband(driverController.getRightX(), 0.08);
+        if (driverController.rightStick().getAsBoolean()==true){
+            speed/=2;
+            //divide turn as well? also what should we divide/multiply by
+        }
 
         drivetrain.drive(speed, turn);
       }, drivetrain);
