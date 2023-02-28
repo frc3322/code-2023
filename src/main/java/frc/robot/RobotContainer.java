@@ -149,11 +149,11 @@ public class RobotContainer {
 
     driverController
     .povUp()
-    .whileTrue(new StartEndCommand (() -> intake.setFlipperSpeed(-0.2), () -> intake.setFlipperSpeed(0), intake));
+    .whileTrue(new StartEndCommand (() -> intake.setFlipperSpeed(-0.4), () -> intake.setFlipperSpeed(0), intake));
 
     driverController
     .povDown()
-    .whileTrue(new StartEndCommand (() -> intake.setFlipperSpeed(0.2), () -> intake.setFlipperSpeed(0), intake));
+    .whileTrue(new StartEndCommand (() -> intake.setFlipperSpeed(0.3), () -> intake.setFlipperSpeed(0), intake));
 
     driverController
     .povLeft()

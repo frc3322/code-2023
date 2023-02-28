@@ -103,6 +103,8 @@ public final class Constants {
     public static final int elevatorTop = 0;
     public static final int elevatorBottom = 3;
     public static final int transferOutProximitySensor = 1;
+    public static final int intakeTopSensor = 4;
+
   }
 
   public static final class IntakeZoneLimits{
