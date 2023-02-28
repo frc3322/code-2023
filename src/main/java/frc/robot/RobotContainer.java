@@ -107,6 +107,7 @@ public class RobotContainer {
     //default commands
     drivetrain.setDefaultCommand(driveCommand);
     transfer.setDefaultCommand(transfer.beltRunCommand());
+    intake.setDefaultCommand(intake.spinIntakeWhileUp(transfer.isBeltRunning()));
     //transfer.setDefaultCommand(elevatorCommand);
 
     //driver controller (0) commands

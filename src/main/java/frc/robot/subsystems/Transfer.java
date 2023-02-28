@@ -98,6 +98,10 @@ public class Transfer extends SubsystemBase implements Loggable{
     beltMotor.set(power);
   }
 
+  public boolean isBeltRunning(){
+    return beltMotor.get() != 0;
+  }
+
   public void setActiveBeltSpeed(double speed){
     activeBeltSpeed = speed;
   }
