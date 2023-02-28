@@ -63,7 +63,7 @@ public class Intake extends SubsystemBase implements Loggable {
           spinIntakeSameWay(.1);
         }
         else{
-          spinIntakeSameWay(armPower);
+          spinIntakeSameWay(0);
         }
        }, this);
     }
