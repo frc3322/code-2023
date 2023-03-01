@@ -150,9 +150,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       speed = MathUtil.applyDeadband(speed, 0.02);
       turn = MathUtil.applyDeadband(turn, 0.02);
   
-      var speeds = jankArcadeDriveIK(speed, turn, false);
+      var speeds = robotDrive.arcadeDriveIK(speed, turn, false);
   
-      motorFL.set(speeds.left * 1);
+      motorFL.set(speeds.left * jankDriveMultiplier);
       motorFR.set(speeds.right * 1);
   
     
@@ -165,34 +165,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   
 
-  public static WheelSpeeds jankArcadeDriveIK(double xSpeed, double zRotation, boolean squareInputs) {
-    xSpeed = MathUtil.clamp(xSpeed, -1.0, 1.0);
-    zRotation = MathUtil.clamp(zRotation, -1.0, 1.0);
-
-    // Square the inputs (while preserving the sign) to increase fine control
-    // while permitting full power.
-    if (squareInputs) {
-      xSpeed = Math.copySign(xSpeed * xSpeed, xSpeed);
-      zRotation = Math.copySign(zRotation * zRotation, zRotation);
-    }
-
-    double leftSpeed = xSpeed - zRotation;
-    double rightSpeed = xSpeed + zRotation;
-    leftSpeed *= jankDriveMultiplier;
-
-    // Find the maximum possible value of (throttle + turn) along the vector
-    // that the joystick is pointing, then desaturate the wheel speeds
-    double greaterInput = Math.max(Math.abs(xSpeed), Math.abs(zRotation));
-    double lesserInput = Math.min(Math.abs(xSpeed), Math.abs(zRotation));
-    if (greaterInput == 0.0) {
-      return new WheelSpeeds(0.0, 0.0);
-    }
-    double saturatedInput = (greaterInput + lesserInput) / greaterInput;
-    leftSpeed /= saturatedInput;
-    rightSpeed /= saturatedInput;
-
-    return new WheelSpeeds(leftSpeed, rightSpeed);
-  }
+  
 
   // Limelight Functions Start
 
