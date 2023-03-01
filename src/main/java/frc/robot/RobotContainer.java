@@ -22,12 +22,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.EjectGamePieceCommand;
 //import frc.robot.commands.SpinTransfer;
 import frc.robot.commands.IntakeGamePieceCommand;
+import frc.robot.commands.MoveClawCommand;
+import frc.robot.commands.MoveFourbarCommand;
 import frc.robot.Constants.*;
 //arooshwashere
 
@@ -285,7 +288,31 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return new PlaceAndLeave();
   }
+
+  /*
+  AUTON COMMANDS BELOW
+  */
+  private class PlaceAndLeave extends SequentialCommandGroup {
+    private PlaceAndLeave() {
+        addCommands(
+           new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+          //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
+            new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
+            new WaitCommand(4.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            new WaitCommand(0.5),
+            new MoveFourbarCommand(Types.FourbarPosition.RETRACT, fourbar),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw)
+            
+            //DriveToDistanceCommand(),
+        );
+
+    }
+}
 
 }

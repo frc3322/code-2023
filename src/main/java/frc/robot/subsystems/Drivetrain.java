@@ -67,6 +67,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     motorBR.follow(motorFR);
     motorBL.follow(motorFL);
 
+    FLEncoder.setPositionConversionFactor(0.4788/8.45);
+    FREncoder.setPositionConversionFactor(0.4788/8.45);
+    //meters per rotation, gear ratio
+    
+    FLEncoder.setVelocityConversionFactor(0.4788/8.45/60);
+    FREncoder.setVelocityConversionFactor(0.4788/8.45/60);
+    //meters per wheel rotation, gearing reduction, divide by 60 for per second
+
 
     motorFR.setIdleMode(IdleMode.kBrake);
     motorFL.setIdleMode(IdleMode.kBrake);

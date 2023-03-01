@@ -14,8 +14,7 @@ public final class Types {
 
     public enum ClawPosition {
       OPEN,
-      TOGGLECONE,
-      TOGGLECUBE
+      CLOSED
     }
 
     public enum FourbarPosition {

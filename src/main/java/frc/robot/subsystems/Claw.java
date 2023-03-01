@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Types.ClawPosition;
 
 public class Claw extends SubsystemBase {
   /** Creates a new Outtake. */
@@ -30,6 +31,16 @@ public class Claw extends SubsystemBase {
 
     public void setClosed() {
       claw.set(Value.kForward);
+    }
+    public ClawPosition getClawPosition(){
+      if (claw.get()==Value.kReverse){
+        return ClawPosition.OPEN;
+      }
+      else if (claw.get()==Value.kForward){
+        return ClawPosition.CLOSED;
+      }
+      //I don't know if closed should be the default position, but it shuld work for not.
+      return ClawPosition.CLOSED;
     }
 
   @Override

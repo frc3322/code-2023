@@ -10,14 +10,15 @@ import frc.robot.subsystems.Fourbar;
 
 public class MoveFourbarCommand extends CommandBase {
 
-  private FourbarPosition fourbarPosition;
+  private FourbarPosition fourbarDestination;
   private Fourbar fourbar;
 
   /** Creates a new MoveForebar. */
-  public MoveFourbarCommand(FourbarPosition fourbarPosition, Fourbar fourbar) {
+  public MoveFourbarCommand(FourbarPosition fourbarDestination, Fourbar fourbar) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(fourbar);
-    this.fourbarPosition = fourbarPosition;
+
+    this.fourbarDestination = fourbarDestination;
     this.fourbar = fourbar;
 
   }
@@ -29,7 +30,7 @@ public class MoveFourbarCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (fourbarPosition == FourbarPosition.EXTEND) {
+    if (fourbarDestination == FourbarPosition.EXTEND) {
       fourbar.fourbarUp();
     }
     else {
@@ -44,6 +45,10 @@ public class MoveFourbarCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    //make same change to fourbar as well
+    if (fourbarDestination==fourbar.getFourBarPosition()){
+        return true;
+    }
     return false;
   }
 }
