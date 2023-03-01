@@ -79,7 +79,7 @@ public class Intake extends SubsystemBase implements Loggable {
     public Command flipDownSpin(){
       return new RunCommand(
         () -> {setFlipperSpeed(calculateIntakeFlipDown());
-        spinIntake(IntakeConstants.coneIntakeInSpeed);}
+        spinIntake(IntakeConstants.coneIntakeInSpeed);}, this
       )
       .until(()->atBottom()
     )
@@ -90,7 +90,7 @@ public class Intake extends SubsystemBase implements Loggable {
     public Command flipUpStop(){
       return new RunCommand(
         () -> {setFlipperSpeed(calculateIntakeFlipUp());
-        spinIntake(0);}
+        spinIntake(0);}, this
       )
       .until(()->atTop()
       ).withTimeout(2);

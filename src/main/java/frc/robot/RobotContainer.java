@@ -12,6 +12,8 @@ import frc.robot.subsystems.Transfer;
 import frc.robot.subsystems.Claw;
 import io.github.oblarg.oblog.Logger;
 
+import java.time.Instant;
+
 import javax.swing.text.html.HTMLDocument.BlockElement;
 
 import edu.wpi.first.math.MathUtil;
@@ -107,15 +109,17 @@ public class RobotContainer {
 
     driverController
         .leftBumper()
-        .onTrue(intake.flipDownSpin())
+        .onTrue(
+          new InstantCommand(()-> fourbar.fourbarDown())
+          .andThen(intake.flipDownSpin()))
         .onFalse(intake.flipUpStop());
 
-    driverController
-        .leftTrigger()
-        .onTrue(intake.flipDownEject()
-        .andThen(new InstantCommand(() -> fourbar.fourbarDown()))
-        )
-        .onFalse(intake.flipUpStop());
+    // driverController
+    //     .leftTrigger()
+    //     .onTrue(intake.flipDownEject()
+    //     .andThen(new InstantCommand(() -> fourbar.fourbarDown()))
+    //     )
+    //     .onFalse(intake.flipUpStop());
 
     driverController
         .a()
