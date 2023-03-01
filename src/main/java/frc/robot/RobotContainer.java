@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Types.FourbarPosition;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
 import frc.robot.subsystems.Intake;
@@ -105,7 +106,7 @@ public class RobotContainer {
     // default commands
     drivetrain.setDefaultCommand(driveCommand);
     transfer.setDefaultCommand(transfer.beltRunCommand());
-    intake.setDefaultCommand(intake.spinIntakeWhileUp(transfer.isBeltRunning()));
+   // intake.setDefaultCommand(intake.spinIntakeWhileUp(transfer.isBeltRunning()));
     // transfer.setDefaultCommand(elevatorCommand);
 
     // driver controller (0) commands
@@ -114,6 +115,8 @@ public class RobotContainer {
         .leftBumper()
         .onTrue(
           new InstantCommand(()-> fourbar.fourbarDown())
+          .andThen(new WaitCommand(.5).unless(()->fourbar.getFourBarPosition() == FourbarPosition.RETRACT))
+
           .andThen(intake.flipDownSpin()))
         .onFalse(intake.flipUpStop());
 
@@ -161,11 +164,11 @@ public class RobotContainer {
 
     driverController
         .axisGreaterThan(2, 0)
-        .whileTrue(new RunCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed), intake));
+        .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(-driverController.getLeftTriggerAxis()/3), intake));
 
     driverController
         .axisGreaterThan(3, 0)
-        .whileTrue(new RunCommand(() -> intake.spinIntake(-IntakeConstants.coneIntakeInSpeed), intake));
+        .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(driverController.getRightTriggerAxis()/3), intake));
 
     driverController
         .b()
@@ -199,9 +202,8 @@ public class RobotContainer {
 
     secondaryController
         .y()
-        .onTrue(new InstantCommand(() -> claw.setClosed(), claw)
-            .andThen(new WaitCommand(1))
-            .andThen(transfer.elevatorToBottom()));
+        .onTrue(new InstantCommand(() -> claw.setClosed(), claw));
+            
 
     secondaryController
         .b()
@@ -239,8 +241,10 @@ public class RobotContainer {
             new InstantCommand(() -> claw.setClosed(), claw)
                 .alongWith(intake.flipUp())
                 .andThen(new WaitCommand(.5))
-                .andThen(
-                    new InstantCommand(() -> fourbar.fourbarUp())));
+            .andThen(transfer.elevatorToBottom().alongWith(new InstantCommand(() -> fourbar.fourbarUp()))
+            ));
+            
+             
 
     secondaryController
         .axisGreaterThan(5, 0)
