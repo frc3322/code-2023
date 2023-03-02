@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.EjectGamePieceCommand;
 //import frc.robot.commands.SpinTransfer;
 import frc.robot.commands.IntakeGamePieceCommand;
@@ -305,6 +306,7 @@ public class RobotContainer {
   private class PlaceAndLeave extends SequentialCommandGroup {
     private PlaceAndLeave() {
         addCommands(
+           
            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
           //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
             new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
@@ -317,10 +319,18 @@ public class RobotContainer {
             new WaitCommand(0.5),
             new MoveClawCommand(Types.ClawPosition.OPEN, claw)
             
-            //DriveToDistanceCommand(),
+
+            
+            new InstantCommand(
+                () -> drivetrain.resetEncoders(),
+                drivetrain
+            ),
+            new DriveToDistanceCommand(-5, drivetrain)
         );
 
     }
 }
+
+
 
 }
