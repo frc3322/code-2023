@@ -6,6 +6,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -139,6 +141,35 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     robotDrive.feed();
   }
+
+  public void jankDrive(double speed, double turn) {
+
+    turn = 0.5 * turn + 0.5 * Math.pow(turn, 3);  // Weird math
+
+    this.speed = speed;
+    this.turn = turn;
+
+    HAL.report(
+      31, 7, 2);
+      speed = MathUtil.applyDeadband(speed, 0.02);
+      turn = MathUtil.applyDeadband(turn, 0.02);
+  
+      var speeds = robotDrive.arcadeDriveIK(speed, turn, false);
+  
+      motorFL.set(speeds.left);
+      motorFR.set(speeds.right * .50);
+  
+    
+
+   // robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
+   
+
+    robotDrive.feed();
+  }
+
+  
+
+  
 
   // Limelight Functions Start
 
