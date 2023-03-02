@@ -56,7 +56,7 @@ public class RobotContainer {
         double speed = MathUtil.applyDeadband(driverController.getLeftY(), 0.09);
         double turn = MathUtil.applyDeadband(driverController.getRightX(), 0.08);
 
-        drivetrain.drive(speed, turn);
+        drivetrain.jankDrive(speed, turn);
       }, drivetrain);
 
   private final Command elevatorCommand = new RunCommand(

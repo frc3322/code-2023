@@ -157,7 +157,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       var speeds = robotDrive.arcadeDriveIK(speed, turn, false);
   
       motorFL.set(speeds.left);
-      motorFR.set(speeds.right * .50);
+      motorFR.set(speeds.right * .90);
   
     
 
