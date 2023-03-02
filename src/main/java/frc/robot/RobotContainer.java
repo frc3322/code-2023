@@ -317,7 +317,7 @@ public class RobotContainer {
             new WaitCommand(0.5),
             new MoveFourbarCommand(Types.FourbarPosition.RETRACT, fourbar),
             new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw)
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
             
 
             
