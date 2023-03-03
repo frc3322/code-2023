@@ -4,39 +4,29 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.Types.FourbarPosition;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Fourbar;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Transfer;
-import frc.robot.subsystems.Claw;
-import io.github.oblarg.oblog.Logger;
-
-import java.time.Instant;
-
-import javax.swing.text.html.HTMLDocument.BlockElement;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+//arooshwashere
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.TransferConstants;
+import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.EjectGamePieceCommand;
-//import frc.robot.commands.SpinTransfer;
-import frc.robot.commands.IntakeGamePieceCommand;
 import frc.robot.commands.MoveClawCommand;
 import frc.robot.commands.MoveFourbarCommand;
-import frc.robot.Constants.*;
-//arooshwashere
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Fourbar;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Transfer;
+import io.github.oblarg.oblog.Logger;
 
 public class RobotContainer {
 
@@ -112,6 +102,7 @@ public class RobotContainer {
 
     // driver controller (0) commands
 
+    //Automated intake control
     driverController
         .leftBumper()
         .onTrue(
@@ -128,19 +119,23 @@ public class RobotContainer {
     //     )
     //     .onFalse(intake.flipUpStop());
 
+    //Driver 4 bar toggle OR eject... needs testing
     driverController
         .a()
         .onTrue(
 
-            new SequentialCommandGroup(
-                new InstantCommand(() -> claw.setClosed(), claw)
-                    .andThen(new WaitCommand(.5))
-                    .andThen(
-                        fourbar.fourbarToggle())
+      intake.flipDownEject()
 
-            )
+            // new SequentialCommandGroup(
+            //     new InstantCommand(() -> claw.setClosed(), claw)
+            //         .andThen(new WaitCommand(.5))
+            //         .andThen(
+            //             fourbar.fourbarToggle())
 
-        );
+            // )
+
+        )
+        .onFalse(intake.flipUpStop());
 
     // driverController
     // .rightBumper()
@@ -151,46 +146,55 @@ public class RobotContainer {
     // fourbar.fourbarToggle()
     // ));
 
+    //Driver manual intake up
     driverController
         .povUp()
         .whileTrue(new StartEndCommand(() -> intake.setFlipperSpeed(-0.4), () -> intake.setFlipperSpeed(0), intake));
 
+    //Driver manual intkae down
     driverController
         .povDown()
         .whileTrue(new StartEndCommand(() -> intake.setFlipperSpeed(0.3), () -> intake.setFlipperSpeed(0), intake));
 
+    //Driver intake arm reset
     driverController
         .povLeft()
         .onTrue(new InstantCommand(() -> intake.resetArmEncoder()));
 
+    //driver manual intake up number 2
     driverController
         .axisGreaterThan(2, 0)
         .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(-driverController.getLeftTriggerAxis()/3), intake));
 
+    //driver manual intake down number two
     driverController
         .axisGreaterThan(3, 0)
         .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(driverController.getRightTriggerAxis()/3), intake));
 
+    // driver's claw open override
     driverController
         .b()
         .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
-    // x for align cube
+    // x to reduce transfer speed
     driverController
         .x()
         .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.cubeTransferSpeed)));
 
-    // y for align cone
+    // y for normal transfer function
     driverController
         .y()
         .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.coneTransferSpeed)));
 
+    //driver manual intake spin
     driverController
         .rightBumper()
         .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed),
             () -> intake.spinIntake(0)));
 
-    // driverController
+ 
+ 
+   // driverController
     // .a()
     // .onTrue(
     // new InstantCommand(() -> claw.setClosed(), claw)
@@ -199,32 +203,38 @@ public class RobotContainer {
     // new InstantCommand(() -> fourbar.fourbarDown())
     // ));
 
-    // secondary controls
+    // secondary controls timeee
 
+    //secondary claw close
     secondaryController
         .y()
         .onTrue(new InstantCommand(() -> claw.setClosed(), claw));
             
-
+    //secondary claw ppen
     secondaryController
         .b()
         .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
+
+    //secondary transfer stop override
     secondaryController
         .x()
         .onTrue(
           new InstantCommand(() -> transfer.setBeltPower(0))
         );
 
+    //secondary automatic elevator down
     secondaryController
         .leftBumper()
         .onTrue(transfer.elevatorToBottom());
 
+    //secondary automatic elevator up
     secondaryController
         .rightBumper()
         .onTrue(transfer.elevatorToTop());
 
-    secondaryController
+    //Secondary 4 bar in with claw and intake safety
+     secondaryController
         .povDown()
         .onTrue(
             new InstantCommand(() -> claw.setClosed(), claw)
@@ -235,7 +245,8 @@ public class RobotContainer {
                 .andThen(new InstantCommand(() -> claw.setOpen(), claw))
 
         );
-
+    
+    //secondary 4 bar out with claw and intake safety
     secondaryController
         .povUp()
         .onTrue(
@@ -246,29 +257,55 @@ public class RobotContainer {
             ));
             
              
-
+    //Secondary manual transfer
     secondaryController
         .axisGreaterThan(5, 0)
         .whileTrue(new RunCommand(
             () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
 
-    secondaryController
+
+    //secodnary controller manual transfer other way
+     secondaryController
         .axisLessThan(5, 0)
         .whileTrue(new RunCommand(
             () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
 
+    //secondary controller manual elevator NO SAFETY        
     secondaryController
         .axisGreaterThan(1, 0)
         .whileTrue(new RunCommand(
             () -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09)),
             transfer));
 
+
+    //secondary controller manual elevator NO SAFETY
     secondaryController
         .axisLessThan(1, 0)
         .whileTrue(new RunCommand(
             () -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09)),
             transfer));
 
+  
+  
+    //secondary manual intake up
+    secondaryController
+     .axisGreaterThan(2, 0)
+     .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(-driverController.getLeftTriggerAxis()/3), intake));
+
+    //secondary manual intake down 
+    secondaryController
+        .axisGreaterThan(3, 0)
+        .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(driverController.getRightTriggerAxis()/3), intake));
+
+
+    secondaryController
+      .povRight()
+      .whileTrue(
+        new StartEndCommand(
+         ()-> intake.spinIntake(IntakeConstants.coneIntakeInSpeed) ,
+         ()-> intake.spinIntake(0),
+          intake)
+      );
     // secondaryController
     // .axisGreaterThan(2, 0)
     // .whileTrue(new RunCommand(()->
