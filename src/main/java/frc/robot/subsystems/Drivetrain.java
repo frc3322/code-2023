@@ -136,8 +136,22 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     this.speed = speed;
     this.turn = turn;
 
-   // robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
-   robotDrive.arcadeDrive(speed, turn, false);
+   //robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
+    robotDrive.arcadeDrive(speed, turn, false);
+
+    robotDrive.feed();
+  }
+
+  public void autonDrive(double speed, double turn) {
+    
+    // to compensate for the turning/binding on one side, add x to turn
+    // turn = turn + x;
+
+    this.speed = speed;
+    this.turn = turn;
+
+    // robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
+    robotDrive.arcadeDrive(speed, turn, false);
 
     robotDrive.feed();
   }

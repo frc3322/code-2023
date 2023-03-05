@@ -83,7 +83,7 @@ public class Transfer extends SubsystemBase implements Loggable{
   }
 
 
-  public Command beltRunCommand(){
+  public Command beltRunCommand(Transfer transfery){
    return new RunCommand(() ->{
     if(isFrontOccupied()){
       setBeltPower(activeBeltSpeed);
@@ -91,7 +91,7 @@ public class Transfer extends SubsystemBase implements Loggable{
     if(isBackOccupied()){
       setBeltPower(0);
     }
-   }, this);
+   }, transfery);
   }
 
   public void setBeltPower(double power){

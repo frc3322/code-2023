@@ -79,7 +79,7 @@ public class Intake extends SubsystemBase implements Loggable {
     public Command flipDownSpin(){
       return new RunCommand(
         () -> {setFlipperSpeed(calculateIntakeFlipDown());
-        spinIntake(IntakeConstants.coneIntakeInSpeed);}, this
+        spinIntakeTopFaster(IntakeConstants.coneIntakeInSpeed);}, this
       )
       .until(()->atBottom()
     )
@@ -87,10 +87,21 @@ public class Intake extends SubsystemBase implements Loggable {
       
     }
 
+    public Command cubeFlipDownSpin(){
+      return new RunCommand(
+        () -> {setFlipperSpeed(calculateIntakeFlipDown());
+        spinIntakeTopFaster(IntakeConstants.cubeIntakeInSpeed);}, this
+      )
+      .until(()->atBottom()
+    )
+    .withTimeout(2);
+      
+    }
+      
     public Command flipUpStop(){
       return new RunCommand(
         () -> {setFlipperSpeed(calculateIntakeFlipUp());
-        spinIntake(0);}, this
+        spinIntakeTopFaster(0);}, this
       )
       .until(()->atTop()
       ).withTimeout(2);
@@ -109,7 +120,7 @@ public class Intake extends SubsystemBase implements Loggable {
     public Command flipDownEject(){
       return new RunCommand(
         () -> {setFlipperSpeed(calculateIntakeFlipDown());
-        spinIntake(-IntakeConstants.coneIntakeInSpeed);}
+        spinIntakeTopFaster(-IntakeConstants.coneIntakeInSpeed);}
       )
       .until(()->atBottom()
       ).withTimeout(2);
@@ -141,9 +152,21 @@ public class Intake extends SubsystemBase implements Loggable {
     }
   }
  
+  public void spinIntakeTopFaster(double speed){
+    motorTopRoller.set(speed*1.3);
+    motorBottomRoller.set(speed);
+    //multiply by .8
+  }
   public void spinIntake(double speed){
     motorTopRoller.set(speed);
     motorBottomRoller.set(speed);
+    //multiply by .8
+  }
+
+
+  public void spinIntakeBottomFaster(double speed){
+    motorTopRoller.set(speed);
+    motorBottomRoller.set(speed*2);
     //multiply by .8
   }
 

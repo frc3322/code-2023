@@ -22,7 +22,7 @@ public class DriveToDistanceCommand extends PIDCommand {
         // Set reference to target
         targetDistance,
         // Pipe output to turn robot
-        output -> drive.jankDrive(output,0),
+        output -> drive.autonDrive(output,0),
         // Require the drive
         drive);
 

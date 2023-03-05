@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -41,12 +43,14 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController secondaryController = new CommandXboxController(1);
 
+  SendableChooser<Command> autChooser = new SendableChooser<>();
+
   private final Command driveCommand = new RunCommand(
       () -> {
         double speed = MathUtil.applyDeadband(driverController.getLeftY(), 0.09);
         double turn = MathUtil.applyDeadband(driverController.getRightX(), 0.08);
 
-        drivetrain.jankDrive(speed, turn);
+        drivetrain.drive(speed, turn);
       }, drivetrain);
 
   private final Command elevatorCommand = new RunCommand(
@@ -69,8 +73,16 @@ public class RobotContainer {
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
+
+  
   public RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
+    autChooser.addOption("nothing", null);
+    autChooser.addOption("place and leave", new PlaceAndLeave());
+    autChooser.addOption("just place", new JustPlace());
+    //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
+    autChooser.setDefaultOption("just place", new JustPlace());
+    SmartDashboard.putData("select autonomous", autChooser);
 
     // Configure the trigger bindings
     configureBindings();
@@ -96,7 +108,7 @@ public class RobotContainer {
 
     // default commands
     drivetrain.setDefaultCommand(driveCommand);
-    transfer.setDefaultCommand(transfer.beltRunCommand());
+    transfer.setDefaultCommand(transfer.beltRunCommand(transfer));
    // intake.setDefaultCommand(intake.spinIntakeWhileUp(transfer.isBeltRunning()));
     // transfer.setDefaultCommand(elevatorCommand);
 
@@ -122,20 +134,9 @@ public class RobotContainer {
     //Driver 4 bar toggle OR eject... needs testing
     driverController
         .a()
-        .onTrue(
+        .whileTrue(new StartEndCommand(()->intake.spinIntakeBottomFaster(-IntakeConstants.coneIntakeInSpeed), ()->intake.spinIntakeBottomFaster(0), intake));
 
-      intake.flipDownEject()
-
-            // new SequentialCommandGroup(
-            //     new InstantCommand(() -> claw.setClosed(), claw)
-            //         .andThen(new WaitCommand(.5))
-            //         .andThen(
-            //             fourbar.fourbarToggle())
-
-            // )
-
-        )
-        .onFalse(intake.flipUpStop());
+     
 
     // driverController
     // .rightBumper()
@@ -163,13 +164,25 @@ public class RobotContainer {
 
     //driver manual intake up number 2
     driverController
-        .axisGreaterThan(2, 0)
-        .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(-driverController.getLeftTriggerAxis()/3), intake));
+    .axisGreaterThan(2, 0)
+    .onTrue(
+          new InstantCommand(()-> fourbar.fourbarDown())
+          .andThen(new WaitCommand(.5).unless(()->fourbar.getFourBarPosition() == FourbarPosition.RETRACT))
+
+          .andThen(intake.cubeFlipDownSpin()))
+        .onFalse(intake.flipUpStop());
+
+        // .axisGreaterThan(2, 0)
+        // .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(-driverController.getLeftTriggerAxis()/3), intake));
 
     //driver manual intake down number two
     driverController
         .axisGreaterThan(3, 0)
-        .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(driverController.getRightTriggerAxis()/3), intake));
+        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.cubeIntakeInSpeed),
+        () -> intake.spinIntake(0)));
+
+
+        
 
     // driver's claw open override
     driverController
@@ -259,14 +272,14 @@ public class RobotContainer {
              
     //Secondary manual transfer
     secondaryController
-        .axisGreaterThan(5, 0)
+        .axisGreaterThan(5, 0.09)
         .whileTrue(new RunCommand(
             () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
 
 
     //secodnary controller manual transfer other way
      secondaryController
-        .axisLessThan(5, 0)
+        .axisLessThan(5, -0.09)
         .whileTrue(new RunCommand(
             () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
 
@@ -302,8 +315,8 @@ public class RobotContainer {
       .povRight()
       .whileTrue(
         new StartEndCommand(
-         ()-> intake.spinIntake(IntakeConstants.coneIntakeInSpeed) ,
-         ()-> intake.spinIntake(0),
+         ()-> intake.spinIntakeTopFaster(IntakeConstants.coneIntakeInSpeed) ,
+         ()-> intake.spinIntakeTopFaster(0),
           intake)
       );
     // secondaryController
@@ -334,7 +347,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new PlaceAndLeave();
+    return autChooser.getSelected();     
   }
 
   /*
@@ -347,7 +360,7 @@ public class RobotContainer {
            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
           //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
             new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
-            new WaitCommand(4.5),
+            new WaitCommand(3.5),
             new MoveClawCommand(Types.ClawPosition.OPEN, claw),
             new WaitCommand(0.5),
             new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
@@ -362,12 +375,63 @@ public class RobotContainer {
                 () -> drivetrain.resetEncoders(),
                 drivetrain
             ),
-            new DriveToDistanceCommand(-5, drivetrain)
+            new DriveToDistanceCommand(-4, drivetrain)
         );
 
     }
 }
 
+private class JustPlace extends SequentialCommandGroup {
+    private JustPlace() {
+        addCommands(
+            
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
+            new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
+            new WaitCommand(3.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            new WaitCommand(0.5),
+            new MoveFourbarCommand(Types.FourbarPosition.RETRACT, fourbar),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw)
+            
+        );
+    }
+}
 
+
+private class PlaceLeaveBalance extends SequentialCommandGroup {
+    private PlaceLeaveBalance() {
+        addCommands(
+            
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
+            new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
+            new WaitCommand(3.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            new WaitCommand(0.5),
+            new MoveFourbarCommand(Types.FourbarPosition.RETRACT, fourbar),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+
+            new InstantCommand(
+                () -> drivetrain.resetEncoders(),
+                drivetrain
+            ),
+            new DriveToDistanceCommand(-4.5, drivetrain),
+            new InstantCommand(
+                () -> drivetrain.resetEncoders(),
+                drivetrain
+            ),
+            new DriveToDistanceCommand(1, drivetrain)
+            
+        );
+    }
+}
+ 
 
 }
