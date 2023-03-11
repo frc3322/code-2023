@@ -6,18 +6,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
-import frc.robot.Types.LaunchTo;
-
-public class LaunchCommand extends CommandBase {
-  /** Creates a new LaunchCommand. */
+import frc.robot.Constants;
+public class IntakeCubeCommand extends CommandBase {
+  /** Creates a new IntakeCubeCommand. */
   private Intake intake;
-  private LaunchTo launchTo;
 
-  public LaunchCommand(Intake intake, LaunchTo launchTo) {
+  public IntakeCubeCommand(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
     this.intake=intake;
-    this.launchTo=launchTo;
   }
 
   // Called when the command is initially scheduled.
@@ -27,18 +24,8 @@ public class LaunchCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    switch(launchTo){
-      case LOW:
-        //set roller speeds to launch it to low
-        break;
-      case MID:
-        //set roller speeds to launch it to mid
-        break;
-      case TOP:
-        //set roller speeds to launch it to top
-        break;
-// If you know which command should be used, please add.
-    }
+    //may need to change which intake method it is
+    intake.spinIntake(Constants.IntakeConstants.cubeIntakeInSpeed);
   }
 
   // Called once the command ends or is interrupted.

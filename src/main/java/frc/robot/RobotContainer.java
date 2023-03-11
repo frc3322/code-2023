@@ -25,7 +25,9 @@ import frc.robot.commands.EjectGamePieceCommand;
 import frc.robot.commands.MoveClawCommand;
 import frc.robot.commands.MoveFourbarCommand;
 import frc.robot.commands.IntakeDownCommand;
+import frc.robot.commands.IntakeUpCommand;
 import frc.robot.commands.LaunchCommand;
+import frc.robot.commands.IntakeCubeCommand;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
@@ -83,6 +85,7 @@ public class RobotContainer {
     autChooser.addOption("nothing", null);
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
+    autChooser.addOption("place, leave, grab cube", new PlaceLeaveCollect());
     //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
     SmartDashboard.putData("select autonomous", autChooser);
@@ -467,5 +470,18 @@ private class PlaceLeaveCollect extends SequentialCommandGroup {
             
         );
     }
+}
+private class IntakeAutonTest extends SequentialCommandGroup {
+    private IntakeAutonTest(){
+        addCommands(
+            new IntakeDownCommand(intake),
+            new WaitCommand(2.5),
+            new IntakeCubeCommand(intake).withTimeout(1.5),
+            new WaitCommand(2.5),
+            new IntakeUpCommand(intake),
+            new LaunchCommand(intake, LaunchTo.HIGH).withTimeout(2.0)
+        );
+    }
+
 }
 }
