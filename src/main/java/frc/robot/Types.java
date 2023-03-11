@@ -32,5 +32,10 @@ public final class Types {
       BOTTOM,
       TOP
     }
+    public enum LaunchTo {
+      LOW,
+      MID,
+      TOP
+    }
 
 }

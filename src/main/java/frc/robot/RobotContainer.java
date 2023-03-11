@@ -19,10 +19,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.TransferConstants;
 import frc.robot.Types.FourbarPosition;
+import frc.robot.Types.LaunchTo;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.EjectGamePieceCommand;
 import frc.robot.commands.MoveClawCommand;
 import frc.robot.commands.MoveFourbarCommand;
+import frc.robot.commands.IntakeDownCommand;
+import frc.robot.commands.LaunchCommand;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
@@ -409,7 +412,7 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
             new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
             //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
             new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
-            new WaitCommand(3.5),
+            new WaitCommand(3.5), //this can be decreased
             new MoveClawCommand(Types.ClawPosition.OPEN, claw),
             new WaitCommand(0.5),
             new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
@@ -432,6 +435,37 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
         );
     }
 }
- 
+private class PlaceLeaveCollect extends SequentialCommandGroup {
+    //will need to reorder this+add correct commands in correct order.
+    private PlaceLeaveCollect() {
+        addCommands(
+            
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
+            new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
+            new WaitCommand(2), 
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+            new WaitCommand(0.25),
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            new WaitCommand(0.25),
+            new MoveFourbarCommand(Types.FourbarPosition.RETRACT, fourbar),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
 
+            new InstantCommand(
+                () -> drivetrain.resetEncoders(),
+                drivetrain
+            ),
+            new DriveToDistanceCommand(-4.5, drivetrain),
+            new InstantCommand(
+                () -> drivetrain.resetEncoders(),
+                drivetrain
+            ),
+            new IntakeDownCommand(intake),
+            new DriveToDistanceCommand(1, drivetrain),
+            new LaunchCommand(intake, LaunchTo.MID).withTimeout(2.0)
+            
+        );
+    }
+}
 }
