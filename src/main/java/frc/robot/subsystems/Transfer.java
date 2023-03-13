@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
+//this entire file may become irrelevant.
 public class Transfer extends SubsystemBase implements Loggable{
   private final DigitalInput transferInProximitySensor = new DigitalInput(DIO.transferInProximitySensor);
   private final DigitalInput transferOutProximitySensor = new DigitalInput(DIO.transferOutProximitySensor);
