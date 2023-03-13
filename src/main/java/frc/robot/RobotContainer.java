@@ -24,8 +24,8 @@ import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.EjectGamePieceCommand;
 import frc.robot.commands.MoveClawCommand;
 import frc.robot.commands.MoveFourbarCommand;
-import frc.robot.commands.IntakeDownCommand;
-import frc.robot.commands.IntakeUpCommand;
+//import frc.robot.commands.IntakeDownCommand;
+//import frc.robot.commands.IntakeUpCommand;
 import frc.robot.commands.LaunchCommand;
 import frc.robot.commands.IntakeCubeCommand;
 import frc.robot.subsystems.Claw;
@@ -464,7 +464,7 @@ private class PlaceLeaveCollect extends SequentialCommandGroup {
                 () -> drivetrain.resetEncoders(),
                 drivetrain
             ),
-            new IntakeDownCommand(intake),
+            intake.flipDown(),
             new DriveToDistanceCommand(1, drivetrain),
             new LaunchCommand(intake, LaunchTo.MID).withTimeout(2.0)
             
@@ -474,12 +474,12 @@ private class PlaceLeaveCollect extends SequentialCommandGroup {
 private class IntakeAutonTest extends SequentialCommandGroup {
     private IntakeAutonTest(){
         addCommands(
-            new IntakeDownCommand(intake),
+            intake.flipDown(),
             new WaitCommand(2.5),
             new IntakeCubeCommand(intake).withTimeout(1.5),
             new WaitCommand(2.5),
-            new IntakeUpCommand(intake),
-            new LaunchCommand(intake, LaunchTo.HIGH).withTimeout(2.0)
+            intake.flipUp(),
+            new LaunchCommand(intake, LaunchTo.TOP).withTimeout(2.0)
         );
     }
 

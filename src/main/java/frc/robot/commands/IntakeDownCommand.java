@@ -1,42 +1,45 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// // Copyright (c) FIRST and other WPILib contributors.
+// // Open Source Software; you can modify and/or share it under the terms of
+// // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+//Not Using
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
 
-public class IntakeDownCommand extends CommandBase {
-  /** Creates a new IntakeDownCommand. */
-  private Intake intake;
+// package frc.robot.commands;
 
-  public IntakeDownCommand(Intake intake) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intake);
-    this.intake=intake;
-  }
+// import edu.wpi.first.wpilibj2.command.CommandBase;
+// import frc.robot.subsystems.Intake;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
+// public class IntakeDownCommand extends CommandBase {
+//   /** Creates a new IntakeDownCommand. */
+//   private Intake intake;
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    intake.setFlipperSpeed(intake.calculateIntakeFlipDown());
-  }
+//   public IntakeDownCommand(Intake intake) {
+//     // Use addRequirements() here to declare subsystem dependencies.
+//     addRequirements(intake);
+//     this.intake=intake;
+//   }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
+//   // Called when the command is initially scheduled.
+//   @Override
+//   public void initialize() {}
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    if (intake.calculateIntakeFlipDown()==0){
-        return true;
-    }
-    return false;
-  }
-}
+//   // Called every time the scheduler runs while the command is scheduled.
+//   @Override
+//   public void execute() {
+//     intake.setFlipperSpeed(intake.calculateIntakeFlipDown());
+//   }
+
+//   // Called once the command ends or is interrupted.
+//   @Override
+//   public void end(boolean interrupted) {}
+
+//   // Returns true when the command should end.
+//   @Override
+//   public boolean isFinished() {
+//     if (intake.calculateIntakeFlipDown()==0){
+//         return true;
+//     }
+//     return false;
+//   }
+// }
