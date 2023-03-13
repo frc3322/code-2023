@@ -53,22 +53,7 @@ public class RobotContainer {
         drivetrain.drive(speed, turn);
       }, drivetrain);
 
-  private final Command elevatorCommand = new RunCommand(
-      () -> {
-        double elevatorPower = MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09);
-        double transferPower = -MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09);
 
-        transfer.setElevatorPower(elevatorPower);
-        transfer.setBeltPower(transferPower);
-
-        // if(transfer.isFrontOccupied()){
-        // transfer.setBeltPower(transfer.activeBeltSpeed);
-        // }
-        // if(transfer.isBackOccupied()){
-        // transfer.setBeltPower(0);
-        // }
-
-      }, transfer);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -236,15 +221,7 @@ public class RobotContainer {
           new InstantCommand(() -> transfer.setBeltPower(0))
         );
 
-    //secondary automatic elevator down
-    secondaryController
-        .leftBumper()
-        .onTrue(transfer.elevatorToBottom());
 
-    //secondary automatic elevator up
-    secondaryController
-        .rightBumper()
-        .onTrue(transfer.elevatorToTop());
 
     //Secondary 4 bar in with claw and intake safety
      secondaryController
@@ -266,8 +243,8 @@ public class RobotContainer {
             new InstantCommand(() -> claw.setClosed(), claw)
                 .alongWith(intake.flipUp())
                 .andThen(new WaitCommand(.5))
-            .andThen(transfer.elevatorToBottom().alongWith(new InstantCommand(() -> fourbar.fourbarUp()))
-            ));
+            .andThen(new InstantCommand(() -> fourbar.fourbarUp()))
+            );
             
              
     //Secondary manual transfer
@@ -283,22 +260,8 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
 
-    //secondary controller manual elevator NO SAFETY        
-    secondaryController
-        .axisGreaterThan(1, 0)
-        .whileTrue(new RunCommand(
-            () -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09)),
-            transfer));
+    
 
-
-    //secondary controller manual elevator NO SAFETY
-    secondaryController
-        .axisLessThan(1, 0)
-        .whileTrue(new RunCommand(
-            () -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09)),
-            transfer));
-
-  
   
     //secondary manual intake up
     secondaryController
