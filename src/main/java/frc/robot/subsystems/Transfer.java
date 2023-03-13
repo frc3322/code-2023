@@ -30,16 +30,7 @@ public class Transfer extends SubsystemBase implements Loggable{
 
   /** Creates a new Transfer. */
   public static final CANSparkMax beltMotor = new CANSparkMax(CAN.transfer, MotorType.kBrushless);
-  public static final CANSparkMax elevatorMotor = new CANSparkMax(CAN.elevatorMotor, MotorType.kBrushless);
 
-  private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
-
-  @Log private double elevatorPos = elevatorEncoder.getPosition();
-
-  @Log private boolean elevatorTop = elevatorAtTop().getAsBoolean();
-  @Log private boolean elevatorBotom = elevatorAtBottom().getAsBoolean();
-
-  @Log private boolean elevatorShouldntRunlogg = elevatorShouldntRun().getAsBoolean();
 
   @Log public double activeBeltSpeed = TransferConstants.coneTransferSpeed;
 
@@ -52,22 +43,13 @@ public class Transfer extends SubsystemBase implements Loggable{
     beltMotor.burnFlash();
     
     //Initialize Elevator
-    elevatorMotor.setIdleMode(IdleMode.kBrake);
-    elevatorMotor.burnFlash();
+
   }
 
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    elevatorPos = elevatorEncoder.getPosition();
-    if(elevatorAtTop().getAsBoolean()){
-      elevatorPos = 0;
-    }
-    elevatorTop = elevatorTopProx.get();
-    elevatorBotom = elevatorBottomProx.get();
-    elevatorShouldntRunlogg = elevatorShouldntRun().getAsBoolean();
-
   }
 
   @Log
@@ -105,54 +87,4 @@ public class Transfer extends SubsystemBase implements Loggable{
   public void setActiveBeltSpeed(double speed){
     activeBeltSpeed = speed;
   }
-
-
-  public BooleanSupplier elevatorAtTop(){
-    return ()-> !elevatorTopProx.get();
-  }
-
-  
-  public BooleanSupplier elevatorAtBottom(){
-    return ()-> !elevatorBottomProx.get();
-  }
-
-  public BooleanSupplier elevatorShouldntRun(){
-    return ()-> (elevatorAtTop().getAsBoolean()) || (elevatorAtBottom().getAsBoolean());
-  }
-
-  public Command elevatorToTop(){
-    return new RunCommand(()-> setElevatorPower(-.5))
-    .until(elevatorAtTop())
-    .andThen(()-> setElevatorPower(0));
-  }
-
-  public Command elevatorToBottom(){
-    return new RunCommand(()-> setElevatorPower(.5))
-    .until(elevatorAtBottom())
-    .andThen(()-> setElevatorPower(0));
-  }
-
-  
-    public void setElevatorPower(double power)
-    {
-        elevatorMotor.set(power);
-    }
-
-    public double convertEncoderPosition(ElevatorPosition position) {
-      double encoderPosition;
-      if (position == ElevatorPosition.BOTTOM){
-          encoderPosition = ElevatorConstants.kBottomEncoderPosition;
-      }else if (position == ElevatorPosition.MID){
-        encoderPosition = ElevatorConstants.kMidEncoderPosition;
-      }
-      else{
-          encoderPosition = ElevatorConstants.kTopEncoderPosition;
-      }
-      return encoderPosition;
-    }
-
-    public double getElevatorPosition(){
-        // gets the current elevator encoder position
-        return elevatorPos;
-    }
 }
