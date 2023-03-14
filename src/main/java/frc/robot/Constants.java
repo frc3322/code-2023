@@ -1,8 +1,10 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 
-public final class Constants {
+public final class Constants{
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   
@@ -72,7 +74,7 @@ public final class Constants {
   }
 
   public static final class IntakeConstants{
-    public static final double coneIntakeInSpeed = 0.6;
+    @Config public static final double coneIntakeInSpeed = 0.6;
     public static final double cubeIntakeInSpeed = 0.2;
 
     public static final double armUpSpeed = -0.3;
@@ -80,7 +82,7 @@ public final class Constants {
 
     public static final double armDownSpeed = 0.2; 
     
-
+    @Config public static final double bottomRollerSpeedMultiplier = 0.6;
 
   }
 

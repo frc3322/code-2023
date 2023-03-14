@@ -28,9 +28,11 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Transfer;
+import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
+import io.github.oblarg.oblog.annotations.Config;
 
-public class RobotContainer {
+public class RobotContainer implements Loggable{
 
   // The robot's subsystems and commands are defined here...
 
@@ -39,6 +41,14 @@ public class RobotContainer {
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
   private final Transfer transfer = new Transfer();
+
+  
+ private double speedy = -1;
+
+//  @Config
+//  public void setty(double x){
+//     speedy = x;
+//  }
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController secondaryController = new CommandXboxController(1);
@@ -134,7 +144,7 @@ public class RobotContainer {
     //Driver 4 bar toggle OR eject... needs testing
     driverController
         .a()
-        .whileTrue(new StartEndCommand(()->intake.spinIntakeBottomFaster(-IntakeConstants.coneIntakeInSpeed), ()->intake.spinIntakeBottomFaster(0), intake));
+        .whileTrue(new StartEndCommand(()->intake.spinIntakeTopFaster(speedy), ()->intake.spinIntakeBottomFaster(0), intake));
 
      
 
@@ -254,8 +264,8 @@ public class RobotContainer {
                 .andThen(new WaitCommand(.5))
                 .andThen(
                     new InstantCommand(() -> fourbar.fourbarDown()))
-                .andThen(new WaitCommand(.75))
-                .andThen(new InstantCommand(() -> claw.setOpen(), claw))
+                //.andThen(new WaitCommand(.75))
+                //.andThen(new InstantCommand(() -> claw.setOpen(), claw))
 
         );
     
@@ -263,8 +273,8 @@ public class RobotContainer {
     secondaryController
         .povUp()
         .onTrue(
-            new InstantCommand(() -> claw.setClosed(), claw)
-                .alongWith(intake.flipUp())
+            new InstantCommand(() -> /*claw.setClosed(), claw)
+                .alongWith(*/intake.flipUp())
                 .andThen(new WaitCommand(.5))
             .andThen(transfer.elevatorToBottom().alongWith(new InstantCommand(() -> fourbar.fourbarUp()))
             ));
