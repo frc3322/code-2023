@@ -166,7 +166,7 @@ public class Intake extends SubsystemBase implements Loggable {
 
   public void spinIntakeBottomFaster(double speed){
     motorTopRoller.set(speed);
-    motorBottomRoller.set(speed*2);
+    motorBottomRoller.set(speed*.5);
     //multiply by .8
   }
 

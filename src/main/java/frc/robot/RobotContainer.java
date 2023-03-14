@@ -134,7 +134,7 @@ public class RobotContainer {
     //Driver 4 bar toggle OR eject... needs testing
     driverController
         .a()
-        .whileTrue(new StartEndCommand(()->intake.spinIntakeBottomFaster(-IntakeConstants.coneIntakeInSpeed), ()->intake.spinIntakeBottomFaster(0), intake));
+        .whileTrue(new StartEndCommand(()->intake.spinIntakeBottomFaster(-1), ()->intake.spinIntakeBottomFaster(0), intake));
 
      
 
