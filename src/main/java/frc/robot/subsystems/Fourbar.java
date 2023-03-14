@@ -63,4 +63,15 @@ public class Fourbar extends SubsystemBase implements Loggable {
       //I don't know if closed should be the default position, but it should work for not.
       return FourbarPosition.RETRACT;
     }
+
+  public Command createMoveCommand(FourbarPosition fourbarDestination){
+    return new InstantCommand(()->{
+    if (fourbarDestination == FourbarPosition.EXTEND) {
+      fourbarUp();
+    }
+    else {
+      fourbarDown();
+    }
+    }).until(()->(fourbarDestination==getFourBarPosition()));
+  }
 }
