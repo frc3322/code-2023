@@ -20,7 +20,6 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.TransferConstants;
 import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.DriveToDistanceCommand;
-import frc.robot.commands.EjectGamePieceCommand;
 import frc.robot.commands.MoveClawCommand;
 import frc.robot.commands.MoveFourbarCommand;
 import frc.robot.subsystems.Claw;
@@ -53,11 +52,6 @@ public class RobotContainer {
         drivetrain.drive(speed, turn);
       }, drivetrain);
 
-
-
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
 
   
   public RobotContainer() {
@@ -94,9 +88,7 @@ public class RobotContainer {
     // default commands
     drivetrain.setDefaultCommand(driveCommand);
     transfer.setDefaultCommand(transfer.beltRunCommand(transfer));
-   // intake.setDefaultCommand(intake.spinIntakeWhileUp(transfer.isBeltRunning()));
-    // transfer.setDefaultCommand(elevatorCommand);
-
+  
     // driver controller (0) commands
 
     //Automated intake control
@@ -109,28 +101,13 @@ public class RobotContainer {
           .andThen(intake.flipDownSpin()))
         .onFalse(intake.flipUpStop());
 
-    // driverController
-    //     .leftTrigger()
-    //     .onTrue(intake.flipDownEject()
-    //     .andThen(new InstantCommand(() -> fourbar.fourbarDown()))
-    //     )
-    //     .onFalse(intake.flipUpStop());
+   
 
     //Driver 4 bar toggle OR eject... needs testing
     driverController
         .a()
         .whileTrue(new StartEndCommand(()->intake.spinIntakeBottomFaster(-IntakeConstants.coneIntakeInSpeed), ()->intake.spinIntakeBottomFaster(0), intake));
 
-     
-
-    // driverController
-    // .rightBumper()
-    // .onTrue(
-    // new InstantCommand(() -> claw.setClosed(), claw)
-    // .andThen(new WaitCommand(.5))
-    // .andThen(
-    // fourbar.fourbarToggle()
-    // ));
 
     //Driver manual intake up
     driverController
@@ -157,17 +134,11 @@ public class RobotContainer {
           .andThen(intake.cubeFlipDownSpin()))
         .onFalse(intake.flipUpStop());
 
-        // .axisGreaterThan(2, 0)
-        // .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(-driverController.getLeftTriggerAxis()/3), intake));
-
     //driver manual intake down number two
     driverController
         .axisGreaterThan(3, 0)
         .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.cubeIntakeInSpeed),
-        () -> intake.spinIntake(0)));
-
-
-        
+        () -> intake.spinIntake(0)));      
 
     // driver's claw open override
     driverController
@@ -190,16 +161,6 @@ public class RobotContainer {
         .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed),
             () -> intake.spinIntake(0)));
 
- 
- 
-   // driverController
-    // .a()
-    // .onTrue(
-    // new InstantCommand(() -> claw.setClosed(), claw)
-    // .andThen(new WaitCommand(.75))
-    // .andThen(
-    // new InstantCommand(() -> fourbar.fourbarDown())
-    // ));
 
     // secondary controls timeee
 
@@ -260,8 +221,6 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
 
-    
-
   
     //secondary manual intake up
     secondaryController
@@ -282,19 +241,7 @@ public class RobotContainer {
          ()-> intake.spinIntakeTopFaster(0),
           intake)
       );
-    // secondaryController
-    // .axisGreaterThan(2, 0)
-    // .whileTrue(new RunCommand(()->
-    // transfer.setElevatorPower(secondaryController.getLeftTriggerAxis()/2),
-    // transfer));
 
-    // secondaryController
-    // .axisGreaterThan(3, 0)
-    // .whileTrue(new RunCommand(()->
-    // transfer.setElevatorPower(-secondaryController.getRightTriggerAxis()/2),
-    // transfer));
-
-    // down trasfer reversed
 
   }
 
