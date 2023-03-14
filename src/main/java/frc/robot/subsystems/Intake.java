@@ -29,8 +29,6 @@ public class Intake extends SubsystemBase implements Loggable {
   private final DigitalInput intakeTopSensor = new DigitalInput(DIO.intakeTopSensor);
   // intake will need a proximity sensor to tell if there is a game piece inside
  
-
-  
   @Log private double armpos;
   @Log private double armPower;
   @Log private double intakeAtTop;
@@ -185,6 +183,11 @@ public class Intake extends SubsystemBase implements Loggable {
     
     armpos = armEncoder.getPosition();
     armPower = motorArm.getAppliedOutput();
+
+    // If top sensor detects intake up, zeros encoder
+    // if (!intakeTopSensor.get()) {
+    //   armEncoder.setPosition(0.0);
+    // }
   }
 }
   
