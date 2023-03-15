@@ -13,9 +13,9 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 
 /** Add your docs here. */
-public class GetRamseteCommand extends RamseteCommand {
+public class AutonRamseteCommand extends RamseteCommand {
 
-    public GetRamseteCommand(Trajectory path, Drivetrain drivetrain){
+    public AutonRamseteCommand(Trajectory path, Drivetrain drivetrain){
         super(
             path,
             drivetrain::getPose,
@@ -27,8 +27,8 @@ public class GetRamseteCommand extends RamseteCommand {
             ),
             DriveConstants.kDriveKinematics,
             drivetrain::getWheelSpeeds,
-            new PIDController(DriveConstants.kDriveP, 0, 0),
-            new PIDController(DriveConstants.kDriveP, 0, 0),
+            new PIDController(DriveConstants.kDrivePRamsete, 0, 0),
+            new PIDController(DriveConstants.kDrivePRamsete, 0, 0),
             drivetrain::tankDriveVolts,
             drivetrain
         );
