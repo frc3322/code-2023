@@ -46,16 +46,20 @@ public class Intake extends SubsystemBase implements Loggable {
 
   @Log
   public Boolean atTop(){
+    //return true if encoder is at 0 position/below 1 position.
     return armEncoder.getPosition() < 1;
   }    
   
   @Log
   public Boolean atBottom(){
+    //return true if encoder is at bottom.
     return armEncoder.getPosition() > IntakeZoneLimits.bottomLimitOff;
   }  
   
-
+/*
+Not in use
     public Command spinIntakeWhileUp(boolean transferRunning){
+
       return new RunCommand(() ->{
         if(transferRunning){
           spinIntakeSameWay(.1);
@@ -65,9 +69,10 @@ public class Intake extends SubsystemBase implements Loggable {
         }
        }, this);
     }
-
+*/
     public Command flipUp(){
       return new RunCommand(
+        //set flipper to correct setting until it is true that the flipper is at the top.
         () -> setFlipperSpeed(calculateIntakeFlipUp())
       )
       .until(()->atTop());
@@ -76,6 +81,7 @@ public class Intake extends SubsystemBase implements Loggable {
 
     public Command flipDownSpin(){
       return new RunCommand(
+        //flip down and spin intake in with the top wheels moving faster
         () -> {setFlipperSpeed(calculateIntakeFlipDown());
         spinIntakeTopFaster(IntakeConstants.coneIntakeInSpeed);}, this
       )
@@ -95,8 +101,9 @@ public class Intake extends SubsystemBase implements Loggable {
     .withTimeout(2);
       
     }
-      
+    
     public Command flipUpStop(){
+      //stop spinning, then move until at top is true. 
       return new RunCommand(
         () -> {setFlipperSpeed(calculateIntakeFlipUp());
         spinIntakeTopFaster(0);}, this
@@ -108,13 +115,15 @@ public class Intake extends SubsystemBase implements Loggable {
 
     
     public Command flipDown(){
+      //flips to bottom, does not spin. may be able to delete
       return new RunCommand(
         () -> setFlipperSpeed(calculateIntakeFlipDown())
       )
       .until(()->atBottom());
       
     }
-
+/*
+not in use
     public Command flipDownEject(){
       return new RunCommand(
         () -> {setFlipperSpeed(calculateIntakeFlipDown());
@@ -123,10 +132,11 @@ public class Intake extends SubsystemBase implements Loggable {
       .until(()->atBottom()
       ).withTimeout(2);
       
-    }
+    */
 
 
   public void setFlipperSpeed(double speed){
+    //moves the entire arm
     motorArm.set(speed);
   }
 
@@ -156,6 +166,7 @@ public class Intake extends SubsystemBase implements Loggable {
     //multiply by .8
   }
   public void spinIntake(double speed){
+    //move both same speed
     motorTopRoller.set(speed);
     motorBottomRoller.set(-speed);
     //multiply by .8
@@ -163,17 +174,22 @@ public class Intake extends SubsystemBase implements Loggable {
 
 
   public void spinIntakeBottomFaster(double speed){
+    //move bottom faster
     motorTopRoller.set(speed);
     motorBottomRoller.set(speed * 2);
     //multiply by .8
   }
-
+/*
+Not in use
   public void spinIntakeSameWay(double speed){
+    //spin them in same direction
     motorTopRoller.set(speed);
     motorBottomRoller.set(-speed);
   }
+  */
 
   public void resetArmEncoder(){
+    //set current position to 0.
     armEncoder.setPosition(0);
   }
 

@@ -26,17 +26,21 @@ public class Claw extends SubsystemBase {
     }
 
     public void setOpen() {
+      //opens claw
      claw.set(Value.kReverse);
     }
 
     public void setClosed() {
+      //closes claw
       claw.set(Value.kForward);
     }
     public ClawPosition getClawPosition(){
       if (claw.get()==Value.kReverse){
+        //if claw is open return open
         return ClawPosition.OPEN;
       }
       else if (claw.get()==Value.kForward){
+        //if claw is closed return closed
         return ClawPosition.CLOSED;
       }
       //I don't know if closed should be the default position, but it shuld work for not.

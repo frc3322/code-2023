@@ -20,9 +20,8 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.TransferConstants;
 import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.DriveToDistanceCommand;
-import frc.robot.commands.EjectGamePieceCommand;
 import frc.robot.commands.MoveClawCommand;
-import frc.robot.commands.MoveFourbarCommand;
+//import frc.robot.commands.MoveFourbarCommand;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
@@ -63,26 +62,6 @@ public class RobotContainer implements Loggable{
         drivetrain.drive(speed, turn);
       }, drivetrain);
 
-  private final Command elevatorCommand = new RunCommand(
-      () -> {
-        double elevatorPower = MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09);
-        double transferPower = -MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09);
-
-        transfer.setElevatorPower(elevatorPower);
-        transfer.setBeltPower(transferPower);
-
-        // if(transfer.isFrontOccupied()){
-        // transfer.setBeltPower(transfer.activeBeltSpeed);
-        // }
-        // if(transfer.isBackOccupied()){
-        // transfer.setBeltPower(0);
-        // }
-
-      }, transfer);
-
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
 
   
   public RobotContainer() {
@@ -119,9 +98,7 @@ public class RobotContainer implements Loggable{
     // default commands
     drivetrain.setDefaultCommand(driveCommand);
     transfer.setDefaultCommand(transfer.beltRunCommand(transfer));
-   // intake.setDefaultCommand(intake.spinIntakeWhileUp(transfer.isBeltRunning()));
-    // transfer.setDefaultCommand(elevatorCommand);
-
+  
     // driver controller (0) commands
 
     //Automated intake control
@@ -134,28 +111,13 @@ public class RobotContainer implements Loggable{
           .andThen(intake.flipDownSpin()))
         .onFalse(intake.flipUpStop());
 
-    // driverController
-    //     .leftTrigger()
-    //     .onTrue(intake.flipDownEject()
-    //     .andThen(new InstantCommand(() -> fourbar.fourbarDown()))
-    //     )
-    //     .onFalse(intake.flipUpStop());
+   
 
     //Driver 4 bar toggle OR eject... needs testing
     driverController
         .a()
         .whileTrue(new StartEndCommand(()->intake.spinIntake(speedy), ()->intake.spinIntakeBottomFaster(0), intake));
 
-     
-
-    // driverController
-    // .rightBumper()
-    // .onTrue(
-    // new InstantCommand(() -> claw.setClosed(), claw)
-    // .andThen(new WaitCommand(.5))
-    // .andThen(
-    // fourbar.fourbarToggle()
-    // ));
 
     //Driver manual intake up
     driverController
@@ -182,17 +144,11 @@ public class RobotContainer implements Loggable{
           .andThen(intake.cubeFlipDownSpin()))
         .onFalse(intake.flipUpStop());
 
-        // .axisGreaterThan(2, 0)
-        // .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(-driverController.getLeftTriggerAxis()/3), intake));
-
     //driver manual intake down number two
     driverController
         .axisGreaterThan(3, 0)
         .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.cubeIntakeInSpeed),
-        () -> intake.spinIntake(0)));
-
-
-        
+        () -> intake.spinIntake(0)));      
 
     // driver's claw open override
     driverController
@@ -215,16 +171,6 @@ public class RobotContainer implements Loggable{
         .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed),
             () -> intake.spinIntake(0)));
 
- 
- 
-   // driverController
-    // .a()
-    // .onTrue(
-    // new InstantCommand(() -> claw.setClosed(), claw)
-    // .andThen(new WaitCommand(.75))
-    // .andThen(
-    // new InstantCommand(() -> fourbar.fourbarDown())
-    // ));
 
     // secondary controls timeee
 
@@ -246,15 +192,7 @@ public class RobotContainer implements Loggable{
           new InstantCommand(() -> transfer.setBeltPower(0))
         );
 
-    //secondary automatic elevator down
-    secondaryController
-        .leftBumper()
-        .onTrue(transfer.elevatorToBottom());
 
-    //secondary automatic elevator up
-    secondaryController
-        .rightBumper()
-        .onTrue(transfer.elevatorToTop());
 
     //Secondary 4 bar in with claw and intake safety
      secondaryController
@@ -276,8 +214,8 @@ public class RobotContainer implements Loggable{
             new InstantCommand(() -> /*claw.setClosed(), claw)
                 .alongWith(*/intake.flipUp())
                 .andThen(new WaitCommand(.5))
-            .andThen(transfer.elevatorToBottom().alongWith(new InstantCommand(() -> fourbar.fourbarUp()))
-            ));
+            .andThen(new InstantCommand(() -> fourbar.fourbarUp()))
+            );
             
              
     //Secondary manual transfer
@@ -293,22 +231,6 @@ public class RobotContainer implements Loggable{
         .whileTrue(new RunCommand(
             () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
 
-    //secondary controller manual elevator NO SAFETY        
-    secondaryController
-        .axisGreaterThan(1, 0)
-        .whileTrue(new RunCommand(
-            () -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09)),
-            transfer));
-
-
-    //secondary controller manual elevator NO SAFETY
-    secondaryController
-        .axisLessThan(1, 0)
-        .whileTrue(new RunCommand(
-            () -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09)),
-            transfer));
-
-  
   
     //secondary manual intake up
     secondaryController
@@ -329,19 +251,7 @@ public class RobotContainer implements Loggable{
          ()-> intake.spinIntakeTopFaster(0),
           intake)
       );
-    // secondaryController
-    // .axisGreaterThan(2, 0)
-    // .whileTrue(new RunCommand(()->
-    // transfer.setElevatorPower(secondaryController.getLeftTriggerAxis()/2),
-    // transfer));
 
-    // secondaryController
-    // .axisGreaterThan(3, 0)
-    // .whileTrue(new RunCommand(()->
-    // transfer.setElevatorPower(-secondaryController.getRightTriggerAxis()/2),
-    // transfer));
-
-    // down trasfer reversed
 
   }
 
@@ -369,13 +279,13 @@ public class RobotContainer implements Loggable{
            
            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
           //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
-            new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
+            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
             new WaitCommand(3.5),
             new MoveClawCommand(Types.ClawPosition.OPEN, claw),
             new WaitCommand(0.5),
             new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
             new WaitCommand(0.5),
-            new MoveFourbarCommand(Types.FourbarPosition.RETRACT, fourbar),
+            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
             new WaitCommand(0.5),
             new MoveClawCommand(Types.ClawPosition.OPEN, claw),
             
@@ -397,13 +307,13 @@ private class JustPlace extends SequentialCommandGroup {
             
             new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
             //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
-            new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
+            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
             new WaitCommand(3.5),
             new MoveClawCommand(Types.ClawPosition.OPEN, claw),
             new WaitCommand(0.5),
             new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
             new WaitCommand(0.5),
-            new MoveFourbarCommand(Types.FourbarPosition.RETRACT, fourbar),
+            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
             new WaitCommand(0.5),
             new MoveClawCommand(Types.ClawPosition.OPEN, claw)
             
@@ -418,13 +328,13 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
             
             new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
             //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
-            new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
+            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
             new WaitCommand(3.5),
             new MoveClawCommand(Types.ClawPosition.OPEN, claw),
             new WaitCommand(0.5),
             new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
             new WaitCommand(0.5),
-            new MoveFourbarCommand(Types.FourbarPosition.RETRACT, fourbar),
+            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
             new WaitCommand(0.5),
             new MoveClawCommand(Types.ClawPosition.OPEN, claw),
 
