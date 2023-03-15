@@ -9,6 +9,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -35,6 +38,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final DifferentialDrive robotDrive = new DifferentialDrive(motorFL, motorFR);
 
   private final AHRS gyro = new AHRS();
+
+  private final DifferentialDriveOdometry driveOdometry;
   
   private final SlewRateLimiter accelLimit = new SlewRateLimiter(1.2);
   private final SlewRateLimiter turnLimit = new SlewRateLimiter(2);
@@ -87,6 +92,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     motorFL.burnFlash();
     motorBR.burnFlash();
     motorBL.burnFlash();
+
+    driveOdometry = new DifferentialDriveOdometry(gyro.getRotation2d(), FLEncoder.getPosition(), FREncoder.getPosition());
   }
 
 
@@ -108,8 +115,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return motorFR.getEncoder().getPosition();
   }
   @Log
-  public void getPose() {
-    // TODO: complete this function
+  public Pose2d getPose() {
+    return driveOdometry.getPoseMeters();
   }
 
   // Setters
@@ -140,6 +147,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     robotDrive.arcadeDrive(speed, turn, false);
 
     robotDrive.feed();
+  }
+
+  public void tankDriveVolts(double leftVolts, double rightVolts){
+    motorFL.setVoltage(leftVolts);
+    motorFR.setVoltage(rightVolts);
   }
 
   public void autonDrive(double speed, double turn) {
@@ -181,7 +193,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     robotDrive.feed();
   }
 
-  
+  public DifferentialDriveWheelSpeeds getWheelSpeeds(){
+    return new DifferentialDriveWheelSpeeds(FLEncoder.getVelocity(), FREncoder.getVelocity());
+  }
 
   
 
@@ -212,7 +226,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     robotDrive.feed();
 
-    
+    driveOdometry.update(gyro.getRotation2d(), FLEncoder.getPosition(), FREncoder.getPosition());
 
   }
 

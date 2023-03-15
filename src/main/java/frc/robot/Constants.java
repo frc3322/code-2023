@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -56,6 +57,12 @@ public final class Constants{
     public static final double kDriveD = 0.0075;
     public static final double kDriveToleranceMeters = 0.05;
     public static final double kDriveRateToleranceMetersPerS =0;
+
+    public static final double ksVolts = 0;
+    public static final double kvVoltSecondsPerMeter = 0;
+    public static final double kaVoltSecondsSquaredPerMeter = 0;
+    public static final double kTrackwidthMeters = 0;
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
     //public static final double encoderTicsPerFoot = 6.84;
   }
 
