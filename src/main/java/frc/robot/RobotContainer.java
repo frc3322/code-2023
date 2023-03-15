@@ -144,7 +144,7 @@ public class RobotContainer implements Loggable{
     //Driver 4 bar toggle OR eject... needs testing
     driverController
         .a()
-        .whileTrue(new StartEndCommand(()->intake.spinIntakeTopFaster(speedy), ()->intake.spinIntakeBottomFaster(0), intake));
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(speedy), ()->intake.spinIntakeBottomFaster(0), intake));
 
      
 
