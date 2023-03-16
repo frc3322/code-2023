@@ -85,7 +85,7 @@ public final class Constants{
     public static final double ksVolts = 0.14723;
     public static final double kvVoltSecondsPerMeter = 2.1256;
     public static final double kaVoltSecondsSquaredPerMeter = 1.0358;
-    public static final double kTrackwidthMeters = 0;
+    public static final double kTrackwidthMeters = 0.56429;
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
     
     public static final DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(

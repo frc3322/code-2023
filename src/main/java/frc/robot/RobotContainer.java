@@ -406,27 +406,27 @@ public class RobotContainer implements Loggable{
     }
   }
   
-  private class TwoCubeSingleStation extends SequentialCommandGroup {
+//   private class TwoCubeSingleStatBion extends SequentialCommandGroup {
 
-    private TwoCubeSingleStation() {
-        addCommands(
-            //Place cone from fourbar on start
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
-            //REDUCE THIS NUMBER
-            new WaitCommand(3.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            new WaitCommand(0.5),
-            new MoveFourbarCommand(Types.FourbarPosition.RETRACT, fourbar),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw)
+//     private TwoCubeSingleStation() {
+//         addCommands(
+//             //Place cone from fourbar on start
+//             new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+//             new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
+//             //REDUCE THIS NUMBER
+//             new WaitCommand(3.5),
+//             new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+//             new WaitCommand(0.5),
+//             new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+//             new WaitCommand(0.5),
+//             new MoveFourbarCommand(Types.FourbarPosition.RETRACT, fourbar),
+//             new WaitCommand(0.5),
+//             new MoveClawCommand(Types.ClawPosition.OPEN, claw)
 
             
-        );
-    }
-  }
+//         );
+//     }
+//   }
   
   private class PlaceAndLeave extends SequentialCommandGroup {
     private PlaceAndLeave() {
