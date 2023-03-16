@@ -4,7 +4,15 @@
 
 package frc.robot;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.TransferConstants;
 import frc.robot.Types.FourbarPosition;
+import frc.robot.commands.AutonRamseteCommand;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.EjectGamePieceCommand;
 import frc.robot.commands.MoveClawCommand;
@@ -363,6 +372,42 @@ public class RobotContainer implements Loggable{
   /*
   AUTON COMMANDS BELOW
   */
+  private class StraightLineRamseteTest extends SequentialCommandGroup {
+    
+    private StraightLineRamseteTest() {
+        addCommands(
+            new InstantCommand(
+                () -> drivetrain.resetOdometry(Robot.straightLineTrajectory.getInitialPose()), 
+                drivetrain
+            ),
+            new AutonRamseteCommand(Robot.straightLineTrajectory, drivetrain)
+            
+        );
+    }
+  }
+  
+  private class TwoCubeSingleStation extends SequentialCommandGroup {
+
+    private TwoCubeSingleStation() {
+        addCommands(
+            //Place cone from fourbar on start
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            new MoveFourbarCommand(Types.FourbarPosition.EXTEND, fourbar),
+            //REDUCE THIS NUMBER
+            new WaitCommand(3.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            new WaitCommand(0.5),
+            new MoveFourbarCommand(Types.FourbarPosition.RETRACT, fourbar),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw)
+
+            
+        );
+    }
+  }
+  
   private class PlaceAndLeave extends SequentialCommandGroup {
     private PlaceAndLeave() {
         addCommands(
