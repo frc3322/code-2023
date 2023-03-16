@@ -101,7 +101,7 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
     autChooser.addOption("straight forward pathweaver test", new StraightLinePathWeaver());
-    autChooser.addOption("straight forward ramsete", new StraightLine());
+    //autChooser.addOption("straight forward ramsete", new StraightLine());
 
     //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
@@ -376,21 +376,21 @@ public class RobotContainer implements Loggable{
   /*
   AUTON COMMANDS BELOW
   */
-  private class StraightLine extends SequentialCommandGroup {
+//   private class StraightLine extends SequentialCommandGroup {
     
-    Trajectory exampleTrajectory =
-        TrajectoryGenerator.generateTrajectory(
-            new Pose2d(0, 0, new Rotation2d(0)),
-            List.of(new Translation2d(1.5, 0)),
-            new Pose2d(3, 0, new Rotation2d(0)),
-            AutonConstants.kDriveTrajectoryConfig);
+//     Trajectory exampleTrajectory =
+//         TrajectoryGenerator.generateTrajectory(
+//             new Pose2d(0, 0, new Rotation2d(0)),
+//             List.of(new Translation2d(1, 0)),
+//             new Pose2d(3, 0, new Rotation2d(0)),
+//             AutonConstants.kDriveTrajectoryConfig);
 
-    private StraightLine(){
-        addCommands(
-            new AutonRamseteCommand(exampleTrajectory, drivetrain)
-        );
-    }
-  }
+//     private StraightLine(){
+//         addCommands(
+//             new AutonRamseteCommand(exampleTrajectory, drivetrain)
+//         );
+//     }
+//   }
   
   private class StraightLinePathWeaver extends SequentialCommandGroup {
     

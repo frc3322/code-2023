@@ -93,6 +93,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     motorBR.burnFlash();
     motorBL.burnFlash();
 
+    resetEncoders();
+
     driveOdometry = new DifferentialDriveOdometry(gyro.getRotation2d(), FLEncoder.getPosition(), FREncoder.getPosition());
   }
 
@@ -114,7 +116,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public double getDistance() {
     return motorFR.getEncoder().getPosition();
   }
-  @Log
+  //@Log
   public Pose2d getPose() {
     return driveOdometry.getPoseMeters();
   }
@@ -157,6 +159,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public void tankDriveVolts(double leftVolts, double rightVolts){
     motorFL.setVoltage(leftVolts);
     motorFR.setVoltage(rightVolts);
+    
+    robotDrive.feed();
   }
 
   public void autonDrive(double speed, double turn) {
