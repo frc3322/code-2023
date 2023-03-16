@@ -119,6 +119,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return driveOdometry.getPoseMeters();
   }
 
+  public void resetOdometry(Pose2d pose){
+    resetEncoders();
+    driveOdometry.resetPosition(gyro.getRotation2d(), FLEncoder.getPosition(), FREncoder.getPosition(), pose);
+  }
+
   // Setters
   public void resetGyro() {
     gyro.reset();
