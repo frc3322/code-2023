@@ -1,8 +1,10 @@
 package frc.robot;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import io.github.oblarg.oblog.Loggable;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import io.github.oblarg.oblog.annotations.Config;
 
 public final class Constants{
@@ -58,12 +60,6 @@ public final class Constants{
     public static final double kDriveToleranceMeters = 0.05;
     public static final double kDriveRateToleranceMetersPerS =0;
 
-    public static final double kDrivePRamsete = 3.1549;
-    public static final double ksVolts = 0.14723;
-    public static final double kvVoltSecondsPerMeter = 2.1256;
-    public static final double kaVoltSecondsSquaredPerMeter = 1.0358;
-    public static final double kTrackwidthMeters = 0;
-    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
     //public static final double encoderTicsPerFoot = 6.84;
   }
 
@@ -79,6 +75,36 @@ public final class Constants{
     public static final double elevatorSpeed = .5;
 
     
+  }
+
+  public static final class AutonConstants {
+    public static final double kAutonMaxVoltage = 0;
+    public static final double kMaxSpeedMetersPerSecond = 3.3; // 3.6
+    public static final double kMaxAccelerationMetersPerSecondSquared = 1.3; // 1.5
+    public static final double kDrivePRamsete = 3.1549;
+    public static final double ksVolts = 0.14723;
+    public static final double kvVoltSecondsPerMeter = 2.1256;
+    public static final double kaVoltSecondsSquaredPerMeter = 1.0358;
+    public static final double kTrackwidthMeters = 0;
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
+    
+    public static final DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+      new SimpleMotorFeedforward
+      (
+        ksVolts, 
+        kvVoltSecondsPerMeter,
+        kaVoltSecondsSquaredPerMeter
+      ), 
+      kDriveKinematics, 
+      kAutonMaxVoltage
+      );
+    
+    public static final TrajectoryConfig kDriveTrajectoryConfig = new TrajectoryConfig(
+      kMaxSpeedMetersPerSecond,
+      kMaxAccelerationMetersPerSecondSquared
+      )
+      .setKinematics(kDriveKinematics)
+      .addConstraint(autoVoltageConstraint);
   }
 
   public static final class IntakeConstants{
