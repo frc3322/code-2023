@@ -5,7 +5,14 @@
 package frc.robot;
 
 
+import java.util.List;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.AutonConstants;
 //arooshwashere
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.TransferConstants;
@@ -92,6 +100,9 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("nothing", null);
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
+    autChooser.addOption("straight forward pathweaver test", new StraightLinePathWeaver());
+    autChooser.addOption("straight forward ramsete", new StraightLine());
+
     //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
     SmartDashboard.putData("select autonomous", autChooser);
@@ -365,9 +376,25 @@ public class RobotContainer implements Loggable{
   /*
   AUTON COMMANDS BELOW
   */
-  private class StraightLineRamseteTest extends SequentialCommandGroup {
+  private class StraightLine extends SequentialCommandGroup {
     
-    private StraightLineRamseteTest() {
+    Trajectory exampleTrajectory =
+        TrajectoryGenerator.generateTrajectory(
+            new Pose2d(0, 0, new Rotation2d(0)),
+            List.of(new Translation2d(1.5, 0)),
+            new Pose2d(3, 0, new Rotation2d(0)),
+            AutonConstants.kDriveTrajectoryConfig);
+
+    private StraightLine(){
+        addCommands(
+            new AutonRamseteCommand(exampleTrajectory, drivetrain)
+        );
+    }
+  }
+  
+  private class StraightLinePathWeaver extends SequentialCommandGroup {
+    
+    private StraightLinePathWeaver() {
         addCommands(
             new InstantCommand(
                 () -> drivetrain.resetOdometry(Robot.straightLineTrajectory.getInitialPose()), 
