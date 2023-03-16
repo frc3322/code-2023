@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Intake extends SubsystemBase implements Loggable {
@@ -32,7 +33,11 @@ public class Intake extends SubsystemBase implements Loggable {
   @Log private double armpos;
   @Log private double armPower;
   @Log private double intakeAtTop;
-  
+  @Config public double testingSpeed = -1;
+  //-11.4 for high
+  //-2 for low
+  //-5 for mid
+
   public Intake(){
     //default settings here, right?
     motorTopRoller.setIdleMode(IdleMode.kBrake);
@@ -167,9 +172,16 @@ not in use
   }
   public void spinIntake(double speed){
     //move both same speed
-    motorTopRoller.set(speed);
-    motorBottomRoller.set(-speed);
+    motorTopRoller.setVoltage(speed);
+    motorBottomRoller.setVoltage(-speed);
+    
     //multiply by .8
+  }
+
+
+  @Config
+  public void setSpeedy(double speedy){
+    testingSpeed = speedy;
   }
 
 

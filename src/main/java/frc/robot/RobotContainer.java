@@ -116,7 +116,7 @@ public class RobotContainer implements Loggable{
     //Driver 4 bar toggle OR eject... needs testing
     driverController
         .a()
-        .whileTrue(new StartEndCommand(()->intake.spinIntake(speedy), ()->intake.spinIntakeBottomFaster(0), intake));
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(intake.testingSpeed), ()->intake.spinIntakeBottomFaster(0), intake));
 
 
     //Driver manual intake up
@@ -165,7 +165,7 @@ public class RobotContainer implements Loggable{
         .y()
         .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.coneTransferSpeed)));
 
-    //driver manual intake spin
+    //driver manual intake spin - REWRITE AS ACTUAL START END
     driverController
         .rightBumper()
         .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed),
