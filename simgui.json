@@ -1,0 +1,16 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Distance Controller": "PIDController",
+      "/SmartDashboard/select autonomous": "String Chooser"
+    },
+    "windows": {
+      "/SmartDashboard/select autonomous": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  }
+}

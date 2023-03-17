@@ -8,11 +8,15 @@ package frc.robot;
 import java.util.List;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,6 +55,8 @@ public class RobotContainer implements Loggable{
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
   private final Transfer transfer = new Transfer();
+  Field2d fieldsim = new Field2d();
+  
 
   
  private double speedy = -1;
@@ -101,7 +107,7 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
     autChooser.addOption("straight forward pathweaver test", new StraightLinePathWeaver());
-    //autChooser.addOption("straight forward ramsete", new StraightLine());
+    autChooser.addOption("straight forward ramsete", new StraightLine());
 
     //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
@@ -109,6 +115,9 @@ public class RobotContainer implements Loggable{
 
     // Configure the trigger bindings
     configureBindings();
+
+    SmartDashboard.putData("null", fieldsim);
+    
 
   }
 
@@ -376,25 +385,57 @@ public class RobotContainer implements Loggable{
   /*
   AUTON COMMANDS BELOW
   */
-//   private class StraightLine extends SequentialCommandGroup {
+  private class StraightLine extends SequentialCommandGroup {
     
-//     Trajectory exampleTrajectory =
-//         TrajectoryGenerator.generateTrajectory(
-//             new Pose2d(0, 0, new Rotation2d(0)),
-//             List.of(new Translation2d(1, 0)),
-//             new Pose2d(3, 0, new Rotation2d(0)),
-//             AutonConstants.kDriveTrajectoryConfig);
+    DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+        new SimpleMotorFeedforward
+            (
+            AutonConstants.ksVolts, 
+            AutonConstants.kvVoltSecondsPerMeter,
+            AutonConstants.kaVoltSecondsSquaredPerMeter
+            ), 
+            AutonConstants.kDriveKinematics, 
+            AutonConstants.kAutonMaxVoltage
+    );
+      
+      TrajectoryConfig kDriveTrajectoryConfig = new TrajectoryConfig(
+          AutonConstants.kMaxSpeedMetersPerSecond,
+          AutonConstants.kMaxAccelerationMetersPerSecondSquared
+        )
+        .setKinematics(AutonConstants.kDriveKinematics)
+        .addConstraint(autoVoltageConstraint);
 
-//     private StraightLine(){
-//         addCommands(
-//             new AutonRamseteCommand(exampleTrajectory, drivetrain)
-//         );
-//     }
-//   }
+    Trajectory exampleTrajectory =
+        TrajectoryGenerator.generateTrajectory(
+            new Pose2d(0, 0, new Rotation2d(0)),
+            List.of(new Translation2d(0, 0.5)),
+            new Pose2d(0, 1, new Rotation2d(0)),
+            kDriveTrajectoryConfig);
+
+    private StraightLine(){
+        addCommands(
+            
+        new InstantCommand(
+                () -> drivetrain.resetOdometry(Robot.straightLineTrajectory.getInitialPose()), 
+                drivetrain
+            ),
+
+        new AutonRamseteCommand(exampleTrajectory, drivetrain),
+        
+        new InstantCommand(
+                () -> drivetrain.tankDriveVolts(0, 0), 
+                drivetrain
+            )
+        );
+    }
+  }
   
   private class StraightLinePathWeaver extends SequentialCommandGroup {
-    
+  
+
     private StraightLinePathWeaver() {
+        
+        
         addCommands(
             new InstantCommand(
                 () -> drivetrain.resetOdometry(Robot.straightLineTrajectory.getInitialPose()), 

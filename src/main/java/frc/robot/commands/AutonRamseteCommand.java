@@ -19,7 +19,7 @@ public class AutonRamseteCommand extends RamseteCommand {
         super(
             path,
             drivetrain::getPose,
-            new RamseteController(0, 0),
+            new RamseteController(),
             new SimpleMotorFeedforward(
                 AutonConstants.ksVolts,
                 AutonConstants.kvVoltSecondsPerMeter,
