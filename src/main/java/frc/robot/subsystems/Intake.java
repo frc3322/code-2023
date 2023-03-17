@@ -88,7 +88,7 @@ Not in use
       return new RunCommand(
         //flip down and spin intake in with the top wheels moving faster
         () -> {setFlipperSpeed(calculateIntakeFlipDown());
-        spinIntakeTopFaster(IntakeConstants.coneIntakeInSpeed);}, this
+        spinIntakeTopFaster(IntakeConstants.fastIntakeInV);}, this
       )
       .until(()->atBottom()
     )
@@ -99,7 +99,7 @@ Not in use
     public Command cubeFlipDownSpin(){
       return new RunCommand(
         () -> {setFlipperSpeed(calculateIntakeFlipDown());
-        spinIntakeTopFaster(IntakeConstants.cubeIntakeInSpeed);}, this
+        spinIntakeTopFaster(IntakeConstants.slowIntakeInV);}, this
       )
       .until(()->atBottom()
     )
@@ -165,15 +165,15 @@ not in use
     }
   }
  
-  public void spinIntakeTopFaster(double speed){
-    motorTopRoller.set(speed);
-    motorBottomRoller.set(-speed * IntakeConstants.bottomRollerSpeedMultiplier);
+  public void spinIntakeTopFaster(double volts){
+    motorTopRoller.setVoltage(volts);
+    motorBottomRoller.setVoltage(-volts * IntakeConstants.bottomRollerSpeedMultiplier);
     //multiply by .8
   }
-  public void spinIntake(double speed){
+  public void spinIntake(double volts){
     //move both same speed
-    motorTopRoller.setVoltage(speed);
-    motorBottomRoller.setVoltage(-speed);
+    motorTopRoller.setVoltage(volts);
+    motorBottomRoller.setVoltage(-volts);
     
     //multiply by .8
   }
@@ -185,10 +185,10 @@ not in use
   }
 
 
-  public void spinIntakeBottomFaster(double speed){
+  public void spinIntakeBottomFaster(double volts){
     //move bottom faster
-    motorTopRoller.set(speed);
-    motorBottomRoller.set(speed * 2);
+    motorTopRoller.setVoltage(volts);
+    motorBottomRoller.setVoltage(volts * 2);
     //multiply by .8
   }
 /*

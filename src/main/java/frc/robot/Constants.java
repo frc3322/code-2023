@@ -59,23 +59,13 @@ public final class Constants{
     //public static final double encoderTicsPerFoot = 6.84;
   }
 
-  public static final class ElevatorConstants {
-    public static final double kBottomEncoderPosition = 2;
-    public static final double kMidEncoderPosition = 1;
-    public static final double kTopEncoderPosition = 0;
-
-    public static final double kp = 0;
-    public static final double ki = 0;
-    public static final double kd = 0;
-
-    public static final double elevatorSpeed = .5;
-
-    
-  }
 
   public static final class IntakeConstants{
-    @Config public static final double coneIntakeInSpeed = 0.6;
-    public static final double cubeIntakeInSpeed = 0.2;
+    @Config public static final double fastIntakeInV = 5.0;
+    public static final double slowIntakeInV = 2.0;
+    public static final double intakeLowV = 2.0;
+    public static final double intakeMidV = 5.0;
+    public static final double intakeHighV = 9.0;
 
     public static final double armUpSpeed = -0.3;
     public static final double armUpSlowSpeed = -0.2;

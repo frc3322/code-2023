@@ -116,7 +116,7 @@ public class RobotContainer implements Loggable{
     //Driver 4 bar toggle OR eject... needs testing
     driverController
         .a()
-        .whileTrue(new StartEndCommand(()->intake.spinIntake(intake.testingSpeed), ()->intake.spinIntakeBottomFaster(0), intake));
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeLowV), ()->intake.spinIntakeBottomFaster(0), intake));
 
 
     //Driver manual intake up
@@ -147,7 +147,7 @@ public class RobotContainer implements Loggable{
     //driver manual intake down number two
     driverController
         .axisGreaterThan(3, 0)
-        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.cubeIntakeInSpeed),
+        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.slowIntakeInV),
         () -> intake.spinIntake(0)));      
 
     // driver's claw open override
@@ -158,17 +158,17 @@ public class RobotContainer implements Loggable{
     // x to reduce transfer speed
     driverController
         .x()
-        .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.cubeTransferSpeed)));
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeMidV), ()->intake.spinIntakeBottomFaster(0), intake));
 
     // y for normal transfer function
     driverController
         .y()
-        .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.coneTransferSpeed)));
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeHighV), ()->intake.spinIntakeBottomFaster(0), intake));
 
     //driver manual intake spin - REWRITE AS ACTUAL START END
     driverController
         .rightBumper()
-        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed),
+        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.fastIntakeInV),
             () -> intake.spinIntake(0)));
 
 
@@ -247,7 +247,7 @@ public class RobotContainer implements Loggable{
       .povRight()
       .whileTrue(
         new StartEndCommand(
-         ()-> intake.spinIntakeTopFaster(IntakeConstants.coneIntakeInSpeed) ,
+         ()-> intake.spinIntakeTopFaster(IntakeConstants.fastIntakeInV) ,
          ()-> intake.spinIntakeTopFaster(0),
           intake)
       );
