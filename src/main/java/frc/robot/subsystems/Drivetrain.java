@@ -110,6 +110,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
   @Log
   public double getRoll() {
+    //hopefully this should never change.
     return gyro.getRoll();
   }
   @Log

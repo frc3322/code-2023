@@ -36,30 +36,42 @@ public class Fourbar extends SubsystemBase implements Loggable {
   }
   
   public void fourbarDown(){
-    // sets fourbar to false or down in low
-    //if(fourBar.get() == Value.kForward){
+    // sets fourbar to down or down in low
       fourBar.set(Value.kForward);
     }
  // }
   public void fourbarUp(){
-   // if(fourBar.get() == Value.kReverse){
+   // sets fourbar to top
       fourBar.set(Value.kReverse);
-   // }
     
   }
 
   public Command fourbarToggle() {
+    //toggles position.
     return new InstantCommand(()-> fourBar.toggle());
   }
   
   public FourbarPosition getFourBarPosition(){
       if (fourBar.get()==Value.kReverse){
+        //if up return extended
         return FourbarPosition.EXTEND;
       }
       else if (fourBar.get()==Value.kForward){
         return FourbarPosition.RETRACT;
+        //if down return down
       }
-      //I don't know if closed should be the default position, but it shuld work for not.
+      //I don't know if closed should be the default position, but it should work for not.
       return FourbarPosition.RETRACT;
     }
+
+  public Command createMoveCommand(FourbarPosition fourbarDestination){
+    return new InstantCommand(()->{
+    if (fourbarDestination == FourbarPosition.EXTEND) {
+      fourbarUp();
+    }
+    else {
+      fourbarDown();
+    }
+    }).until(()->(fourbarDestination==getFourBarPosition()));
+  }
 }
