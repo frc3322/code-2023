@@ -333,7 +333,12 @@ public class RobotContainer implements Loggable{
                 () -> drivetrain.resetOdometry(Robot.straightLineTrajectory.getInitialPose()), 
                 drivetrain
             ),
-            new AutonRamseteCommand(Robot.straightLineTrajectory, drivetrain)
+            new AutonRamseteCommand(Robot.straightLineTrajectory, drivetrain),
+
+            new InstantCommand(
+                () -> drivetrain.tankDriveVolts(0, 0), 
+                drivetrain
+            )
             
         );
     }
