@@ -297,36 +297,18 @@ public class RobotContainer implements Loggable{
   */
   private class StraightLine extends SequentialCommandGroup {
     
-    DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
-        new SimpleMotorFeedforward
-            (
-            AutonConstants.ksVolts, 
-            AutonConstants.kvVoltSecondsPerMeter,
-            AutonConstants.kaVoltSecondsSquaredPerMeter
-            ), 
-            AutonConstants.kDriveKinematics, 
-            AutonConstants.kAutonMaxVoltage
-    );
-      
-      TrajectoryConfig kDriveTrajectoryConfig = new TrajectoryConfig(
-          AutonConstants.kMaxSpeedMetersPerSecond,
-          AutonConstants.kMaxAccelerationMetersPerSecondSquared
-        )
-        .setKinematics(AutonConstants.kDriveKinematics)
-        .addConstraint(autoVoltageConstraint);
-
     Trajectory exampleTrajectory =
         TrajectoryGenerator.generateTrajectory(
             new Pose2d(0, 0, new Rotation2d(0)),
             List.of(new Translation2d(0, 0.5)),
             new Pose2d(0, 1, new Rotation2d(0)),
-            kDriveTrajectoryConfig);
+            AutonConstants.kDriveTrajectoryConfig);
 
     private StraightLine(){
         addCommands(
             
         new InstantCommand(
-                () -> drivetrain.resetOdometry(Robot.straightLineTrajectory.getInitialPose()), 
+                () -> drivetrain.resetOdometry(exampleTrajectory.getInitialPose()), 
                 drivetrain
             ),
 

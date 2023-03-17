@@ -88,6 +88,24 @@ public final class Constants{
     public static final double kTrackwidthMeters = 0.56429;
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
     
+    public static final DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+        new SimpleMotorFeedforward
+            (
+            AutonConstants.ksVolts, 
+            AutonConstants.kvVoltSecondsPerMeter,
+            AutonConstants.kaVoltSecondsSquaredPerMeter
+            ), 
+            AutonConstants.kDriveKinematics, 
+            AutonConstants.kAutonMaxVoltage
+    );
+      
+      public static final TrajectoryConfig kDriveTrajectoryConfig = new TrajectoryConfig(
+          AutonConstants.kMaxSpeedMetersPerSecond,
+          AutonConstants.kMaxAccelerationMetersPerSecondSquared
+        )
+        .setKinematics(AutonConstants.kDriveKinematics)
+        .addConstraint(autoVoltageConstraint);
+
   }
 
   public static final class IntakeConstants{
