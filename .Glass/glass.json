@@ -1,0 +1,32 @@
+{
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "open": true
+      }
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Distance Controller": "PIDController",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/null": "Field2d",
+      "/SmartDashboard/select autonomous": "String Chooser"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "image": "${workspacedFolder}/.Glass/2023-field.png",
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables Settings": {
+    "listenAddress": "localhost",
+    "mode": "Client (NT4)",
+    "serverTeam": "localhost"
+  },
+  "NetworkTables View": {
+    "visible": false
+  }
+}
