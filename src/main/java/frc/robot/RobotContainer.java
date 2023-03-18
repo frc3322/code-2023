@@ -245,9 +245,8 @@ public class RobotContainer implements Loggable{
         .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(driverController.getRightTriggerAxis()/3), intake));
     secondaryController
         .leftBumper()
-        .whileTrue(new StartEndCommand(
-            ()->brake.brakeDown(), 
-            ()->brake.brakeUp()));
+        .onTrue(new InstantCommand(
+            ()->brake.toggleBrake()));
 
 
     secondaryController

@@ -24,6 +24,9 @@ public class Brake extends SubsystemBase {
     brake.set(Value.kReverse);
     //may need to be switched
   }
+  public void toggleBrake(){
+    brake.toggle();
+  }
   public Value getBrake(){
     return brake.get();
 
