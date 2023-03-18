@@ -82,6 +82,8 @@ public final class Constants{
     public static final double kMaxSpeedMetersPerSecond = 3.3; // 3.6
     public static final double kMaxAccelerationMetersPerSecondSquared = 1.3; // 1.5
     public static final double kDrivePRamsete = 3.1549;
+    // Set P gain to 0
+    // public static final double kDrivePRamsete = 0;
     public static final double ksVolts = 0.14723;
     public static final double kvVoltSecondsPerMeter = 2.1256;
     public static final double kaVoltSecondsSquaredPerMeter = 1.0358;
