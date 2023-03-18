@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.TransferConstants;
 import frc.robot.Types.FourbarPosition;
-import frc.robot.commands.AutonBalance;
 import frc.robot.commands.AutonBalanceCommand;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.MoveClawCommand;
@@ -42,7 +41,6 @@ public class RobotContainer implements Loggable{
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
   private final Transfer transfer = new Transfer();
-  private final AutonBalance autoBalance = new AutonBalance();
   
 
  private double speedy = -1;
@@ -342,8 +340,9 @@ private class PlaceBalance extends SequentialCommandGroup {
             new MoveClawCommand(Types.ClawPosition.OPEN, claw),
 
             new AutonBalanceCommand(
-                autoBalance,
+                drivetrain,
                 drivetrain::tankDriveVolts,
+                false,
                 drivetrain
             )
 
