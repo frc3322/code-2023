@@ -145,6 +145,9 @@ public class RobotContainer implements Loggable{
         .onFalse(intake.flipUpStop());
 
     //driver manual intake down number two
+
+    //cube intake left trig
+    
     driverController
         .axisGreaterThan(3, 0)
         .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.slowIntakeInV),
@@ -154,6 +157,7 @@ public class RobotContainer implements Loggable{
     driverController
         .b()
         .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
+
 
     // shoot cube mid
     driverController
