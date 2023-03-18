@@ -113,7 +113,7 @@ public class RobotContainer implements Loggable{
 
    
 
-    //Driver 4 bar toggle OR eject... needs testing
+    //Shoot cube Low
     driverController
         .a()
         .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeLowV), ()->intake.spinIntakeBottomFaster(0), intake));
@@ -155,12 +155,12 @@ public class RobotContainer implements Loggable{
         .b()
         .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
-    // x to reduce transfer speed
+    // shoot cube mid
     driverController
         .x()
         .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeMidV), ()->intake.spinIntakeBottomFaster(0), intake));
 
-    // y for normal transfer function
+    // Shoot cube high
     driverController
         .y()
         .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeHighV), ()->intake.spinIntakeBottomFaster(0), intake));
