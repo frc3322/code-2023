@@ -27,6 +27,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Transfer;
+import frc.robot.subsystems.Brake;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
@@ -40,6 +41,7 @@ public class RobotContainer implements Loggable{
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
   private final Transfer transfer = new Transfer();
+  private final Brake brake = new Brake();
 
   
  private double speedy = -1;
@@ -241,6 +243,11 @@ public class RobotContainer implements Loggable{
     secondaryController
         .axisGreaterThan(3, 0)
         .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(driverController.getRightTriggerAxis()/3), intake));
+    secondaryController
+        .leftBumper()
+        .whileTrue(new StartEndCommand(
+            ()->brake.brakeDown(), 
+            ()->brake.brakeUp()));
 
 
     secondaryController

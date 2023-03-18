@@ -17,9 +17,9 @@ public final class Constants{
     public static final int BL = 9;
     public static final int BR = 17;
     
-    // Elevator
+    // Brake
 
-    public static final int elevatorMotor = 36;
+    public static final int brakeSolenoid = 36;
     
     
     //Intake Motors
