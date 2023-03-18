@@ -17,9 +17,10 @@ public final class Constants{
     public static final int BL = 9;
     public static final int BR = 17;
     
-    // Elevator
+    // Brake
 
-    public static final int elevatorMotor = 36;
+    public static final int brakeReverse = 5;
+    public static final int brakeForward = 4;
     
     
     //Intake Motors
@@ -38,9 +39,7 @@ public final class Constants{
     public static final int extendFourbar = 0;
     public static final int retractFourbar = 3;
 
-    //transfer can
-    public static final int transfer = 5;
-
+   
 
     
   }
@@ -76,10 +75,7 @@ public final class Constants{
 
   }
 
-  public static final class TransferConstants{
-    public static final double coneTransferSpeed = 0.3;
-    public static final double cubeTransferSpeed = 0.1;
-  }
+ 
 
   public static final class PIDConstraints{
 
