@@ -5,25 +5,26 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.Constants;
 
 public class Brake extends SubsystemBase {
   /** Creates a new Brake. */
-  private Solenoid brake = new Solenoid(PneumaticsModuleType.REVPH, Constants.CAN.brakeSolenoid/*right now is set to 36, where the elevatoor used to connect*/);
+  private DoubleSolenoid brake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.CAN.brakeForward, Constants.CAN.brakeReverse);
   public Brake() {
     
   }
   public void brakeDown(){
-      brake.set(false);
-      //may need to be switched to true
+      brake.set(Value.kForward);
+      //may need to be switched 
     }
   public void brakeUp(){
-    brake.set(true);
-    //may need to be switched to false
+    brake.set(Value.kReverse);
+    //may need to be switched
   }
-  public boolean getBrake(){
+  public Value getBrake(){
     return brake.get();
 
   }

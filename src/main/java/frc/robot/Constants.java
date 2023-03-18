@@ -19,7 +19,8 @@ public final class Constants{
     
     // Brake
 
-    public static final int brakeSolenoid = 36;
+    public static final int brakeReverse = 4;
+    public static final int brakeForward = 5;
     
     
     //Intake Motors
