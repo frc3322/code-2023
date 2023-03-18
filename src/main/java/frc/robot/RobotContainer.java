@@ -40,8 +40,8 @@ public class RobotContainer implements Loggable{
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
   private final Transfer transfer = new Transfer();
-
   
+
  private double speedy = -1;
 
 //  @Config
@@ -69,7 +69,7 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("nothing", null);
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
-    //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
+    autChooser.addOption("place leave balance", new PlaceBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
     SmartDashboard.putData("select autonomous", autChooser);
 
@@ -322,8 +322,8 @@ private class JustPlace extends SequentialCommandGroup {
 }
 
 
-private class PlaceLeaveBalance extends SequentialCommandGroup {
-    private PlaceLeaveBalance() {
+private class PlaceBalance extends SequentialCommandGroup {
+    private PlaceBalance() {
         addCommands(
             
             new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
@@ -336,19 +336,10 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
             new WaitCommand(0.5),
             fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
             new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw)
 
-            new InstantCommand(
-                () -> drivetrain.resetEncoders(),
-                drivetrain
-            ),
-            new DriveToDistanceCommand(-4.5, drivetrain),
-            new InstantCommand(
-                () -> drivetrain.resetEncoders(),
-                drivetrain
-            ),
-            new DriveToDistanceCommand(1, drivetrain)
             
+
         );
     }
 }
