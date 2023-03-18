@@ -8,6 +8,8 @@ package frc.robot;
 import java.util.List;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -44,8 +47,9 @@ import frc.robot.subsystems.Transfer;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class RobotContainer implements Loggable{
+public class RobotContainer implements Loggable {
 
   // The robot's subsystems and commands are defined here...
 
@@ -56,7 +60,8 @@ public class RobotContainer implements Loggable{
   private final Transfer transfer = new Transfer();
   Field2d fieldsim = new Field2d();
   
-
+  @Log double desiredVelocityLeft;
+  @Log double desiredVelocityRight;
   
  private double speedy = -1;
 
@@ -87,6 +92,7 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("just place", new JustPlace());
     autChooser.addOption("straight forward pathweaver test", new StraightLinePathWeaver());
     autChooser.addOption("straight forward ramsete", new StraightLine());
+    autChooser.addOption("debug trajectories", new DebugAuton());
 
     //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
@@ -280,6 +286,11 @@ public class RobotContainer implements Loggable{
   public void updateLogger() {
     Logger.updateEntries();
   }
+  // used to modify variables in lambda
+  private void setDesiredVelocity(double velLeft, double velRight) {
+    desiredVelocityLeft = velLeft;
+    desiredVelocityRight = velRight;
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -442,6 +453,46 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
             ),
             new DriveToDistanceCommand(1, drivetrain)
             
+        );
+    }
+}
+
+// Runs in a straight line and logs desired velocity
+private class DebugAuton extends SequentialCommandGroup {
+    private DebugAuton() {
+
+        // Disable ramsete controller to help isolate feedforward
+        RamseteController disabledController = new RamseteController();
+        disabledController.setEnabled(false);
+
+        PIDController leftController = new PIDController(AutonConstants.kDrivePRamsete, 0, 0);
+        PIDController rightController = new PIDController(AutonConstants.kDrivePRamsete, 0, 0);
+
+        RamseteCommand ramseteCommand = new RamseteCommand(
+            Robot.straightLineTrajectory,
+            drivetrain::getPose,
+            disabledController,
+            new SimpleMotorFeedforward(
+                AutonConstants.ksVolts,
+                AutonConstants.kvVoltSecondsPerMeter,
+                AutonConstants.kaVoltSecondsSquaredPerMeter
+            ),
+            AutonConstants.kDriveKinematics,
+            drivetrain::getWheelSpeeds,
+            leftController,
+            rightController,
+            (voltsLeft, voltsRight) -> {
+                drivetrain.tankDriveVolts(voltsLeft, voltsRight);
+
+                setDesiredVelocity(leftController.getSetpoint(), rightController.getSetpoint());
+            },
+            drivetrain
+        );
+
+        addCommands(
+            new InstantCommand(() -> drivetrain.resetOdometry(Robot.straightLineTrajectory.getInitialPose())),
+            ramseteCommand,
+            new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0))
         );
     }
 }
