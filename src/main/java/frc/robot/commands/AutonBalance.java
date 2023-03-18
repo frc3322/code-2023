@@ -9,7 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 
-public class AutoBalance {
+public class AutonBalance {
     private BuiltInAccelerometer mRioAccel;
     private int state;
     private int debounceCount;
@@ -22,7 +22,7 @@ public class AutoBalance {
     private double scoringBackUpTime;
     private double doubleTapTime;
 
-    public AutoBalance() {
+    public AutonBalance() {
         mRioAccel = new BuiltInAccelerometer();
         state = 0;
         debounceCount = 0;
@@ -64,6 +64,10 @@ public class AutoBalance {
         // Amount of time to drive forward to secure the scoring of the gamepiece
         doubleTapTime = 0.3;
 
+    }
+
+    public boolean isBalanced(){
+        return state == 4;
     }
 
     public double getPitch() {

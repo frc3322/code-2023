@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.TransferConstants;
 import frc.robot.Types.FourbarPosition;
+import frc.robot.commands.AutonBalance;
+import frc.robot.commands.AutonBalanceCommand;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.MoveClawCommand;
 //import frc.robot.commands.MoveFourbarCommand;
@@ -40,6 +42,7 @@ public class RobotContainer implements Loggable{
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
   private final Transfer transfer = new Transfer();
+  private final AutonBalance autoBalance = new AutonBalance();
   
 
  private double speedy = -1;
@@ -69,7 +72,7 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("nothing", null);
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
-    autChooser.addOption("place leave balance", new PlaceBalance());
+    autChooser.addOption("place balance", new PlaceBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
     SmartDashboard.putData("select autonomous", autChooser);
 
@@ -336,9 +339,13 @@ private class PlaceBalance extends SequentialCommandGroup {
             new WaitCommand(0.5),
             fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
             new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw)
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
 
-            
+            new AutonBalanceCommand(
+                autoBalance,
+                drivetrain::tankDriveVolts,
+                drivetrain
+            )
 
         );
     }

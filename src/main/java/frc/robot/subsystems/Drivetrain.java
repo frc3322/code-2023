@@ -143,6 +143,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     robotDrive.feed();
   }
 
+  public void tankDriveVolts(double leftVolts, double rightVolts){
+    motorFL.setVoltage(leftVolts);
+    motorFR.setVoltage(rightVolts);
+    
+    robotDrive.feed();
+  }
+
   public void autonDrive(double speed, double turn) {
     
     // to compensate for the turning/binding on one side, add x to turn
