@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 //arooshwashere
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.TransferConstants;
 import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.MoveClawCommand;
@@ -26,7 +25,7 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Transfer;
+
 import frc.robot.subsystems.Brake;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
@@ -40,7 +39,7 @@ public class RobotContainer implements Loggable{
   private final Intake intake = new Intake();
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
-  private final Transfer transfer = new Transfer();
+;
   private final Brake brake = new Brake();
 
   
@@ -99,7 +98,7 @@ public class RobotContainer implements Loggable{
 
     // default commands
     drivetrain.setDefaultCommand(driveCommand);
-    transfer.setDefaultCommand(transfer.beltRunCommand(transfer));
+  
   
     // driver controller (0) commands
 
@@ -157,15 +156,7 @@ public class RobotContainer implements Loggable{
         .b()
         .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
-    // x to reduce transfer speed
-    driverController
-        .x()
-        .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.cubeTransferSpeed)));
-
-    // y for normal transfer function
-    driverController
-        .y()
-        .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.coneTransferSpeed)));
+   
 
     //driver manual intake spin - REWRITE AS ACTUAL START END
     driverController
@@ -187,12 +178,6 @@ public class RobotContainer implements Loggable{
         .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
 
-    //secondary transfer stop override
-    secondaryController
-        .x()
-        .onTrue(
-          new InstantCommand(() -> transfer.setBeltPower(0))
-        );
 
 
 
@@ -220,19 +205,7 @@ public class RobotContainer implements Loggable{
             );
             
              
-    //Secondary manual transfer
-    secondaryController
-        .axisGreaterThan(5, 0.09)
-        .whileTrue(new RunCommand(
-            () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
-
-
-    //secodnary controller manual transfer other way
-     secondaryController
-        .axisLessThan(5, -0.09)
-        .whileTrue(new RunCommand(
-            () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
-
+ 
   
     //secondary manual intake up
     secondaryController
@@ -246,7 +219,12 @@ public class RobotContainer implements Loggable{
     secondaryController
         .leftBumper()
         .onTrue(new InstantCommand(
-            ()->brake.toggleBrake()));
+            ()->brake.brakeDown()));
+
+            secondaryController
+            .rightBumper()
+            .onTrue(new InstantCommand(
+                ()->brake.brakeUp()));
 
 
     secondaryController

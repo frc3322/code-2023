@@ -19,8 +19,8 @@ public final class Constants{
     
     // Brake
 
-    public static final int brakeReverse = 4;
-    public static final int brakeForward = 5;
+    public static final int brakeReverse = 5;
+    public static final int brakeForward = 4;
     
     
     //Intake Motors
@@ -39,9 +39,7 @@ public final class Constants{
     public static final int extendFourbar = 0;
     public static final int retractFourbar = 3;
 
-    //transfer can
-    public static final int transfer = 5;
-
+   
 
     
   }
@@ -60,19 +58,7 @@ public final class Constants{
     //public static final double encoderTicsPerFoot = 6.84;
   }
 
-  public static final class ElevatorConstants {
-    public static final double kBottomEncoderPosition = 2;
-    public static final double kMidEncoderPosition = 1;
-    public static final double kTopEncoderPosition = 0;
-
-    public static final double kp = 0;
-    public static final double ki = 0;
-    public static final double kd = 0;
-
-    public static final double elevatorSpeed = .5;
-
-    
-  }
+ 
 
   public static final class IntakeConstants{
     @Config public static final double coneIntakeInSpeed = 0.6;
@@ -87,10 +73,7 @@ public final class Constants{
 
   }
 
-  public static final class TransferConstants{
-    public static final double coneTransferSpeed = 0.3;
-    public static final double cubeTransferSpeed = 0.1;
-  }
+ 
 
   public static final class PIDConstraints{
 
