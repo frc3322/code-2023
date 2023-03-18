@@ -67,6 +67,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
    @Log double BLVelocityVal;
    @Log double BRVelocityVal;
 
+   public double ramseteRightP = .0019979;
+   public double ramseteLeftP = 0.1109;
+
   /** Creates a new ExampleSubsystem. */
   public Drivetrain() {
     motorFL.setInverted(true);
