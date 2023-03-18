@@ -64,7 +64,7 @@ public final class Constants{
     @Config public static final double fastIntakeInV = 5.0;
     public static final double slowIntakeInV = 2.0;
     public static final double intakeLowV = -2.0;
-    public static final double intakeMidV = -5.0;
+    public static final double intakeMidV = -6.0;
     public static final double intakeHighV = -9.0;
 
     public static final double armUpSpeed = -0.3;
