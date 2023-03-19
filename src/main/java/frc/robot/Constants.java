@@ -48,11 +48,14 @@ public final class Constants{
     public static final double kTurnP = 0.03;
     public static final double kTurnI = 0;
     public static final double kTurnD = 0.0075;
+
     public static final double kTurnToleranceDeg = 0.05;
     public static final double kTurnRateToleranceDegPerS =0;
+
     public static final double kDriveP = 0.3;
     public static final double kDriveI = 0;
     public static final double kDriveD = 0.0075;
+    
     public static final double kDriveToleranceMeters = 0.05;
     public static final double kDriveRateToleranceMetersPerS =0;
     //public static final double encoderTicsPerFoot = 6.84;
@@ -62,6 +65,7 @@ public final class Constants{
   public static final class IntakeConstants{
     @Config public static final double fastIntakeInV = 5.0;
     public static final double slowIntakeInV = 2.0;
+
     public static final double intakeLowV = -2.0;
     public static final double intakeMidV = -6.0;
     public static final double intakeHighV = -9.0;
@@ -75,23 +79,9 @@ public final class Constants{
 
   }
 
- 
-
-  public static final class PIDConstraints{
-
-    //random numbers for that
-    public static final double TTAVelocity = 0.5;
-    public static final double TTAAcceleration = 0.5;
-    public static final TrapezoidProfile.Constraints TTAConstraints = new TrapezoidProfile.Constraints(TTAVelocity, TTAAcceleration);
-
-  }
 
   public static final class DIO {
-    public static final int transferInProximitySensor = 2;
-    public static final int elevatorTop = 0;
-    public static final int elevatorBottom = 3;
-    public static final int transferOutProximitySensor = 1;
-    public static final int intakeTopSensor = 4;
+    public static final int intakeTopSensor = 0;
 
   }
 

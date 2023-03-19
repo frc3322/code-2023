@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -61,26 +59,35 @@ public class Intake extends SubsystemBase implements Loggable {
     return armEncoder.getPosition() > IntakeZoneLimits.bottomLimitOff;
   }  
   
-/*
-Not in use
-    public Command spinIntakeWhileUp(boolean transferRunning){
-
-      return new RunCommand(() ->{
-        if(transferRunning){
-          spinIntakeSameWay(.1);
-        }
-        else{
-          spinIntakeSameWay(0);
-        }
-       }, this);
-    }
-*/
     public Command flipUp(){
       return new RunCommand(
         //set flipper to correct setting until it is true that the flipper is at the top.
         () -> setFlipperSpeed(calculateIntakeFlipUp())
       )
       .until(()->atTop());
+      
+    }
+
+    
+    
+    public Command flipUpStop(){
+      //stop spinning, then move until at top is true. 
+      return new RunCommand(
+        () -> {setFlipperSpeed(calculateIntakeFlipUp());
+        spinIntakeTopFaster(0);}, this
+      )
+      .until(()->atTop()
+      ).withTimeout(2);
+      
+    }
+
+    
+    public Command flipDown(){
+      //flips to bottom, does not spin. may be able to delete
+      return new RunCommand(
+        () -> setFlipperSpeed(calculateIntakeFlipDown())
+      )
+      .until(()->atBottom());
       
     }
 
@@ -106,38 +113,6 @@ Not in use
     .withTimeout(2);
       
     }
-    
-    public Command flipUpStop(){
-      //stop spinning, then move until at top is true. 
-      return new RunCommand(
-        () -> {setFlipperSpeed(calculateIntakeFlipUp());
-        spinIntakeTopFaster(0);}, this
-      )
-      .until(()->atTop()
-      ).withTimeout(2);
-      
-    }
-
-    
-    public Command flipDown(){
-      //flips to bottom, does not spin. may be able to delete
-      return new RunCommand(
-        () -> setFlipperSpeed(calculateIntakeFlipDown())
-      )
-      .until(()->atBottom());
-      
-    }
-/*
-not in use
-    public Command flipDownEject(){
-      return new RunCommand(
-        () -> {setFlipperSpeed(calculateIntakeFlipDown());
-        spinIntakeTopFaster(-IntakeConstants.coneIntakeInSpeed);}
-      )
-      .until(()->atBottom()
-      ).withTimeout(2);
-      
-    */
 
 
   public void setFlipperSpeed(double speed){
@@ -191,14 +166,6 @@ not in use
     motorBottomRoller.setVoltage(volts * 2);
     //multiply by .8
   }
-/*
-Not in use
-  public void spinIntakeSameWay(double speed){
-    //spin them in same direction
-    motorTopRoller.set(speed);
-    motorBottomRoller.set(-speed);
-  }
-  */
 
   public void resetArmEncoder(){
     //set current position to 0.

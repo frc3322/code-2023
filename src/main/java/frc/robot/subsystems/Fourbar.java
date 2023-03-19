@@ -45,11 +45,6 @@ public class Fourbar extends SubsystemBase implements Loggable {
       fourBar.set(Value.kReverse);
     
   }
-
-  public Command fourbarToggle() {
-    //toggles position.
-    return new InstantCommand(()-> fourBar.toggle());
-  }
   
   public FourbarPosition getFourBarPosition(){
       if (fourBar.get()==Value.kReverse){

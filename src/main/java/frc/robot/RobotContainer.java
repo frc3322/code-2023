@@ -102,7 +102,7 @@ public class RobotContainer implements Loggable{
   
     // driver controller (0) commands
 
-    //Automated intake control
+    //driver cone speed intake
     driverController
         .leftBumper()
         .onTrue(
@@ -135,7 +135,7 @@ public class RobotContainer implements Loggable{
         .povLeft()
         .onTrue(new InstantCommand(() -> intake.resetArmEncoder()));
 
-    //driver manual intake up number 2
+    //driver cube intake
     driverController
     .axisGreaterThan(2, 0)
     .onTrue(
@@ -147,7 +147,7 @@ public class RobotContainer implements Loggable{
 
     //driver manual intake down number two
 
-    //cube intake left trig
+    //cube intake without down left trig
     
     driverController
         .axisGreaterThan(3, 0)
@@ -170,7 +170,7 @@ public class RobotContainer implements Loggable{
         .y()
         .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeHighV), ()->intake.spinIntakeBottomFaster(0), intake));
 
-    //driver manual intake spin - REWRITE AS ACTUAL START END
+    //driver manual intake spin
     driverController
         .rightBumper()
         .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.fastIntakeInV),
@@ -201,17 +201,13 @@ public class RobotContainer implements Loggable{
                 .andThen(new WaitCommand(.5))
                 .andThen(
                     new InstantCommand(() -> fourbar.fourbarDown()))
-                //.andThen(new WaitCommand(.75))
-                //.andThen(new InstantCommand(() -> claw.setOpen(), claw))
-
         );
     
     //secondary 4 bar out with claw and intake safety
     secondaryController
         .povUp()
         .onTrue(
-            new InstantCommand(() -> /*claw.setClosed(), claw)
-                .alongWith(*/intake.flipUp())
+            new InstantCommand(() -> intake.flipUp())
                 .andThen(new WaitCommand(.5))
             .andThen(new InstantCommand(() -> fourbar.fourbarUp()))
             );

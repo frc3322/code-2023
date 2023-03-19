@@ -7,10 +7,6 @@ public final class Types {
   }
 
     //Enum for transfer direction. Used in RobotContainer and SpinTransfer
-    public enum TransferDirection {
-      FORWARD,
-      REVERSE
-    }
 
     public enum ClawPosition {
       OPEN,
@@ -20,17 +16,6 @@ public final class Types {
     public enum FourbarPosition {
       RETRACT,
       EXTEND
-    }
-
-    public enum ElevatorPosition {
-      BOTTOM,
-      MID,
-      TOP
-    }
-
-    public enum IntakePosition {
-      BOTTOM,
-      TOP
     }
 
 }

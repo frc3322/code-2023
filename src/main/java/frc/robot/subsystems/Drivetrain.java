@@ -125,10 +125,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     motorBR.getEncoder().setPosition(0);
   }
 
-  public void setPID() {
-    // TODO: compmlete this function
-  }
-
   // Actions
 
   public void drive(double speed, double turn) {
@@ -157,35 +153,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     robotDrive.feed();
   }
 
-  public void jankDrive(double speed, double turn) {
-
-    turn = 0.5 * turn + 0.5 * Math.pow(turn, 3);  // Weird math
-
-    this.speed = speed;
-    this.turn = turn;
-
-    HAL.report(
-      31, 7, 2);
-      speed = MathUtil.applyDeadband(speed, 0.02);
-      turn = MathUtil.applyDeadband(turn, 0.02);
-  
-      var speeds = robotDrive.arcadeDriveIK(speed, turn, false);
-  
-      motorFL.set(speeds.left);
-      motorFR.set(speeds.right * .90);
-  
-    
-
-   // robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
-   
-
-    robotDrive.feed();
-  }
-
-  
-
-  
-
   // Limelight Functions Start
 
   public void setPipeline(int pipelineNum){
@@ -199,7 +166,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   @Override
   public void periodic() {
-    // heading = getHeading();
+  
 
     FLVoltageVal = motorFL.getBusVoltage();
     FRVoltageVal = motorFR.getBusVoltage();
