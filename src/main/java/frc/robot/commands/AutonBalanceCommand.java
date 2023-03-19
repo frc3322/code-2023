@@ -47,32 +47,22 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
     state = 0;
     debounceCount = 0;
 
-    /**********
-     * CONFIG *
-     **********/
-    // Speed the robot drived while scoring/approaching station, default = 0.4
+    // Speed the robot drived while scoring/approaching station
     robotSpeedFast = 6 * reverseModifier;
 
+    // Speed the robot drives once it is on the charging station
     robotSpeedMid = 2 * reverseModifier;
 
-    // Speed the robot drives while balancing itself on the charge station.
-    // Should be roughly half the fast speed, to make the robot more accurate,
-    // default = 0.2
+    // Speed the robot drives to complete the balance
     robotSpeedSlow = 1 * reverseModifier;
-    
 
-    // Angle where the robot knows it is on the charge station, default = 13.0
+    // Angle where the robot knows it is on the charge station
     onChargeStationDegree = 17;
 
     // Angle where the robot can assume it is level on the charging station
-    // Used for exiting the drive forward sequence as well as for auto balancing,
-    // default = 6.0
-    levelDegree = 3; //3
+    levelDegree = 3;
 
-    // Amount of time a sensor condition needs to be met before changing states in
-    // seconds
-    // Reduces the impact of sensor noice, but too high can make the auto run
-    // slower, default = 0.2
+    // Amount of time a sensor condition needs to be met before changing states in seconds. Only used in state 1
     debounceTime = 0.3;
     
     this.drivetrain = drivetrain;

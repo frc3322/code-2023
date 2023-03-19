@@ -70,7 +70,7 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("nothing", null);
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
-    autChooser.addOption("place balance", new PlaceBalance());
+    autChooser.addOption("place balance", new PlaceIntakeBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
     SmartDashboard.putData("select autonomous", autChooser);
 
@@ -323,8 +323,8 @@ private class JustPlace extends SequentialCommandGroup {
 }
 
 
-private class PlaceBalance extends SequentialCommandGroup {
-    private PlaceBalance() {
+private class PlaceIntakeBalance extends SequentialCommandGroup {
+    private PlaceIntakeBalance() {
         addCommands(
             
             new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
@@ -339,10 +339,29 @@ private class PlaceBalance extends SequentialCommandGroup {
             new WaitCommand(0.5),
             new MoveClawCommand(Types.ClawPosition.OPEN, claw),
 
+            // Go to game piece
+            new DriveToDistanceCommand(-4.6, drivetrain),
+
+            // Intake game piece
+            new InstantCommand(
+                () -> intake.setFlipperSpeed(intake.calculateIntakeFlipDown()), 
+                intake),
+            new InstantCommand(
+                () -> intake.spinIntake(IntakeConstants.cubeIntakeInSpeed), 
+                intake),
+            new WaitCommand(0.5),
+            new InstantCommand(
+                () -> intake.spinIntake(0), 
+                intake),
+            new InstantCommand(
+                () -> intake.setFlipperSpeed(intake.calculateIntakeFlipUp()), 
+                intake),
+
+            // Balance backwards
             new AutonBalanceCommand(
                 drivetrain,
                 drivetrain::tankDriveVolts,
-                false,
+                true,
                 drivetrain
             )
 
