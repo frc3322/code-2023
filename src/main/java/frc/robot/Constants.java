@@ -65,8 +65,8 @@ public final class Constants{
 
   public static final class AutonConstants {
     public static final double kAutonMaxVoltage = 7;
-    public static final double kMaxSpeedMetersPerSecond = 3.3; // 3.6
-    public static final double kMaxAccelerationMetersPerSecondSquared = 1.3; // 1.5
+    public static final double kMaxSpeedMetersPerSecond = .5; // 3.6
+    public static final double kMaxAccelerationMetersPerSecondSquared = .07; // 1.5
     public static final double kDrivePRamsete = 3.1549;
     // Set P gain to 0
     // public static final double kDrivePRamsete = 0;
