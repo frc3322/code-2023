@@ -21,12 +21,13 @@ import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.MoveClawCommand;
 //import frc.robot.commands.MoveFourbarCommand;
+import frc.robot.commands.autoncommands.PlaceConeCommandGroup;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
 import frc.robot.subsystems.Intake;
-
 import frc.robot.subsystems.Brake;
+
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
@@ -322,18 +323,7 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
     private PlaceLeaveBalance() {
         addCommands(
             
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
-            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
-            new WaitCommand(3.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            new WaitCommand(0.5),
-            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-
+            new PlaceConeCommandGroup(claw, fourbar),
             new InstantCommand(
                 () -> drivetrain.resetEncoders(),
                 drivetrain
