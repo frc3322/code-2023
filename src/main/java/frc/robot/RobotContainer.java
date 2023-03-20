@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonConstants;
 //arooshwashere
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.TransferConstants;
 import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.AutonRamseteCommand;
 import frc.robot.commands.DriveToDistanceCommand;
@@ -43,7 +42,8 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Transfer;
+
+import frc.robot.subsystems.Brake;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
@@ -57,7 +57,8 @@ public class RobotContainer implements Loggable {
   private final Intake intake = new Intake();
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
-  private final Transfer transfer = new Transfer();
+;
+  private final Brake brake = new Brake();
   Field2d fieldsim = new Field2d();
   
   @Log double desiredVelocityLeft;
@@ -125,7 +126,7 @@ public class RobotContainer implements Loggable {
 
     // default commands
     drivetrain.setDefaultCommand(driveCommand);
-    transfer.setDefaultCommand(transfer.beltRunCommand(transfer));
+  
   
     // driver controller (0) commands
 
@@ -141,10 +142,10 @@ public class RobotContainer implements Loggable {
 
    
 
-    //Driver 4 bar toggle OR eject... needs testing
+    //Shoot cube Low
     driverController
         .a()
-        .whileTrue(new StartEndCommand(()->intake.spinIntake(intake.testingSpeed), ()->intake.spinIntakeBottomFaster(0), intake));
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeLowV), ()->intake.spinIntakeBottomFaster(0), intake));
 
 
     //Driver manual intake up
@@ -173,9 +174,12 @@ public class RobotContainer implements Loggable {
         .onFalse(intake.flipUpStop());
 
     //driver manual intake down number two
+
+    //cube intake left trig
+    
     driverController
         .axisGreaterThan(3, 0)
-        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.cubeIntakeInSpeed),
+        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.slowIntakeInV),
         () -> intake.spinIntake(0)));      
 
     // driver's claw open override
@@ -183,20 +187,21 @@ public class RobotContainer implements Loggable {
         .b()
         .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
-    // x to reduce transfer speed
+
+    // shoot cube mid
     driverController
         .x()
-        .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.cubeTransferSpeed)));
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeMidV), ()->intake.spinIntakeBottomFaster(0), intake));
 
-    // y for normal transfer function
+    // Shoot cube high
     driverController
         .y()
-        .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.coneTransferSpeed)));
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeHighV), ()->intake.spinIntakeBottomFaster(0), intake));
 
     //driver manual intake spin - REWRITE AS ACTUAL START END
     driverController
         .rightBumper()
-        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed),
+        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.fastIntakeInV),
             () -> intake.spinIntake(0)));
 
 
@@ -213,12 +218,6 @@ public class RobotContainer implements Loggable {
         .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
 
-    //secondary transfer stop override
-    secondaryController
-        .x()
-        .onTrue(
-          new InstantCommand(() -> transfer.setBeltPower(0))
-        );
 
 
 
@@ -246,19 +245,7 @@ public class RobotContainer implements Loggable {
             );
             
              
-    //Secondary manual transfer
-    secondaryController
-        .axisGreaterThan(5, 0.09)
-        .whileTrue(new RunCommand(
-            () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
-
-
-    //secodnary controller manual transfer other way
-     secondaryController
-        .axisLessThan(5, -0.09)
-        .whileTrue(new RunCommand(
-            () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
-
+ 
   
     //secondary manual intake up
     secondaryController
@@ -269,13 +256,22 @@ public class RobotContainer implements Loggable {
     secondaryController
         .axisGreaterThan(3, 0)
         .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(driverController.getRightTriggerAxis()/3), intake));
+    secondaryController
+        .leftBumper()
+        .onTrue(new InstantCommand(
+            ()->brake.brakeDown()));
+
+            secondaryController
+            .rightBumper()
+            .onTrue(new InstantCommand(
+                ()->brake.brakeUp()));
 
 
     secondaryController
       .povRight()
       .whileTrue(
         new StartEndCommand(
-         ()-> intake.spinIntakeTopFaster(IntakeConstants.coneIntakeInSpeed) ,
+         ()-> intake.spinIntakeTopFaster(IntakeConstants.fastIntakeInV) ,
          ()-> intake.spinIntakeTopFaster(0),
           intake)
       );
