@@ -18,6 +18,8 @@ public class PlaceConeCommandGroup extends SequentialCommandGroup {
   private Fourbar fourbar;
   public PlaceConeCommandGroup(Claw claw, Fourbar fourbar) {
     addRequirements(claw, fourbar);
+    this.claw=claw;
+    this.fourbar=fourbar;
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(

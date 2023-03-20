@@ -274,21 +274,8 @@ public class RobotContainer implements Loggable{
     private PlaceAndLeave() {
         addCommands(
            
-           new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-          //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
-            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
-            new WaitCommand(3.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            new WaitCommand(0.5),
-            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            
-
-            
-            new InstantCommand(
+           new PlaceConeCommandGroup(claw, fourbar),            
+           new InstantCommand(
                 () -> drivetrain.resetEncoders(),
                 drivetrain
             ),
@@ -302,17 +289,7 @@ private class JustPlace extends SequentialCommandGroup {
     private JustPlace() {
         addCommands(
             
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
-            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
-            new WaitCommand(3.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            new WaitCommand(0.5),
-            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw)
+            new PlaceConeCommandGroup(claw, fourbar)
             
         );
     }
@@ -324,6 +301,7 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
         addCommands(
             
             new PlaceConeCommandGroup(claw, fourbar),
+
             new InstantCommand(
                 () -> drivetrain.resetEncoders(),
                 drivetrain
