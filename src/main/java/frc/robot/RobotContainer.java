@@ -363,7 +363,16 @@ private class PlaceIntakeBalance extends SequentialCommandGroup {
                 drivetrain::tankDriveVolts,
                 true,
                 drivetrain
-            )
+            )/*, 
+
+            // Shoot cube while on charge station
+            new InstantCommand(
+                () -> intake.spinIntake(-1), 
+                intake)
+            
+            to shoot uncomment and change number to appropriate value
+            
+            */
 
         );
     }
