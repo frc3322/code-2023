@@ -20,6 +20,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.MoveClawCommand;
+import frc.robot.commands.TurnToGyroAngleCommand;
 //import frc.robot.commands.MoveFourbarCommand;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -73,6 +74,7 @@ public class RobotContainer implements Loggable{
     //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
     SmartDashboard.putData("select autonomous", autChooser);
+    SmartDashboard.putData("stupidTurnToAngle", new TurnToGyroAngleCommand(90, drivetrain));
 
     // Configure the trigger bindings
     configureBindings();
@@ -312,6 +314,8 @@ private class JustPlace extends SequentialCommandGroup {
         );
     }
 }
+
+
 
 
 private class PlaceLeaveBalance extends SequentialCommandGroup {

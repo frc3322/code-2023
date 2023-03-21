@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
@@ -62,6 +63,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
    @Log double BLVelocityVal;
    @Log double BRVelocityVal;
 
+   public double turnP;
+   public double turnI;
+   public double turnD;
+   public double setpoint;
+
   /** Creates a new ExampleSubsystem. */
   public Drivetrain() {
     motorFL.setInverted(true);
@@ -93,7 +99,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   // Getters
   @Log
   public double getYaw() {
-    return gyro.getRotation2d().getDegrees();
+    return gyro.getYaw();
   }
   @Log
   public double getPitch() {
@@ -161,6 +167,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       .getEntry("pipeline")
       //sets the value of the pipeline entry to the parameter of the function
       .setNumber(pipelineNum);
+  }
+
+  @Config
+  public void setStupidAnglePID(double p, double i, double d, double s){
+    turnP = p;
+    turnI =i;
+    turnD =d;
+    setpoint = s;
   }
 
 
