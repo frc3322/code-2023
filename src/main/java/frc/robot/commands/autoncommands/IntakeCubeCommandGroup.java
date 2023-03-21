@@ -7,28 +7,32 @@ package frc.robot.commands.autoncommands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 import frc.robot.subsystems.Intake;
-import frc.robot.Types;
+import frc.robot.subsystems.Drivetrain;
+
+import frc.robot.commands.DriveToDistanceCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ShootCubeCommandGroup extends SequentialCommandGroup {
-  /** Creates a new ShootCubeCommand. */
+public class IntakeCubeCommandGroup extends SequentialCommandGroup {
+  /** Creates a new IntakeCubeGroup. */
   private Intake intake;
-  private double launchV;
-  public ShootCubeCommandGroup(Intake intake, double launchV) {
-    addRequirements(intake);
-    this.launchV=launchV;
+  private Drivetrain drive;
+
+  public IntakeCubeCommandGroup(Intake intake, Drivetrain drive) {
+    addRequirements(intake, drive);
     this.intake=intake;
+    this.drive=drive;
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      /*
-      new InstantCommand(()->intake.flipUp()).withTimeout(.5),*/
-      new InstantCommand(()->intake.spinIntake(launchV)),
-      new WaitCommand(0.7),
-      new InstantCommand(()->intake.spinIntake(0))
+      new InstantCommand(()->intake.flipDownSpin()),
+      new WaitCommand(.5),
+      new DriveToDistanceCommand(.25, drive),
+      new InstantCommand(()->intake.flipUpStop()),
+      new DriveToDistanceCommand(-.25, drive)
     );
   }
 }
