@@ -71,6 +71,8 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
     autChooser.addOption("place balance", new PlaceIntakeBalance());
+    autChooser.addOption("ForwardBalance", new ForwardsBalance());
+    autChooser.addOption("RevrseBalance", new ReverseBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
     SmartDashboard.putData("select autonomous", autChooser);
 
@@ -377,6 +379,31 @@ private class PlaceIntakeBalance extends SequentialCommandGroup {
         );
     }
 }
- 
+
+private class ForwardsBalance extends SequentialCommandGroup{
+    private ForwardsBalance(){
+        addCommands(
+            new AutonBalanceCommand(
+                drivetrain,
+                drivetrain::tankDriveVolts,
+                false,
+                drivetrain
+            )
+        );
+    }
+} 
+
+private class ReverseBalance extends SequentialCommandGroup{
+    private ReverseBalance() {
+        addCommands(
+            new AutonBalanceCommand(
+                drivetrain,
+                drivetrain::tankDriveVolts,
+                true,
+                drivetrain
+            )
+        );
+    }
+} 
 
 }

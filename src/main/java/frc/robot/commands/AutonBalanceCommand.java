@@ -57,7 +57,7 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
     robotSpeedSlow = 1 * reverseModifier;
 
     // Angle where the robot knows it is on the charge station
-    onChargeStationDegree = 17;
+    onChargeStationDegree = 12 * reverseModifier;
 
     // Angle where the robot can assume it is level on the charging station
     levelDegree = 3;
