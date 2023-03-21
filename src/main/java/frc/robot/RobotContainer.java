@@ -22,6 +22,8 @@ import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.MoveClawCommand;
 //import frc.robot.commands.MoveFourbarCommand;
 import frc.robot.commands.autoncommands.PlaceConeCommandGroup;
+import frc.robot.commands.autoncommands.IntakeCubeCommandGroup;
+import frc.robot.commands.autoncommands.ShootCubeCommandGroup;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
@@ -71,6 +73,7 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("nothing", null);
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
+    autChooser.addOption("test cube (high launch)", new CubeTest());
     //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
     SmartDashboard.putData("select autonomous", autChooser);
@@ -290,6 +293,16 @@ private class JustPlace extends SequentialCommandGroup {
         addCommands(
             
             new PlaceConeCommandGroup(claw, fourbar)
+            
+        );
+    }
+}
+private class CubeTest extends SequentialCommandGroup {
+    private CubeTest() {
+        addCommands(
+            
+            new IntakeCubeCommandGroup(intake, drivetrain),
+            new ShootCubeCommandGroup(intake, IntakeConstants.intakeHighV)
             
         );
     }
