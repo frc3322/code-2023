@@ -20,9 +20,9 @@ public class DriveToDistanceCommand extends PIDCommand {
         // Close loop on heading
         drive::getDistance,
         // Set reference to target
-        drive.getDistance() + (targetDistance * DriveConstants.encoderTicsPerFoot),
+        targetDistance,
         // Pipe output to turn robot
-        output -> drive.drive(output,0),
+        output -> drive.autonDrive(output,0),
         // Require the drive
         drive);
 
@@ -36,7 +36,7 @@ public class DriveToDistanceCommand extends PIDCommand {
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
     getController()
-        .setTolerance(DriveConstants.kDriveToleranceDeg, DriveConstants.kDriveRateToleranceDegPerS);
+        .setTolerance(DriveConstants.kDriveToleranceMeters, DriveConstants.kDriveRateToleranceMetersPerS);
   }
 
   @Override

@@ -4,20 +4,10 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Fourbar;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Transfer;
-import frc.robot.subsystems.Claw;
-import io.github.oblarg.oblog.Logger;
-
-import javax.swing.text.html.HTMLDocument.BlockElement;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -25,13 +15,24 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.EjectGamePieceCommand;
-//import frc.robot.commands.SpinTransfer;
-import frc.robot.commands.IntakeGamePieceCommand;
-import frc.robot.Constants.*;
 //arooshwashere
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Types.FourbarPosition;
+import frc.robot.commands.DriveToDistanceCommand;
+import frc.robot.commands.MoveClawCommand;
+import frc.robot.commands.TurnToGyroAngleCommand;
+//import frc.robot.commands.MoveFourbarCommand;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Fourbar;
+import frc.robot.subsystems.Intake;
 
-public class RobotContainer {
+import frc.robot.subsystems.Brake;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.Logger;
+import io.github.oblarg.oblog.annotations.Config;
+
+public class RobotContainer implements Loggable{
 
   // The robot's subsystems and commands are defined here...
 
@@ -39,10 +40,21 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
-  private final Transfer transfer = new Transfer();
+;
+  private final Brake brake = new Brake();
+
+  
+ private double speedy = -1;
+
+//  @Config
+//  public void setty(double x){
+//     speedy = x;
+//  }
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController secondaryController = new CommandXboxController(1);
+
+  SendableChooser<Command> autChooser = new SendableChooser<>();
 
   private final Command driveCommand = new RunCommand(
       () -> {
@@ -56,28 +68,17 @@ public class RobotContainer {
         drivetrain.drive(speed, turn);
       }, drivetrain);
 
-  private final Command elevatorCommand = new RunCommand(
-      () -> {
-        double elevatorPower = MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09);
-        double transferPower = -MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09);
 
-        transfer.setElevatorPower(elevatorPower);
-        transfer.setBeltPower(transferPower);
-
-        // if(transfer.isFrontOccupied()){
-        // transfer.setBeltPower(transfer.activeBeltSpeed);
-        // }
-        // if(transfer.isBackOccupied()){
-        // transfer.setBeltPower(0);
-        // }
-
-      }, transfer);
-
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
+  
   public RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
+    autChooser.addOption("nothing", null);
+    autChooser.addOption("place and leave", new PlaceAndLeave());
+    autChooser.addOption("just place", new JustPlace());
+    //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
+    autChooser.setDefaultOption("just place", new JustPlace());
+    SmartDashboard.putData("select autonomous", autChooser);
+    SmartDashboard.putData("stupidTurnToAngle", new TurnToGyroAngleCommand(90, drivetrain));
 
     // Configure the trigger bindings
     configureBindings();
@@ -103,177 +104,152 @@ public class RobotContainer {
 
     // default commands
     drivetrain.setDefaultCommand(driveCommand);
-    transfer.setDefaultCommand(transfer.beltRunCommand());
-    intake.setDefaultCommand(intake.spinIntakeWhileUp(transfer.isBeltRunning()));
-    // transfer.setDefaultCommand(elevatorCommand);
-
+  
+  
     // driver controller (0) commands
 
+    //driver cone speed intake
     driverController
         .leftBumper()
-        .onTrue(intake.flipDownSpin())
+        .onTrue(
+          new InstantCommand(()-> fourbar.fourbarDown())
+          .andThen(new WaitCommand(.5).unless(()->fourbar.getFourBarPosition() == FourbarPosition.RETRACT))
+
+          .andThen(intake.flipDownSpin()))
         .onFalse(intake.flipUpStop());
 
-    driverController
-        .leftTrigger()
-        .onTrue(intake.flipDownEject()
-        .andThen(new InstantCommand(() -> fourbar.fourbarDown()))
-        )
-        .onFalse(intake.flipUpStop());
+   
 
+    //Shoot cube Low
     driverController
         .a()
-        .onTrue(
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeLowV), ()->intake.spinIntakeBottomFaster(0), intake));
 
-            new SequentialCommandGroup(
-                new InstantCommand(() -> claw.setClosed(), claw)
-                    .andThen(new WaitCommand(.5))
-                    .andThen(
-                        fourbar.fourbarToggle())
 
-            )
-
-        );
-
-    // driverController
-    // .rightBumper()
-    // .onTrue(
-    // new InstantCommand(() -> claw.setClosed(), claw)
-    // .andThen(new WaitCommand(.5))
-    // .andThen(
-    // fourbar.fourbarToggle()
-    // ));
-
+    //Driver manual intake up
     driverController
         .povUp()
         .whileTrue(new StartEndCommand(() -> intake.setFlipperSpeed(-0.4), () -> intake.setFlipperSpeed(0), intake));
 
+    //Driver manual intkae down
     driverController
         .povDown()
         .whileTrue(new StartEndCommand(() -> intake.setFlipperSpeed(0.3), () -> intake.setFlipperSpeed(0), intake));
 
+    //Driver intake arm reset
     driverController
         .povLeft()
         .onTrue(new InstantCommand(() -> intake.resetArmEncoder()));
 
+    //driver cube intake
     driverController
-        .axisGreaterThan(2, 0)
-        .whileTrue(new RunCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed), intake));
+    .axisGreaterThan(2, 0)
+    .onTrue(
+          new InstantCommand(()-> fourbar.fourbarDown())
+          .andThen(new WaitCommand(.5).unless(()->fourbar.getFourBarPosition() == FourbarPosition.RETRACT))
 
+          .andThen(intake.cubeFlipDownSpin()))
+        .onFalse(intake.flipUpStop());
+
+    //driver manual intake down number two
+
+    //cube intake without down left trig
+    
     driverController
         .axisGreaterThan(3, 0)
-        .whileTrue(new RunCommand(() -> intake.spinIntake(-IntakeConstants.coneIntakeInSpeed), intake));
+        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.slowIntakeInV),
+        () -> intake.spinIntake(0)));      
 
+    // driver's claw open override
     driverController
         .b()
         .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
-    // x for align cube
+
+    // shoot cube mid
     driverController
         .x()
-        .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.cubeTransferSpeed)));
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeMidV), ()->intake.spinIntakeBottomFaster(0), intake));
 
-    // y for align cone
+    // Shoot cube high
     driverController
         .y()
-        .onTrue(new InstantCommand(() -> transfer.setActiveBeltSpeed(TransferConstants.coneTransferSpeed)));
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeHighV), ()->intake.spinIntakeBottomFaster(0), intake));
 
+    //driver manual intake spin
     driverController
         .rightBumper()
-        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.coneIntakeInSpeed),
+        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.fastIntakeInV),
             () -> intake.spinIntake(0)));
 
-    // driverController
-    // .a()
-    // .onTrue(
-    // new InstantCommand(() -> claw.setClosed(), claw)
-    // .andThen(new WaitCommand(.75))
-    // .andThen(
-    // new InstantCommand(() -> fourbar.fourbarDown())
-    // ));
 
-    // secondary controls
+    // secondary controls timeee
 
+    //secondary claw close
     secondaryController
         .y()
-        .onTrue(new InstantCommand(() -> claw.setClosed(), claw)
-            .andThen(new WaitCommand(1))
-            .andThen(transfer.elevatorToBottom()));
-
+        .onTrue(new InstantCommand(() -> claw.setClosed(), claw));
+            
+    //secondary claw ppen
     secondaryController
         .b()
         .onTrue(new InstantCommand(() -> claw.setOpen(), claw));
 
-    secondaryController
-        .x()
-        .onTrue(
-          new InstantCommand(() -> transfer.setBeltPower(0))
-        );
 
-    secondaryController
-        .leftBumper()
-        .onTrue(transfer.elevatorToBottom());
 
-    secondaryController
-        .rightBumper()
-        .onTrue(transfer.elevatorToTop());
 
-    secondaryController
+
+    //Secondary 4 bar in with claw and intake safety
+     secondaryController
         .povDown()
         .onTrue(
             new InstantCommand(() -> claw.setClosed(), claw)
                 .andThen(new WaitCommand(.5))
                 .andThen(
                     new InstantCommand(() -> fourbar.fourbarDown()))
-                .andThen(new WaitCommand(.75))
-                .andThen(new InstantCommand(() -> claw.setOpen(), claw))
-
         );
-
+    
+    //secondary 4 bar out with claw and intake safety
     secondaryController
         .povUp()
         .onTrue(
-            new InstantCommand(() -> claw.setClosed(), claw)
-                .alongWith(intake.flipUp())
+            new InstantCommand(() -> intake.flipUp())
                 .andThen(new WaitCommand(.5))
-                .andThen(
-                    new InstantCommand(() -> fourbar.fourbarUp())));
+            .andThen(new InstantCommand(() -> fourbar.fourbarUp()))
+            );
+            
+             
+ 
+  
+    //secondary manual intake up
+    secondaryController
+     .axisGreaterThan(2, 0)
+     .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(-driverController.getLeftTriggerAxis()/3), intake));
+
+    //secondary manual intake down 
+    secondaryController
+        .axisGreaterThan(3, 0)
+        .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(driverController.getRightTriggerAxis()/3), intake));
+    secondaryController
+        .leftBumper()
+        .onTrue(new InstantCommand(
+            ()->brake.brakeDown()));
+
+            secondaryController
+            .rightBumper()
+            .onTrue(new InstantCommand(
+                ()->brake.brakeUp()));
+
 
     secondaryController
-        .axisGreaterThan(5, 0)
-        .whileTrue(new RunCommand(
-            () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
+      .povRight()
+      .whileTrue(
+        new StartEndCommand(
+         ()-> intake.spinIntakeTopFaster(IntakeConstants.fastIntakeInV) ,
+         ()-> intake.spinIntakeTopFaster(0),
+          intake)
+      );
 
-    secondaryController
-        .axisLessThan(5, 0)
-        .whileTrue(new RunCommand(
-            () -> transfer.setBeltPower(MathUtil.applyDeadband(secondaryController.getRightY() / 2, 0.09)), transfer));
-
-    secondaryController
-        .axisGreaterThan(1, 0)
-        .whileTrue(new RunCommand(
-            () -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09)),
-            transfer));
-
-    secondaryController
-        .axisLessThan(1, 0)
-        .whileTrue(new RunCommand(
-            () -> transfer.setElevatorPower(MathUtil.applyDeadband(secondaryController.getLeftY() / 2, 0.09)),
-            transfer));
-
-    // secondaryController
-    // .axisGreaterThan(2, 0)
-    // .whileTrue(new RunCommand(()->
-    // transfer.setElevatorPower(secondaryController.getLeftTriggerAxis()/2),
-    // transfer));
-
-    // secondaryController
-    // .axisGreaterThan(3, 0)
-    // .whileTrue(new RunCommand(()->
-    // transfer.setElevatorPower(-secondaryController.getRightTriggerAxis()/2),
-    // transfer));
-
-    // down trasfer reversed
 
   }
 
@@ -289,7 +265,93 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return autChooser.getSelected();     
   }
+
+  /*
+  AUTON COMMANDS BELOW
+  */
+  private class PlaceAndLeave extends SequentialCommandGroup {
+    private PlaceAndLeave() {
+        addCommands(
+           
+           new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+          //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
+            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
+            new WaitCommand(3.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            new WaitCommand(0.5),
+            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+            
+
+            
+            new InstantCommand(
+                () -> drivetrain.resetEncoders(),
+                drivetrain
+            ),
+            new DriveToDistanceCommand(-4, drivetrain)
+        );
+
+    }
+}
+
+private class JustPlace extends SequentialCommandGroup {
+    private JustPlace() {
+        addCommands(
+            
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
+            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
+            new WaitCommand(3.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            new WaitCommand(0.5),
+            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw)
+            
+        );
+    }
+}
+
+
+
+
+private class PlaceLeaveBalance extends SequentialCommandGroup {
+    private PlaceLeaveBalance() {
+        addCommands(
+            
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
+            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
+            new WaitCommand(3.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+            new WaitCommand(0.5),
+            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
+            new WaitCommand(0.5),
+            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
+
+            new InstantCommand(
+                () -> drivetrain.resetEncoders(),
+                drivetrain
+            ),
+            new DriveToDistanceCommand(-4.5, drivetrain),
+            new InstantCommand(
+                () -> drivetrain.resetEncoders(),
+                drivetrain
+            ),
+            new DriveToDistanceCommand(1, drivetrain)
+            
+        );
+    }
+}
+ 
 
 }
