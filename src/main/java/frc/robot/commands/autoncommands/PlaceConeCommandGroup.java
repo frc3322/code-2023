@@ -25,7 +25,7 @@ public class PlaceConeCommandGroup extends SequentialCommandGroup {
     addCommands(
       new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
       fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
-      new WaitCommand(3.5),
+      new WaitCommand(2),
       new MoveClawCommand(Types.ClawPosition.OPEN, claw),
       new WaitCommand(0.5),
       new MoveClawCommand(Types.ClawPosition.CLOSED, claw),

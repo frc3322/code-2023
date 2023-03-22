@@ -74,6 +74,7 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
     autChooser.addOption("test cube (high launch)", new CubeTest());
+    //autChooser.addOption("cone test", new PlaceComm());
     //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
     SmartDashboard.putData("select autonomous", autChooser);
@@ -301,7 +302,7 @@ private class CubeTest extends SequentialCommandGroup {
     private CubeTest() {
         addCommands(
             
-            new IntakeCubeCommandGroup(intake, drivetrain),
+           // new IntakeCubeCommandGroup(intake, drivetrain),
             new ShootCubeCommandGroup(intake, IntakeConstants.intakeHighV)
             
         );
