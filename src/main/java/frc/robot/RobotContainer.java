@@ -60,6 +60,11 @@ public class RobotContainer implements Loggable{
       () -> {
         double speed = MathUtil.applyDeadband(driverController.getLeftY(), 0.09);
         double turn = MathUtil.applyDeadband(driverController.getRightX(), 0.08);
+        if (drivetrain.getSlowMode()){
+            speed/=5;
+            turn/=2;
+            //divide turn as well? also what should we divide/multiply by
+        }
 
         drivetrain.drive(speed, turn);
       }, drivetrain);
@@ -103,6 +108,13 @@ public class RobotContainer implements Loggable{
   
   
     // driver controller (0) commands
+
+    driverController
+    .rightStick()
+    .onTrue(
+        new InstantCommand(()-> drivetrain.toggleSlowMode())
+    );
+
 
     //driver cone speed intake
     driverController
