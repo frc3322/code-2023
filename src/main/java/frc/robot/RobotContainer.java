@@ -82,6 +82,7 @@ public class RobotContainer implements Loggable{
     
     SmartDashboard.putData("select autonomous", autChooser);
     SmartDashboard.putData("stupidTurnToAngle", new TurnToGyroAngleCommand(90, drivetrain));
+    SmartDashboard.putData("stupid drive distance", new TestDriveDist());
 
     // Configure the trigger bindings
     configureBindings();
@@ -312,11 +313,11 @@ public class RobotContainer implements Loggable{
 private class TestDriveDist extends SequentialCommandGroup{
     private TestDriveDist(){
         addCommands(
-            new InstantCommand(
-                () -> drivetrain.resetEncoders(),
-                drivetrain
-            ),
-            new DriveToDistanceCommand(4, drivetrain)
+            // new InstantCommand(
+            //     () -> drivetrain.resetEncoders(),
+            //     drivetrain
+            // ),
+            new DriveToDistanceCommand(3, drivetrain)
 
 
         );

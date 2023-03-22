@@ -52,7 +52,7 @@ public final class Constants{
     public static final double kTurnToleranceDeg = 0.5;
     public static final double kTurnRateToleranceDegPerS =5;
 
-    public static final double kDriveP = 0.3;
+    public static final double kDriveP = 0.15;
     public static final double kDriveI = 0;
     public static final double kDriveD = 0.0075;
     
