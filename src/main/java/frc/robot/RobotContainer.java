@@ -20,6 +20,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.MoveClawCommand;
+import frc.robot.commands.TurnToGyroAngleCommand;
 //import frc.robot.commands.MoveFourbarCommand;
 import frc.robot.commands.autoncommands.PlaceConeCommandGroup;
 import frc.robot.commands.autoncommands.IntakeCubeCommandGroup;
@@ -75,6 +76,7 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("just place", new JustPlace());
     autChooser.addOption("test cube (high launch)", new CubeTest());
     //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
+    //need to add ConeTwoCube red and blue
     autChooser.setDefaultOption("just place", new JustPlace());
     SmartDashboard.putData("select autonomous", autChooser);
 
@@ -308,6 +310,61 @@ private class CubeTest extends SequentialCommandGroup {
     }
 }
 
+
+private class ConeTwoCubeBlue extends SequentialCommandGroup {
+    private ConeTwoCubeBlue() {
+        addCommands(
+            //start at bottom of field right against grid
+            //place with pre-loaded cone
+            new PlaceConeCommandGroup(claw, fourbar),
+            //drive out 5.26 meters from start. This can be changed, just based on an estimate of where would be good to put cubes from pathweaver.
+            new DriveToDistanceCommand(5.26, drivetrain),
+            //intake the first cube, which is in line with start.
+            new IntakeCubeCommandGroup(intake, drivetrain),
+            //turn to what should be the correct amount of degrees
+            //this is based on the assumption that turnToAngle turns clockwise, which if I remember correctly it does.
+            new TurnToGyroAngleCommand(-172.67, drivetrain),
+            new DriveToDistanceCommand(5.04, drivetrain),
+            new TurnToGyroAngleCommand(-7.33, drivetrain),
+            new DriveToDistanceCommand(.26, drivetrain),
+            new ShootCubeCommandGroup(intake, IntakeConstants.intakeHighV),
+            //start on second cube
+            new DriveToDistanceCommand(3.618, drivetrain),
+            new TurnToGyroAngleCommand(-27.31, drivetrain),
+            //second cube is 1 meter above the first
+            new DriveToDistanceCommand(1.93, drivetrain),
+            new IntakeCubeCommandGroup(intake, drivetrain)
+            //from here can try to do more if there is time
+        );
+    }
+}
+private class ConeTwoCubeRed extends SequentialCommandGroup {
+    private ConeTwoCubeRed() {
+        addCommands(
+            //start at bottom of field right against grid
+            //place with pre-loaded cone
+            new PlaceConeCommandGroup(claw, fourbar),
+            //drive out 5.26 meters from start. This can be changed, just based on an estimate of where would be good to put cubes from pathweaver.
+            new DriveToDistanceCommand(5.26, drivetrain),
+            //intake the first cube, which is in line with start.
+            new IntakeCubeCommandGroup(intake, drivetrain),
+            //turn to what should be the correct amount of degrees
+            //this is based on the assumption that turnToAngle turns clockwise, which if I remember correctly it does.
+            new TurnToGyroAngleCommand(172.67, drivetrain),
+            new DriveToDistanceCommand(5.04, drivetrain),
+            new TurnToGyroAngleCommand(7.33, drivetrain),
+            new DriveToDistanceCommand(.26, drivetrain),
+            new ShootCubeCommandGroup(intake, IntakeConstants.intakeHighV),
+            //start on second cube
+            new DriveToDistanceCommand(3.618, drivetrain),
+            new TurnToGyroAngleCommand(27.31, drivetrain),
+            //second cube is 1 meter above the first
+            new DriveToDistanceCommand(1.93, drivetrain),
+            new IntakeCubeCommandGroup(intake, drivetrain)
+            //from here can try to do more if there is time
+        );
+    }
+}
 
 private class PlaceLeaveBalance extends SequentialCommandGroup {
     private PlaceLeaveBalance() {
