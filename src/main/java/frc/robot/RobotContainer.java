@@ -110,7 +110,7 @@ public class RobotContainer implements Loggable{
     // driver controller (0) commands
 
     driverController
-    .leftStick()
+    .rightStick()
     .onTrue(
         new InstantCommand(()-> drivetrain.toggleSlowMode())
     );
