@@ -31,14 +31,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final RelativeEncoder FREncoder = motorFR.getEncoder();
   private final RelativeEncoder BLEncoder = motorBL.getEncoder();
   private final RelativeEncoder BREncoder = motorBR.getEncoder();
+
+  private boolean inSlowMode = false;
   
   
   private final DifferentialDrive robotDrive = new DifferentialDrive(motorFL, motorFR);
 
   private final AHRS gyro = new AHRS();
   
-  private final SlewRateLimiter accelLimit = new SlewRateLimiter(1.2);
-  private final SlewRateLimiter turnLimit = new SlewRateLimiter(2);
+  private final SlewRateLimiter accelLimit = new SlewRateLimiter(1.7);
+  private final SlewRateLimiter turnLimit = new SlewRateLimiter(2.3);
 
   //gets the default instance of NetworkTables that is automatically created
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
@@ -139,8 +141,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     this.speed = speed;
     this.turn = turn;
 
-   //robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
-    robotDrive.arcadeDrive(speed, turn, false);
+   robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
+    //robotDrive.arcadeDrive(speed, turn, false);
 
     robotDrive.feed();
   }
@@ -167,6 +169,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       .getEntry("pipeline")
       //sets the value of the pipeline entry to the parameter of the function
       .setNumber(pipelineNum);
+  }
+
+  public void toggleSlowMode(){
+    inSlowMode = !inSlowMode;
+  }
+
+  public boolean getSlowMode(){
+    return inSlowMode;
   }
 
   @Config
