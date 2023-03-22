@@ -77,7 +77,9 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
     //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
+    autChooser.addOption("drive distance test", new TestDriveDist());
     autChooser.setDefaultOption("just place", new JustPlace());
+    
     SmartDashboard.putData("select autonomous", autChooser);
     SmartDashboard.putData("stupidTurnToAngle", new TurnToGyroAngleCommand(90, drivetrain));
 
@@ -304,6 +306,20 @@ public class RobotContainer implements Loggable{
             new DriveToDistanceCommand(-4, drivetrain)
         );
 
+    }
+}
+
+private class TestDriveDist extends SequentialCommandGroup{
+    private TestDriveDist(){
+        addCommands(
+            new InstantCommand(
+                () -> drivetrain.resetEncoders(),
+                drivetrain
+            ),
+            new DriveToDistanceCommand(4, drivetrain)
+
+
+        );
     }
 }
 
