@@ -103,6 +103,12 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public double getYaw() {
     return gyro.getYaw();
   }
+
+  @Log
+  public double getYawRate() {
+    return gyro.getRate();
+  }
+
   @Log
   public double getPitch() {
     return gyro.getPitch();
