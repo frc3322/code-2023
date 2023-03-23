@@ -9,15 +9,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
+import io.github.oblarg.oblog.Loggable;
 
 /** A command that will turn the robot to the specified angle. */
-public class TurnToGyroAngleCommand extends PIDCommand {
+public class TurnToGyroAngleCommand extends PIDCommand implements Loggable{
   /**
    * Turns to robot to the specified angle.
    *
    * @param targetAngleDegrees The angle to turn to
    * @param drive The drive subsystem to use
    */
+
+  private Drivetrain drive;
   
   public TurnToGyroAngleCommand(double targetAngleDegrees, Drivetrain drive) {
     super(
@@ -31,6 +34,7 @@ public class TurnToGyroAngleCommand extends PIDCommand {
         // Require the drive
         drive);
     
+    this.drive = drive;
     SmartDashboard.putData("Angle Controller", getController());
     
 
@@ -48,4 +52,12 @@ public class TurnToGyroAngleCommand extends PIDCommand {
     // End when the controller is at the reference.
     return getController().atSetpoint();
   }
+
+  @Override
+  public void initialize() {
+    // End when the controller is at the reference.
+    drive.resetGyro();;
+  }
+
+  
 }

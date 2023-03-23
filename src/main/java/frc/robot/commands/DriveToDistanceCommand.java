@@ -12,31 +12,38 @@ import frc.robot.subsystems.Drivetrain;
 
 /** A command that will turn the robot to the specified angle. */
 public class DriveToDistanceCommand extends PIDCommand {
-  
-  public DriveToDistanceCommand(double targetDistance, Drivetrain drive) {
 
+  private Drivetrain drivetrain;
+  private double targetDist;
+  
+  public DriveToDistanceCommand(double targetDistance, Drivetrain drivetrain) {
+    
     super(
       new PIDController(DriveConstants.kDriveP, DriveConstants.kDriveI, DriveConstants.kDriveD),
         // Close loop on heading
-        drive::getDistance,
+        drivetrain::getDistance,
         // Set reference to target
-        drive.getDistance() + (targetDistance * DriveConstants.encoderTicsPerFoot),
+        targetDistance,
         // Pipe output to turn robot
-        output -> drive.drive(output,0),
+        output -> drivetrain.autonDrive(output,0),
         // Require the drive
-        drive);
-
+        drivetrain);
+    this.drivetrain = drivetrain;
+    this.targetDist = targetDistance;
     SmartDashboard.putData("Distance Controller", getController());
     
 
-    // Set the controller to be continuous
-    // DO NOT REMOVE THIS LINE //
-    getController().enableContinuousInput(0, 60);
+  
     
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
     getController()
-        .setTolerance(DriveConstants.kDriveToleranceDeg, DriveConstants.kDriveRateToleranceDegPerS);
+        .setTolerance(DriveConstants.kDriveToleranceMeters, DriveConstants.kDriveRateToleranceMetersPerS);
+  }
+  
+  @Override
+  public void initialize() {
+    drivetrain.resetEncoders();
   }
 
   @Override
