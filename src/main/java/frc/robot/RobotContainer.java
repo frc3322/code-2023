@@ -21,6 +21,7 @@ import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.MoveClawCommand;
 import frc.robot.commands.TurnToGyroAngleCommand;
+import frc.robot.commands.PlaceConeCommandGroup;
 //import frc.robot.commands.MoveFourbarCommand;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -81,7 +82,7 @@ public class RobotContainer implements Loggable{
     autChooser.setDefaultOption("just place", new JustPlace());
     
     SmartDashboard.putData("select autonomous", autChooser);
-    SmartDashboard.putData("stupidTurnToAngle", new TurnToGyroAngleCommand(90, drivetrain));
+    SmartDashboard.putData("stupidTurnToAngle", new TurnToGyroAngleCommand(170, drivetrain));
     SmartDashboard.putData("stupid drive distance", new TestDriveDist());
 
     // Configure the trigger bindings
@@ -286,25 +287,24 @@ public class RobotContainer implements Loggable{
     private PlaceAndLeave() {
         addCommands(
            
-           new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-          //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
-            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
-            new WaitCommand(3.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            new WaitCommand(0.5),
-            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            
+        new PlaceConeCommandGroup(claw, fourbar),
+          
+        new DriveToDistanceCommand(-4, drivetrain)
 
-            
-            new InstantCommand(
-                () -> drivetrain.resetEncoders(),
-                drivetrain
-            ),
-            new DriveToDistanceCommand(-4, drivetrain)
+        );
+
+    }
+}
+
+private class PlaceAndCube extends SequentialCommandGroup {
+    private PlaceAndCube() {
+        addCommands(
+           
+        new PlaceConeCommandGroup(claw, fourbar),
+          
+        new DriveToDistanceCommand(-4, drivetrain)
+      //  new TurnToGyroAngleCommand(speedy, drivetrain)
+
         );
 
     }
@@ -319,7 +319,6 @@ private class TestDriveDist extends SequentialCommandGroup{
             // ),
             new DriveToDistanceCommand(3, drivetrain)
 
-
         );
     }
 }
@@ -328,17 +327,7 @@ private class JustPlace extends SequentialCommandGroup {
     private JustPlace() {
         addCommands(
             
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
-            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
-            new WaitCommand(3.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            new WaitCommand(0.5),
-            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw)
+        new PlaceConeCommandGroup(claw, fourbar)
             
         );
     }
@@ -351,22 +340,7 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
     private PlaceLeaveBalance() {
         addCommands(
             
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
-            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
-            new WaitCommand(3.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            new WaitCommand(0.5),
-            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-
-            new InstantCommand(
-                () -> drivetrain.resetEncoders(),
-                drivetrain
-            ),
+        new PlaceConeCommandGroup(claw, fourbar),
             new DriveToDistanceCommand(-4.5, drivetrain),
             new InstantCommand(
                 () -> drivetrain.resetEncoders(),

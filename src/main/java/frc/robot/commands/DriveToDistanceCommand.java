@@ -33,9 +33,7 @@ public class DriveToDistanceCommand extends PIDCommand {
     SmartDashboard.putData("Distance Controller", getController());
     
 
-    // Set the controller to be continuous
-    // DO NOT REMOVE THIS LINE //
-   // getController().enableContinuousInput(0, 60);
+  
     
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
