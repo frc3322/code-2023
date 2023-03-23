@@ -56,7 +56,7 @@ public final class Constants{
     public static final double kDriveI = 0;
     public static final double kDriveD = 0.0075;
     
-    public static final double kDriveToleranceMeters = 0.05;
+    public static final double kDriveToleranceMeters = 0.4;
     public static final double kDriveRateToleranceMetersPerS =0;
     //public static final double encoderTicsPerFoot = 6.84;
 

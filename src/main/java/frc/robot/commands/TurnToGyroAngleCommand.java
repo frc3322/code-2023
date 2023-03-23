@@ -19,6 +19,8 @@ public class TurnToGyroAngleCommand extends PIDCommand implements Loggable{
    * @param targetAngleDegrees The angle to turn to
    * @param drive The drive subsystem to use
    */
+
+  private Drivetrain drive;
   
   public TurnToGyroAngleCommand(double targetAngleDegrees, Drivetrain drive) {
     super(
@@ -32,6 +34,7 @@ public class TurnToGyroAngleCommand extends PIDCommand implements Loggable{
         // Require the drive
         drive);
     
+    this.drive = drive;
     SmartDashboard.putData("Angle Controller", getController());
     
 
@@ -49,4 +52,12 @@ public class TurnToGyroAngleCommand extends PIDCommand implements Loggable{
     // End when the controller is at the reference.
     return getController().atSetpoint();
   }
+
+  @Override
+  public void initialize() {
+    // End when the controller is at the reference.
+    drive.resetGyro();;
+  }
+
+  
 }
