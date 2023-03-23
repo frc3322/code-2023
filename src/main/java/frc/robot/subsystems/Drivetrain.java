@@ -13,11 +13,14 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 import frc.robot.Constants;
 import frc.robot.commands.DriveToBalance;
+import frc.robot.commands.DriveToDistanceCommand;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
@@ -69,10 +72,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public double balancekP;
   public double balancekI;
   public double balancekD;
+
    public double turnP;
    public double turnI;
    public double turnD;
    public double setpoint;
+
+   public DriveToBalance driveyBalancey = new DriveToBalance(this);
 
   /** Creates a new ExampleSubsystem. */
   public Drivetrain() {
@@ -172,6 +178,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     robotDrive.feed();
   }
 
+  public SequentialCommandGroup jankyBalance(){
+    return new RunCommand(() -> {
+      if(getPitch() > 15){
+        new DriveToDistanceCommand(15, this);
+      }
+    }, this)
+    .unless(()-> getPitch() == 0)
+    .beforeStarting(()-> drive(0.2,0), this);
+  }
+
   public void tankDriveVolts(double l, double r){
     motorFL.setVoltage(l);
     motorFR.setVoltage(r);
@@ -190,6 +206,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   @Log
   public double balanceError(){
     return driveyBalancey.getController().getPositionError();
+  }
+
   public void toggleSlowMode(){
     inSlowMode = !inSlowMode;
   }

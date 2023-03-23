@@ -39,6 +39,7 @@ public class DriveToBalance extends ProfiledPIDCommand {
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
+    SmartDashboard.putData(this.getController());
   }
   
 

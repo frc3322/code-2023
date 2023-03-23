@@ -85,6 +85,8 @@ public class RobotContainer implements Loggable{
     SmartDashboard.putData("select autonomous", autChooser);
     SmartDashboard.putData("stupidTurnToAngle", new TurnToGyroAngleCommand(170, drivetrain));
     SmartDashboard.putData("stupid drive distance", new TestDriveDist());
+    SmartDashboard.putData("drivetobalancepid", drivetrain.driveyBalancey);
+    SmartDashboard.putData("jankyBalance", drivetrain.jankyBalance().until(()->(drivetrain.getPitch() == 0)));
 
     // Configure the trigger bindings
     configureBindings();
