@@ -48,13 +48,13 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
     debounceCount = 0;
 
     // Speed the robot drived while scoring/approaching station
-    robotSpeedFast = 3 * reverseModifier;
+    robotSpeedFast = 1.7 * reverseModifier;
 
     // Speed the robot drives once it is on the charging station
-    robotSpeedMid = 1.65 * reverseModifier;
+    robotSpeedMid = 1.7 * reverseModifier;
 
     // Speed the robot drives to complete the balance
-    robotSpeedSlow = 1.65 * reverseModifier;
+    robotSpeedSlow = 1.7 * reverseModifier;
 
     // Angle where the robot knows it is on the charge station
     onChargeStationDegree = 12 /* * reverseModifier*/;
