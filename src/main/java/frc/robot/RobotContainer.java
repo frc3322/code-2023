@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 //arooshwashere
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Types.FourbarPosition;
+import frc.robot.commands.AutonBalanceCommand;
+import frc.robot.commands.AutonBalanceAdjusted;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.MoveClawCommand;
 //import frc.robot.commands.MoveFourbarCommand;
@@ -70,7 +72,9 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("nothing", null);
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
-    //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
+    autChooser.addOption("place balance", new PlaceIntakeBalance());
+    autChooser.addOption("ForwardBalance", new ForwardsBalance());
+    autChooser.addOption("RevrseBalance", new ReverseBalance());
     autChooser.setDefaultOption("just place", new JustPlace());
     SmartDashboard.putData("select autonomous", autChooser);
 
@@ -314,36 +318,57 @@ private class JustPlace extends SequentialCommandGroup {
 }
 
 
-private class PlaceLeaveBalance extends SequentialCommandGroup {
-    private PlaceLeaveBalance() {
+private class PlaceIntakeBalance extends SequentialCommandGroup {
+    private PlaceIntakeBalance() {
         addCommands(
             
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
-            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
-            new WaitCommand(3.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            new WaitCommand(0.5),
-            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-
-            new InstantCommand(
-                () -> drivetrain.resetEncoders(),
-                drivetrain
-            ),
-            new DriveToDistanceCommand(-4.5, drivetrain),
-            new InstantCommand(
-                () -> drivetrain.resetEncoders(),
-                drivetrain
-            ),
-            new DriveToDistanceCommand(1, drivetrain)
             
+            
+            // Balance backwards
+            new AutonBalanceCommand(
+                drivetrain,
+                drivetrain::tankDriveVolts,
+                true,
+                drivetrain
+            )/*, 
+
+            // Shoot cube while on charge station
+            new InstantCommand(
+                () -> intake.spinIntake(-1), 
+                intake)
+            
+            to shoot uncomment and change number to appropriate value
+            
+            */
+
         );
     }
 }
- 
+
+private class ForwardsBalance extends SequentialCommandGroup{
+    private ForwardsBalance(){
+        addCommands(
+            new AutonBalanceCommand(
+                drivetrain,
+                drivetrain::tankDriveVolts,
+                false,
+                drivetrain
+            )
+        );
+    }
+} 
+
+private class ReverseBalance extends SequentialCommandGroup{
+    private ReverseBalance() {
+        addCommands(
+            new AutonBalanceCommand(
+                drivetrain,
+                drivetrain::tankDriveVolts,
+                true,
+                drivetrain
+            )
+        );
+    }
+} 
 
 }
