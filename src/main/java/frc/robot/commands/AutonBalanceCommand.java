@@ -48,13 +48,13 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
     debounceCount = 0;
 
     // Speed the robot drived while scoring/approaching station
-    robotSpeedFast = 1.7 * reverseModifier;
+    robotSpeedFast = 1 * reverseModifier;
 
     // Speed the robot drives once it is on the charging station
-    robotSpeedMid = 1.7 * reverseModifier;
+    robotSpeedMid = 1 * reverseModifier;
 
     // Speed the robot drives to complete the balance
-    robotSpeedSlow = 1.7 * reverseModifier;
+    robotSpeedSlow = .6 * reverseModifier;
 
     // Angle where the robot knows it is on the charge station
     onChargeStationDegree = 12 /* * reverseModifier*/;
@@ -87,29 +87,31 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
                 state = 1;
             }
         return robotSpeedFast;
-        // driving up charge station, drive slower, stopping when level
+        // driving up charge station, drive slower until tips over, reverse motors when it does
         case 1:
-            if (getPitch() < levelDegree / 2) {
-                debounceCount++;
-            }
-            if (debounceCount > secondsToTicks(debounceTime)) {
-                state = 2;
-                debounceCount = 0;
-                return 0;
+            if(getPitch() < levelDegree){
+              state = 3;
             }
             return robotSpeedMid;
-        // on charge station, stop motors and wait for end of auto
+        // reverse motors until level, return 0 when level
         case 2:
-            if (Math.abs(getPitch()) <= levelDegree / 2) {
-                state = 3;
-                return 0;
-            }
-            return -robotSpeedSlow * Math.abs(getPitch() / getPitch());
+          if(getPitch() > -levelDegree){
+            state = 3;
+          }
+          return -robotSpeedSlow;
             
         case 3:
-            return 0;
+          if(getPitch() > levelDegree){
+            state = 1;
+          }
+          else if(getPitch() < -levelDegree){
+            state = 2;
+          }
+          return 0;
+
+
     }
-    return 0;
+      return 0;
 }
 
   // Called when the command is initially scheduled.
@@ -133,6 +135,6 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return state == 3;
+    return false;
   }
 }
