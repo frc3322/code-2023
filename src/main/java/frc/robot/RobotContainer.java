@@ -290,7 +290,7 @@ public class RobotContainer implements Loggable{
            
         new PlaceConeCommandGroup(claw, fourbar),
           
-        new DriveToDistanceCommand(-4, drivetrain)
+        new DriveToDistanceCommand(-4.5, drivetrain)
 
         );
 
