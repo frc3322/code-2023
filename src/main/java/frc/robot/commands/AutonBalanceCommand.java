@@ -48,7 +48,7 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
     debounceCount = 0;
 
     // Speed the robot drived while scoring/approaching station
-    robotSpeedFast = 1 * reverseModifier;
+    robotSpeedFast = 2 * reverseModifier;
 
     // Speed the robot drives once it is on the charging station
     robotSpeedMid = 1 * reverseModifier;
@@ -117,7 +117,7 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    state = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
