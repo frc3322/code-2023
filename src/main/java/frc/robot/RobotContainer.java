@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 //arooshwashere
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Types.FourbarPosition;
+import frc.robot.commands.AutonBalanceCommand;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.MoveClawCommand;
 import frc.robot.commands.TurnToGyroAngleCommand;
@@ -77,7 +78,9 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("nothing", null);
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
-    //autChooser.addOption("place leave balance", new PlaceLeaveBalance());
+    autChooser.addOption("place balance", new PlaceBalance());
+    autChooser.addOption("ForwardBalance", new ForwardsBalance());
+    autChooser.addOption("RevrseBalance", new ReverseBalance());
     autChooser.addOption("drive distance test", new TestDriveDist());
     autChooser.setDefaultOption("just place", new JustPlace());
     autChooser.setDefaultOption("place cube", new PlaceAndCube());
@@ -339,21 +342,46 @@ private class JustPlace extends SequentialCommandGroup {
 
 
 
-private class PlaceLeaveBalance extends SequentialCommandGroup {
-    private PlaceLeaveBalance() {
+private class PlaceBalance extends SequentialCommandGroup {
+    private PlaceBalance() {
         addCommands(
             
         new PlaceConeCommandGroup(claw, fourbar),
-            new DriveToDistanceCommand(-4.5, drivetrain),
-            new InstantCommand(
-                () -> drivetrain.resetEncoders(),
-                drivetrain
-            ),
-            new DriveToDistanceCommand(1, drivetrain)
+        new AutonBalanceCommand(
+            drivetrain, 
+            drivetrain::tankDriveVolts, 
+            true, 
+            drivetrain)
             
+
         );
     }
 }
- 
+
+private class ForwardsBalance extends SequentialCommandGroup{
+    private ForwardsBalance(){
+        addCommands(
+            new AutonBalanceCommand(
+                drivetrain,
+                drivetrain::tankDriveVolts,
+                false,
+                drivetrain
+            )
+        );
+    }
+} 
+
+private class ReverseBalance extends SequentialCommandGroup{
+    private ReverseBalance() {
+        addCommands(
+            new AutonBalanceCommand(
+                drivetrain,
+                drivetrain::tankDriveVolts,
+                true,
+                drivetrain
+            )
+        );
+    }
+} 
 
 }
