@@ -19,9 +19,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.AutonBalanceCommand;
-import frc.robot.commands.AutonBalanceAdjusted;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.MoveClawCommand;
+import frc.robot.commands.TurnToGyroAngleCommand;
+import frc.robot.commands.PlaceConeCommandGroup;
 //import frc.robot.commands.MoveFourbarCommand;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -61,6 +62,11 @@ public class RobotContainer implements Loggable{
       () -> {
         double speed = MathUtil.applyDeadband(driverController.getLeftY(), 0.09);
         double turn = MathUtil.applyDeadband(driverController.getRightX(), 0.08);
+        if (drivetrain.getSlowMode()){
+            speed/=5;
+            turn/=2;
+            //divide turn as well? also what should we divide/multiply by
+        }
 
         drivetrain.drive(speed, turn);
       }, drivetrain);
@@ -72,11 +78,16 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("nothing", null);
     autChooser.addOption("place and leave", new PlaceAndLeave());
     autChooser.addOption("just place", new JustPlace());
-    autChooser.addOption("place balance", new PlaceIntakeBalance());
+    autChooser.addOption("place balance", new PlaceBalance());
     autChooser.addOption("ForwardBalance", new ForwardsBalance());
     autChooser.addOption("RevrseBalance", new ReverseBalance());
+    autChooser.addOption("drive distance test", new TestDriveDist());
     autChooser.setDefaultOption("just place", new JustPlace());
+    autChooser.setDefaultOption("place cube", new PlaceAndCube());
+    
     SmartDashboard.putData("select autonomous", autChooser);
+    SmartDashboard.putData("stupidTurnToAngle", new TurnToGyroAngleCommand(170, drivetrain));
+    SmartDashboard.putData("stupid drive distance", new TestDriveDist());
 
     // Configure the trigger bindings
     configureBindings();
@@ -105,6 +116,13 @@ public class RobotContainer implements Loggable{
   
   
     // driver controller (0) commands
+
+    driverController
+    .rightStick()
+    .onTrue(
+        new InstantCommand(()-> drivetrain.toggleSlowMode())
+    );
+
 
     //driver cone speed intake
     driverController
@@ -273,27 +291,41 @@ public class RobotContainer implements Loggable{
     private PlaceAndLeave() {
         addCommands(
            
-           new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-          //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
-            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
-            new WaitCommand(3.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            new WaitCommand(0.5),
-            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            
+        new PlaceConeCommandGroup(claw, fourbar),
+          
+        new DriveToDistanceCommand(-4, drivetrain)
 
-            
-            new InstantCommand(
-                () -> drivetrain.resetEncoders(),
-                drivetrain
-            ),
-            new DriveToDistanceCommand(-4, drivetrain)
         );
 
+    }
+}
+
+private class PlaceAndCube extends SequentialCommandGroup {
+    private PlaceAndCube() {
+        addCommands(
+           
+        new PlaceConeCommandGroup(claw, fourbar),
+          
+        new DriveToDistanceCommand(-4, drivetrain),
+      new TurnToGyroAngleCommand(-10, drivetrain),
+      intake.flipDownSpin()
+      
+
+        );
+
+    }
+}
+
+private class TestDriveDist extends SequentialCommandGroup{
+    private TestDriveDist(){
+        addCommands(
+            // new InstantCommand(
+            //     () -> drivetrain.resetEncoders(),
+            //     drivetrain
+            // ),
+            new DriveToDistanceCommand(3, drivetrain)
+
+        );
     }
 }
 
@@ -301,45 +333,26 @@ private class JustPlace extends SequentialCommandGroup {
     private JustPlace() {
         addCommands(
             
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            //MoveFourBarCommand works, but it doesn't move on. Is not working. Maybe because it needs to be a different type of command?
-            fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
-            new WaitCommand(3.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-            new WaitCommand(0.5),
-            fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
-            new WaitCommand(0.5),
-            new MoveClawCommand(Types.ClawPosition.OPEN, claw)
+        new PlaceConeCommandGroup(claw, fourbar)
             
         );
     }
 }
 
 
-private class PlaceIntakeBalance extends SequentialCommandGroup {
-    private PlaceIntakeBalance() {
+
+
+private class PlaceBalance extends SequentialCommandGroup {
+    private PlaceBalance() {
         addCommands(
             
+        new PlaceConeCommandGroup(claw, fourbar),
+        new AutonBalanceCommand(
+            drivetrain, 
+            drivetrain::tankDriveVolts, 
+            true, 
+            drivetrain)
             
-            
-            // Balance backwards
-            new AutonBalanceCommand(
-                drivetrain,
-                drivetrain::tankDriveVolts,
-                true,
-                drivetrain
-            )/*, 
-
-            // Shoot cube while on charge station
-            new InstantCommand(
-                () -> intake.spinIntake(-1), 
-                intake)
-            
-            to shoot uncomment and change number to appropriate value
-            
-            */
 
         );
     }
