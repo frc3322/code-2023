@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 //arooshwashere
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.AutonBalanceCommand;
 import frc.robot.commands.DriveToDistanceCommand;
@@ -28,7 +29,7 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
 import frc.robot.subsystems.Intake;
-
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Brake;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
@@ -42,7 +43,7 @@ public class RobotContainer implements Loggable{
   private final Intake intake = new Intake();
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
-;
+  private final LED led = new LED();
   private final Brake brake = new Brake();
 
   
@@ -88,6 +89,8 @@ public class RobotContainer implements Loggable{
     SmartDashboard.putData("select autonomous", autChooser);
     SmartDashboard.putData("stupidTurnToAngle", new TurnToGyroAngleCommand(170, drivetrain));
     SmartDashboard.putData("stupid drive distance", new TestDriveDist());
+
+    led.setLed(LEDConstants.blueValue);
 
     // Configure the trigger bindings
     configureBindings();
