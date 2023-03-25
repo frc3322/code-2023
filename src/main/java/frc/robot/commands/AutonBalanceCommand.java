@@ -79,6 +79,7 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
     return -drivetrain.getPitch();
   }
 
+  // Currently working autonBalance
   public double autoBalanceRoutine() {
     switch (state) {
         // drive forwards to approach station, exit when tilt is detected
@@ -112,7 +113,117 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
 
     }
       return 0;
-}
+  }
+
+  // autonBalance with an extra state to increase speed and reliability
+  public double autoBalanceRoutineNewState() {
+    switch (state) {
+        // drive forwards to approach station, exit when tilt is detected
+        case 0:
+            if (getPitch() > onChargeStationDegree) {
+                state = 1;
+            }
+        return robotSpeedFast;
+        // driving up charge station, drive slower until tips over
+        case 1:
+            if(getPitch() < levelDegree){
+              state = 4;
+            }
+            return robotSpeedMid;
+        // drive reverse until level
+        case 2:
+          if(getPitch() > -levelDegree){
+            state = 4;
+          }
+          return -robotSpeedSlow;
+        // drive forward until level
+        case 3:
+          if(getPitch() < levelDegree){
+            state = 4;
+          }
+          return robotSpeedSlow;
+        // if level, return 0. else drive in apporpriate direction
+        case 4:
+          if(getPitch() > levelDegree){
+            state = 3;
+          }
+          else if(getPitch() < -levelDegree){
+            state = 2;
+          }
+          return 0;
+
+
+    }
+      return 0;
+  }
+
+  // autonBalance with 2 state machines to improve response time
+  public double autoBalanceRoutineTwoStateMachines() {
+    
+    // State switcher
+    switch (state) {
+        
+        // drive forwards to approach station, exit when tilt is detected
+        case 0:
+          if (getPitch() > onChargeStationDegree) {
+              state = 1;
+          }
+        
+        // driving up charge station, drive slower until tips over
+        case 1:
+          if(getPitch() < levelDegree){
+            state = 4;
+          }
+        
+        // drive reverse until level
+        case 2:
+          if(getPitch() > -levelDegree){
+            state = 4;
+          }
+        
+        // drive forward until level
+        case 3:
+          if(getPitch() < levelDegree){
+            state = 4;
+          }
+      
+        // if level, return 0. else drive in apporpriate direction
+        case 4:
+          if(getPitch() > levelDegree){
+            state = 3;
+          }
+          else if(getPitch() < -levelDegree){
+            state = 2;
+          }
+
+    }
+    
+    // Output state machine
+    switch (state) {
+      
+      // drive forwards to approach station, exit when tilt is detected
+      case 0:
+        return robotSpeedFast;
+      
+      // driving up charge station, drive slower until tips over
+      case 1:
+        return robotSpeedMid;
+      
+      // drive reverse until level
+      case 2:
+        return -robotSpeedSlow;
+      
+      // drive forward until level
+      case 3:
+        return robotSpeedSlow;
+      
+      // if level, return 0. else drive in apporpriate direction
+      case 4:
+        return 0;
+
+    }
+    return 0;
+  }
 
   // Called when the command is initially scheduled.
   @Override
