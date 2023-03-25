@@ -167,33 +167,39 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
         case 0:
           if (getPitch() > onChargeStationDegree) {
               state = 1;
+              break;
           }
         
         // driving up charge station, drive slower until tips over
         case 1:
           if(getPitch() < levelDegree){
             state = 4;
+            break;
           }
         
         // drive reverse until level
         case 2:
           if(getPitch() > -levelDegree){
             state = 4;
+            break;
           }
         
         // drive forward until level
         case 3:
           if(getPitch() < levelDegree){
             state = 4;
+            break;
           }
       
         // if level, return 0. else drive in apporpriate direction
         case 4:
           if(getPitch() > levelDegree){
             state = 3;
+            break;
           }
           else if(getPitch() < -levelDegree){
             state = 2;
+            break;
           }
 
     }
