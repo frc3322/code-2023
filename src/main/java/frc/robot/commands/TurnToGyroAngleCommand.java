@@ -30,7 +30,7 @@ public class TurnToGyroAngleCommand extends PIDCommand implements Loggable{
         // Set reference to target
         targetAngleDegrees,
         // Pipe output to turn robot
-        output -> drive.drive(0, output),
+        output -> drive.autonDrive(0, output),
         // Require the drive
         drive);
     

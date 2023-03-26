@@ -18,12 +18,15 @@ public class Brake extends SubsystemBase {
   }
   public void brakeDown(){
       brake.set(Value.kForward);
-      //may need to be switched 
+      
     }
+
   public void brakeUp(){
     brake.set(Value.kReverse);
-    //may need to be switched
+    
   }
+
+  // doesnt work
   public void toggleBrake(){
     brake.toggle();
   }

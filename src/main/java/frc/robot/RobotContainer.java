@@ -173,7 +173,7 @@ public class RobotContainer implements Loggable{
     
     driverController
         .axisGreaterThan(3, 0)
-        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.slowIntakeInV),
+        .whileTrue(new StartEndCommand(() -> intake.spinIntakeJustBottom(3),
         () -> intake.spinIntake(0)));      
 
     // driver's claw open override
@@ -188,9 +188,10 @@ public class RobotContainer implements Loggable{
         .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeMidV), ()->intake.spinIntakeBottomFaster(0), intake));
 
     // Shoot cube high
+    // 9.5 otp 10 bototm is good for mis
     driverController
         .y()
-        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeHighV), ()->intake.spinIntakeBottomFaster(0), intake));
+        .whileTrue(new StartEndCommand(()->{intake.spinIntake(IntakeConstants.intakeHighV);}, ()->intake.spinIntakeBottomFaster(0), intake));
 
     //driver manual intake spin
     driverController
@@ -261,7 +262,7 @@ public class RobotContainer implements Loggable{
       .povRight()
       .whileTrue(
         new StartEndCommand(
-         ()-> intake.spinIntakeTopFaster(IntakeConstants.fastIntakeInV) ,
+         ()-> intake.spinIntakeTopFaster(intake.testingSpeed) ,
          ()-> intake.spinIntakeTopFaster(0),
           intake)
       );
@@ -306,9 +307,14 @@ private class PlaceAndCube extends SequentialCommandGroup {
            
         new PlaceConeCommandGroup(claw, fourbar),
           
-        new DriveToDistanceCommand(-4, drivetrain),
-      new TurnToGyroAngleCommand(-10, drivetrain),
-      intake.flipDownSpin()
+      new DriveToDistanceCommand(-4.2, drivetrain),
+      new TurnToGyroAngleCommand(12, drivetrain),
+      intake.cubeFlipDownSpin(),
+      new DriveToDistanceCommand(-.9, drivetrain),
+      intake.flipUpStop(),
+      new TurnToGyroAngleCommand(170, drivetrain)
+     
+     
       
 
         );

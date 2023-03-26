@@ -153,6 +153,14 @@ public class Intake extends SubsystemBase implements Loggable {
     //multiply by .8
   }
 
+  public void spinIntakeJustBottom(double volts){
+    motorBottomRoller.setVoltage(volts);
+  }
+
+  public void spinIntakeJustTop(double volts){
+    motorTopRoller.setVoltage(volts);
+  }
+
 
   @Config
   public void setSpeedy(double speedy){

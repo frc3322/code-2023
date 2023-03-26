@@ -71,8 +71,8 @@ public final class Constants{
     public static final double slowIntakeInV = 2.0;
 
     public static final double intakeLowV = -2.0;
-    public static final double intakeMidV = -6.0;
-    public static final double intakeHighV = -9.0;
+    public static final double intakeMidV = -6.5;
+    public static final double intakeHighV = -9;
 
     public static final double armUpSpeed = -0.3;
     public static final double armUpSlowSpeed = -0.2;

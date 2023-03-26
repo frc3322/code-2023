@@ -6,13 +6,10 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.hal.HAL;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -126,6 +123,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     gyro.reset();
   }
 
+  
   public void resetEncoders() {
     motorFL.getEncoder().setPosition(0);
     motorFR.getEncoder().setPosition(0);
