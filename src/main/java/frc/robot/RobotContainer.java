@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -56,6 +59,8 @@ public class RobotContainer implements Loggable{
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController secondaryController = new CommandXboxController(1);
+
+  private BooleanSupplier slowModeSupplier = () -> drivetrain.getSlowMode();
 
   SendableChooser<Command> autChooser = new SendableChooser<>();
 
@@ -116,6 +121,7 @@ public class RobotContainer implements Loggable{
 
     // default commands
     drivetrain.setDefaultCommand(driveCommand);
+    led.setDefaultCommand(led.slowModeChecker(slowModeSupplier));
   
   
     // driver controller (0) commands
@@ -254,10 +260,10 @@ public class RobotContainer implements Loggable{
         .onTrue(new InstantCommand(
             ()->brake.brakeDown()));
 
-            secondaryController
-            .rightBumper()
-            .onTrue(new InstantCommand(
-                ()->brake.brakeUp()));
+    secondaryController
+    .rightBumper()
+    .onTrue(new InstantCommand(
+        ()->brake.brakeUp()));
 
 
     secondaryController
@@ -268,7 +274,13 @@ public class RobotContainer implements Loggable{
          ()-> intake.spinIntakeTopFaster(0),
           intake)
       );
+    secondaryController
+        .leftStick()
+        .onTrue(led.setLEDCommand(LEDConstants.purpleValue));
 
+    secondaryController
+        .rightStick()
+        .onTrue(led.setLEDCommand(LEDConstants.yellowValue));
 
   }
 

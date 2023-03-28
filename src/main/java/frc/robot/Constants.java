@@ -108,6 +108,7 @@ public final class Constants{
     public static final double blueValue = 0.83;
     public static final double purpleValue = 0.91;
     public static final double yellowValue = 0.69;
+    public static final double oceanSinelon = -0.75;
 
   }
 
