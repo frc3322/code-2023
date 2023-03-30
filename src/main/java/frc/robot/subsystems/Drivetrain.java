@@ -37,7 +37,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final AHRS gyro = new AHRS();
   
   private final SlewRateLimiter accelLimit = new SlewRateLimiter(1.7);
-  private final SlewRateLimiter turnLimit = new SlewRateLimiter(2);
+  private final SlewRateLimiter turnLimit = new SlewRateLimiter(5);
 
   //gets the default instance of NetworkTables that is automatically created
   NetworkTableInstance inst = NetworkTableInstance.getDefault();

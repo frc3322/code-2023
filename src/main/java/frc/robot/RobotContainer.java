@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -236,17 +237,9 @@ public class RobotContainer implements Loggable{
             );
             
              
+
  
   
-    //secondary manual intake up
-    secondaryController
-     .axisGreaterThan(2, 0)
-     .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(-driverController.getLeftTriggerAxis()/3), intake));
-
-    //secondary manual intake down 
-    secondaryController
-        .axisGreaterThan(3, 0)
-        .whileTrue(new RunCommand(() -> intake.setFlipperSpeed(driverController.getRightTriggerAxis()/3), intake));
     secondaryController
         .leftBumper()
         .onTrue(new InstantCommand(
@@ -266,6 +259,11 @@ public class RobotContainer implements Loggable{
          ()-> intake.spinIntakeTopFaster(0),
           intake)
       );
+
+      secondaryController
+      .a()
+      .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.slowIntakeInV),
+          () -> intake.spinIntake(0)));
 
 
   }
