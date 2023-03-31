@@ -121,7 +121,7 @@ public class RobotContainer implements Loggable{
 
     // default commands
     drivetrain.setDefaultCommand(driveCommand);
-    led.setDefaultCommand(led.slowModeChecker(slowModeSupplier));
+    led.setDefaultCommand(led.statesDefaultCommand(slowModeSupplier));
   
   
     // driver controller (0) commands
@@ -276,11 +276,11 @@ public class RobotContainer implements Loggable{
       );
     secondaryController
         .leftStick()
-        .onTrue(led.setLEDCommand(LEDConstants.purpleValue));
+        .onTrue(led.togglePurpleCommand());
 
     secondaryController
         .rightStick()
-        .onTrue(led.setLEDCommand(LEDConstants.yellowValue));
+        .onTrue(led.toggleYellowCommand());
 
   }
 

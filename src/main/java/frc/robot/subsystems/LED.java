@@ -36,32 +36,60 @@ public class LED extends SubsystemBase {
     blinkin.set(pattern);
   }
 
-  public Command setLEDCommand(double pattern){
-    return new InstantCommand(()->setLed(pattern));
-  }
+  // public Command setLEDCommand(double pattern){
+  //   return new InstantCommand(()->setLed(pattern));
+  // }
 
-  public RunCommand slowModeChecker(BooleanSupplier slowModeTrue){
-    return new RunCommand(() ->
-    {
-      if(slowModeTrue.getAsBoolean()){
-        setLed(LEDConstants.oceanSinelon);
-      }else{
-        setLed(LEDConstants.blueValue);
-      }
-    }
-    , this);
-  }
+  // public RunCommand slowModeChecker(BooleanSupplier slowModeTrue){
+  //   return new RunCommand(() ->
+  //   {
+  //     if(slowModeTrue.getAsBoolean()){
+  //       setLed(LEDConstants.oceanSinelon);
+  //     }else{
+  //       setLed(LEDConstants.blueValue);
+  //     }
+  //   }
+  //   , this);
+  // }
 
-  public Command statesDefaultCommand(BooleanSupplier slowMode){
-    new RunCommand(() -> {
+  public RunCommand statesDefaultCommand(BooleanSupplier slowMode){
+    return new RunCommand(() -> {
       switch(currentState){
         case YELLOW: setLed(LEDConstants.yellowValue);
         case PURPLE: setLed(LEDConstants.purpleValue);
-        case NORMAL: if(slowMode.getAsBoolean())
+        case NORMAL: if(slowMode.getAsBoolean()){
+          setLed(LEDConstants.oceanSinelon);
+        }else{
+          setLed(LEDConstants.blueValue);
+        }
 
       }
-    }, this)
+    }, this);
   }
+
+  public Command setLEDStateCommand(LEDStates state){
+    return  new InstantCommand(() -> {currentState = state;});
+  }
+
+  public Command togglePurpleCommand(){
+   return new InstantCommand(()->{
+    if(!(currentState == LEDStates.PURPLE)){
+      currentState = LEDStates.PURPLE;
+    }else{
+      currentState = LEDStates.NORMAL;
+    }
+   });
+  }
+
+  public Command toggleYellowCommand(){
+    return new InstantCommand(()->{
+     if(!(currentState == LEDStates.YELLOW)){
+       currentState = LEDStates.YELLOW;
+     }else{
+       currentState = LEDStates.NORMAL;
+     }
+    });
+   }
   
   @Override
   public void periodic() {
