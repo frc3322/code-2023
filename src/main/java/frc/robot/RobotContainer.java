@@ -349,7 +349,11 @@ private class JustPlace extends SequentialCommandGroup {
 private class PlaceBalance extends SequentialCommandGroup {
     private PlaceBalance() {
         addCommands(
-            
+        
+        new InstantCommand(
+            () -> drivetrain.tankDriveVolts(0, 0),
+            drivetrain
+        ),
         new PlaceConeCommandGroup(claw, fourbar),
         new AutonBalanceCommand(
             drivetrain, 
