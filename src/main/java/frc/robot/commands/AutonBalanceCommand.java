@@ -54,7 +54,7 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
     robotSpeedMid = 1 * reverseModifier;
 
     // Speed the robot drives to complete the balance
-    robotSpeedSlow = .75 * reverseModifier;
+    robotSpeedSlow = .73 * reverseModifier;
 
     // Angle where the robot knows it is on the charge station
     onChargeStationDegree = 12 /* * reverseModifier*/;
@@ -169,6 +169,7 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
               state = 1;
               break;
           }
+          break;
         
         // driving up charge station, drive slower until tips over
         case 1:
@@ -176,21 +177,21 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
             state = 4;
             break;
           }
-        
+          break;
         // drive reverse until level
         case 2:
           if(getPitch() > -levelDegree){
             state = 4;
             break;
           }
-        
+          break;
         // drive forward until level
         case 3:
           if(getPitch() < levelDegree){
             state = 4;
             break;
           }
-      
+          break;
         // if level, return 0. else drive in apporpriate direction
         case 4:
           if(getPitch() > levelDegree){
@@ -201,6 +202,7 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
             state = 2;
             break;
           }
+          break;
 
     }
     
@@ -240,7 +242,7 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    output.accept(autoBalanceRoutineNewState(), autoBalanceRoutineNewState());
+    output.accept(autoBalanceRoutineTwoStateMachines(), autoBalanceRoutineTwoStateMachines());
   }
 
   // Called once the command ends or is interrupted.

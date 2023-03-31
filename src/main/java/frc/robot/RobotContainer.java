@@ -174,7 +174,7 @@ public class RobotContainer implements Loggable{
     
     driverController
         .axisGreaterThan(3, 0)
-        .whileTrue(new StartEndCommand(() -> intake.spinIntakeJustBottom(3),
+        .whileTrue(new StartEndCommand(() -> intake.spinIntake(3),
         () -> intake.spinIntake(0)));      
 
     // driver's claw open override
