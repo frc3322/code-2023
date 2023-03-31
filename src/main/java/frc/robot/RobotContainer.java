@@ -33,6 +33,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LED;
+import frc.robot.subsystems.LED.LEDStates;
 import frc.robot.subsystems.Brake;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
@@ -276,7 +277,7 @@ public class RobotContainer implements Loggable{
       );
     secondaryController
         .leftStick()
-        .onTrue(led.togglePurpleCommand());
+        .onTrue(led.setLEDStateCommand(LEDStates.YELLOW));
 
     secondaryController
         .rightStick()
