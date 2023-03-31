@@ -48,19 +48,19 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
     debounceCount = 0;
 
     // Speed the robot drived while scoring/approaching station
-    robotSpeedFast = 2 * reverseModifier;
+    robotSpeedFast = 3 * reverseModifier; //2
 
     // Speed the robot drives once it is on the charging station
     robotSpeedMid = 1 * reverseModifier;
 
     // Speed the robot drives to complete the balance
-    robotSpeedSlow = .6 * reverseModifier;
+    robotSpeedSlow = .75 * reverseModifier;
 
     // Angle where the robot knows it is on the charge station
     onChargeStationDegree = 12 /* * reverseModifier*/;
 
     // Angle where the robot can assume it is level on the charging station
-    levelDegree = 3;
+    levelDegree = 4;
 
     // Amount of time a sensor condition needs to be met before changing states in seconds. Only used in state 1
     debounceTime = 0.3;
@@ -79,6 +79,7 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
     return -drivetrain.getPitch();
   }
 
+  // Currently working autonBalance
   public double autoBalanceRoutine() {
     switch (state) {
         // drive forwards to approach station, exit when tilt is detected
@@ -112,7 +113,123 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
 
     }
       return 0;
-}
+  }
+
+  // autonBalance with an extra state to increase speed and reliability
+  public double autoBalanceRoutineNewState() {
+    switch (state) {
+        // drive forwards to approach station, exit when tilt is detected
+        case 0:
+            if (getPitch() > onChargeStationDegree) {
+                state = 1;
+            }
+        return robotSpeedFast;
+        // driving up charge station, drive slower until tips over
+        case 1:
+            if(getPitch() < levelDegree){
+              state = 4;
+            }
+            return robotSpeedMid;
+        // drive reverse until level
+        case 2:
+          if(getPitch() > -levelDegree){
+            state = 4;
+          }
+          return -robotSpeedSlow;
+        // drive forward until level
+        case 3:
+          if(getPitch() < levelDegree){
+            state = 4;
+          }
+          return robotSpeedSlow;
+        // if level, return 0. else drive in apporpriate direction
+        case 4:
+          if(getPitch() > levelDegree){
+            state = 3;
+          }
+          else if(getPitch() < -levelDegree){
+            state = 2;
+          }
+          return 0;
+
+
+    }
+      return 0;
+  }
+
+  // autonBalance with 2 state machines to improve response time
+  public double autoBalanceRoutineTwoStateMachines() {
+    
+    // State switcher
+    switch (state) {
+        
+        // drive forwards to approach station, exit when tilt is detected
+        case 0:
+          if (getPitch() > onChargeStationDegree) {
+              state = 1;
+              break;
+          }
+        
+        // driving up charge station, drive slower until tips over
+        case 1:
+          if(getPitch() < levelDegree){
+            state = 4;
+            break;
+          }
+        
+        // drive reverse until level
+        case 2:
+          if(getPitch() > -levelDegree){
+            state = 4;
+            break;
+          }
+        
+        // drive forward until level
+        case 3:
+          if(getPitch() < levelDegree){
+            state = 4;
+            break;
+          }
+      
+        // if level, return 0. else drive in apporpriate direction
+        case 4:
+          if(getPitch() > levelDegree){
+            state = 3;
+            break;
+          }
+          else if(getPitch() < -levelDegree){
+            state = 2;
+            break;
+          }
+
+    }
+    
+    // Output state machine
+    switch (state) {
+      
+      // drive forwards to approach station, exit when tilt is detected
+      case 0:
+        return robotSpeedFast;
+      
+      // driving up charge station, drive slower until tips over
+      case 1:
+        return robotSpeedMid;
+      
+      // drive reverse until level
+      case 2:
+        return -robotSpeedSlow;
+      
+      // drive forward until level
+      case 3:
+        return robotSpeedSlow;
+      
+      // if level, return 0. else drive in apporpriate direction
+      case 4:
+        return 0;
+
+    }
+    return 0;
+  }
 
   // Called when the command is initially scheduled.
   @Override
@@ -123,7 +240,7 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    output.accept(autoBalanceRoutine(), autoBalanceRoutine());
+    output.accept(autoBalanceRoutineNewState(), autoBalanceRoutineNewState());
   }
 
   // Called once the command ends or is interrupted.
