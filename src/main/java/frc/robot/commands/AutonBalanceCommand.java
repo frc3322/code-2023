@@ -48,19 +48,19 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
     debounceCount = 0;
 
     // Speed the robot drived while scoring/approaching station
-    robotSpeedFast = 2 * reverseModifier;
+    robotSpeedFast = 3 * reverseModifier; //2
 
     // Speed the robot drives once it is on the charging station
     robotSpeedMid = 1 * reverseModifier;
 
     // Speed the robot drives to complete the balance
-    robotSpeedSlow = .6 * reverseModifier;
+    robotSpeedSlow = .75 * reverseModifier;
 
     // Angle where the robot knows it is on the charge station
     onChargeStationDegree = 12 /* * reverseModifier*/;
 
     // Angle where the robot can assume it is level on the charging station
-    levelDegree = 3;
+    levelDegree = 4;
 
     // Amount of time a sensor condition needs to be met before changing states in seconds. Only used in state 1
     debounceTime = 0.3;
@@ -240,7 +240,7 @@ public class AutonBalanceCommand extends CommandBase implements Loggable{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    output.accept(autoBalanceRoutine(), autoBalanceRoutine());
+    output.accept(autoBalanceRoutineNewState(), autoBalanceRoutineNewState());
   }
 
   // Called once the command ends or is interrupted.
