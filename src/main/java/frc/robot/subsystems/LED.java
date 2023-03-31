@@ -17,8 +17,15 @@ import frc.robot.Constants.LEDConstants;
 
 public class LED extends SubsystemBase {
   private Spark blinkin = new Spark(LEDConstants.blinkinPort);
-  
-  /** Creates a new LED. */
+  public enum LEDStates{
+    PURPLE,
+    YELLOW,
+    NORMAL
+  }
+
+  private LEDStates currentState = LEDStates.NORMAL;
+  /**
+   *  Creates a new LED. */
   public LED() {
 
 
@@ -43,6 +50,17 @@ public class LED extends SubsystemBase {
       }
     }
     , this);
+  }
+
+  public Command statesDefaultCommand(BooleanSupplier slowMode){
+    new RunCommand(() -> {
+      switch(currentState){
+        case YELLOW: setLed(LEDConstants.yellowValue);
+        case PURPLE: setLed(LEDConstants.purpleValue);
+        case NORMAL: if(slowMode.getAsBoolean())
+
+      }
+    }, this)
   }
   
   @Override
