@@ -49,10 +49,10 @@ public class RobotContainer implements Loggable{
   
  private double speedy = -1;
 
-//  @Config
-//  public void setty(double x){
-//     speedy = x;
-//  }
+ @Config
+ public void setty(double x){
+    speedy = x;
+ }
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController secondaryController = new CommandXboxController(1);
@@ -255,7 +255,7 @@ public class RobotContainer implements Loggable{
       .povRight()
       .whileTrue(
         new StartEndCommand(
-         ()-> intake.spinIntakeTopFaster(intake.testingSpeed) ,
+         ()-> intake.spinIntakeTopFaster(speedy) ,
          ()-> intake.spinIntakeTopFaster(0),
           intake)
       );
