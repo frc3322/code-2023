@@ -186,7 +186,7 @@ public class RobotContainer implements Loggable{
     // shoot cube mid
     driverController
         .x()
-        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeMidV), ()->intake.spinIntakeBottomFaster(0), intake));
+        .whileTrue(new StartEndCommand(()->intake.spinIntakeTopFaster(IntakeConstants.intakeMidV), ()->intake.spinIntakeBottomFaster(0), intake));
 
     // Shoot cube high
     // 9.5 otp 10 bototm is good for mis

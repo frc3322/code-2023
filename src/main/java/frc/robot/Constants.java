@@ -71,7 +71,7 @@ public final class Constants{
     public static final double slowIntakeInV = 2.0;
 
     public static final double intakeLowV = -1.5;
-    public static final double intakeMidV = -6.5;
+    public static final double intakeMidV = -7;
     public static final double intakeHighV = -8.5;
 
     public static final double armUpSpeed = -0.3;
@@ -80,6 +80,7 @@ public final class Constants{
     public static final double armDownSpeed = 0.2; 
     
     @Config public static final double bottomRollerSpeedMultiplier = 0.6;
+    public static final double bottomRollerSpeedAdditive = 0.3;
 
   }
 
