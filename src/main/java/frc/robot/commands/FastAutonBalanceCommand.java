@@ -23,6 +23,7 @@ public class FastAutonBalanceCommand extends CommandBase{
 
     private FastBalanceStates state; 
     private double time;
+    private boolean reversed;
 
     // Slightly less than the steepest angle that the robot will reach while climbing
     private double onChargeStationDegree = 14;
@@ -48,13 +49,11 @@ public class FastAutonBalanceCommand extends CommandBase{
     public FastAutonBalanceCommand(Drivetrain drivetrain, BiConsumer<Double, Double> output, boolean reversed, Subsystem reqirements) {
         this.drivetrain = drivetrain;
         this.output = output;
+        this.reversed = reversed;
 
         addRequirements(reqirements);
 
         if(reversed){
-            onChargeStationDegree *= -1;
-            shallowClimbDegree *= -1;
-            levelDegree *= -1;
             robotSpeedFast *= -1;
             robotSpeedMid *= -1;
             robotSpeedSlow *= -1;
@@ -63,6 +62,9 @@ public class FastAutonBalanceCommand extends CommandBase{
     }
 
     private double getPitch(){
+        if(reversed){
+            return -drivetrain.getPitch();
+        }
         return drivetrain.getPitch();
     }
 
