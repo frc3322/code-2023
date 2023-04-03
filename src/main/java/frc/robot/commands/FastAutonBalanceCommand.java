@@ -121,7 +121,7 @@ public class FastAutonBalanceCommand extends CommandBase{
                     time = 0;
                 }
                 else {
-                    time++;
+                  //  time++;
                 }
 
                 if (time == secondsToTicks(endPhaseTime)){
