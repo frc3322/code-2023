@@ -8,16 +8,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTableValue;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 import frc.robot.Constants;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
@@ -30,23 +28,22 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final RelativeEncoder FREncoder = motorFR.getEncoder();
   private final RelativeEncoder BLEncoder = motorBL.getEncoder();
   private final RelativeEncoder BREncoder = motorBR.getEncoder();
+
+  private boolean inSlowMode = false;
   
   
   private final DifferentialDrive robotDrive = new DifferentialDrive(motorFL, motorFR);
 
   private final AHRS gyro = new AHRS();
   
-  //private final SlewRateLimiter accelLimit = new SlewRateLimiter(1.2);
-  //private final SlewRateLimiter turnLimit = new SlewRateLimiter(2);
+  private final SlewRateLimiter accelLimit = new SlewRateLimiter(1.7);
+  private final SlewRateLimiter turnLimit = new SlewRateLimiter(5);
 
   //gets the default instance of NetworkTables that is automatically created
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   
   //gets the limelight table where data is stored from the limelight
   NetworkTable limelightTable = inst.getTable("limelight");
-
-  // Create double for logging the yaw of the robot
-  // @Log private double heading = -999;
 
   // create double for logging the controller input
   @Log private double speed = -2;
@@ -65,12 +62,25 @@ public class Drivetrain extends SubsystemBase implements Loggable {
    @Log double BLVelocityVal;
    @Log double BRVelocityVal;
 
+   public double turnP;
+   public double turnI;
+   public double turnD;
+   public double setpoint;
+
   /** Creates a new ExampleSubsystem. */
   public Drivetrain() {
     motorFL.setInverted(true);
     motorFR.setInverted(false);
     motorBR.follow(motorFR);
     motorBL.follow(motorFL);
+
+    FLEncoder.setPositionConversionFactor(0.4788/8.45);
+    FREncoder.setPositionConversionFactor(0.4788/8.45);
+    //meters per rotation, gear ratio
+    
+    FLEncoder.setVelocityConversionFactor(0.4788/8.45/60);
+    FREncoder.setVelocityConversionFactor(0.4788/8.45/60);
+    //meters per wheel rotation, gearing reduction, divide by 60 for per second
 
 
     motorFR.setIdleMode(IdleMode.kBrake);
@@ -88,7 +98,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   // Getters
   @Log
   public double getYaw() {
-    return gyro.getRotation2d().getDegrees();
+    return gyro.getYaw();
   }
   @Log
   public double getPitch() {
@@ -96,6 +106,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
   @Log
   public double getRoll() {
+    //hopefully this should never change.
     return gyro.getRoll();
   }
   @Log
@@ -112,6 +123,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     gyro.reset();
   }
 
+  
   public void resetEncoders() {
     motorFL.getEncoder().setPosition(0);
     motorFR.getEncoder().setPosition(0);
@@ -119,19 +131,36 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     motorBR.getEncoder().setPosition(0);
   }
 
-  public void setPID() {
-    // TODO: compmlete this function
-  }
-
   // Actions
 
   public void drive(double speed, double turn) {
-    //turn = 0.5 * turn + 0.5 * Math.pow(turn, 3);  // Weird math
+    turn = 0.5 * turn + 0.5 * Math.pow(turn, 3);  // Weird math
 
     this.speed = speed;
     this.turn = turn;
 
-    //robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
+   robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
+    //robotDrive.arcadeDrive(speed, turn, false);
+
+    robotDrive.feed();
+  }
+
+  public void tankDriveVolts(double leftVolts, double rightVolts){
+    motorFL.setVoltage(leftVolts);
+    motorFR.setVoltage(rightVolts);
+    
+    robotDrive.feed();
+  }
+
+  public void autonDrive(double speed, double turn) {
+    
+    // to compensate for the turning/binding on one side, add x to turn
+    // turn = turn + x;
+
+    this.speed = speed;
+    this.turn = turn;
+
+    // robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
     robotDrive.arcadeDrive(speed, turn, false);
 
     robotDrive.feed();
@@ -147,10 +176,26 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       .setNumber(pipelineNum);
   }
 
+  public void toggleSlowMode(){
+    inSlowMode = !inSlowMode;
+  }
+
+  public boolean getSlowMode(){
+    return inSlowMode;
+  }
+
+  @Config
+  public void setStupidAnglePID(double p, double i, double d, double s){
+    turnP = p;
+    turnI =i;
+    turnD =d;
+    setpoint = s;
+  }
+
 
   @Override
   public void periodic() {
-    // heading = getHeading();
+  
 
     FLVoltageVal = motorFL.getBusVoltage();
     FRVoltageVal = motorFR.getBusVoltage();

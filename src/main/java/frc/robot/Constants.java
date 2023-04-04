@@ -1,9 +1,10 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 
-public final class Constants {
+public final class Constants{
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   
@@ -16,9 +17,10 @@ public final class Constants {
     public static final int BL = 9;
     public static final int BR = 17;
     
-    // Elevator
+    // Brake
 
-    public static final int elevatorMotor = 36;
+    public static final int brakeReverse = 5;
+    public static final int brakeForward = 4;
     
     
     //Intake Motors
@@ -37,69 +39,57 @@ public final class Constants {
     public static final int extendFourbar = 0;
     public static final int retractFourbar = 3;
 
-    //transfer can
-    public static final int transfer = 5;
-
+   
 
     
   }
 
   public static final class DriveConstants {
-    public static final double kTurnP = 0.03;
+    public static final double kTurnP = 0.015;
     public static final double kTurnI = 0;
     public static final double kTurnD = 0.0075;
-    public static final double kTurnToleranceDeg = 0.05;
-    public static final double kTurnRateToleranceDegPerS =0;
-    public static final double kDriveP = 0.03;
+
+    public static final double kTurnToleranceDeg = 0.5;
+    public static final double kTurnRateToleranceDegPerS =5;
+
+    public static final double kDriveP = 0.15;
     public static final double kDriveI = 0;
     public static final double kDriveD = 0.0075;
-    public static final double kDriveToleranceDeg = 0.05;
-    public static final double kDriveRateToleranceDegPerS =0;
-    public static final double encoderTicsPerFoot = 6.84;
-  }
-
-  public static final class ElevatorConstants {
-    public static final double kBottomEncoderPosition = 2;
-    public static final double kMidEncoderPosition = 1;
-    public static final double kTopEncoderPosition = 0;
-    public static final double kp = 0;
-    public static final double ki = 0;
-    public static final double kd = 0;
-    public static final double elevatorSpeed = .5;
-
     
+    public static final double kDriveToleranceMeters = 0.4;
+    public static final double kDriveRateToleranceMetersPerS =0.1;
+    //public static final double encoderTicsPerFoot = 6.84;
+
+
+    //0.00075 bad too slow
+    //
   }
+
 
   public static final class IntakeConstants{
-    public static final double intakeInSpeed = 0.6;
+    @Config public static final double fastIntakeInV = 5.0;
+    public static final double slowIntakeInV = 2.0;
+
+    public static final double intakeLowV = -1.5;
+    public static final double intakeMidV = -7;
+    public static final double intakeHighV = -8.5;
+
     public static final double armUpSpeed = -0.3;
     public static final double armUpSlowSpeed = -0.2;
+
     public static final double armDownSpeed = 0.2; 
-    public static final double beltForwardSpeed = 0.5;
-    public static final double beltReverseSpeed = -0.5;
-
-
-  }
-
-  public static final class TransferConstants{
-    public static final double transferSpeed = 0.5;
-  }
-
-  public static final class PIDConstraints{
-
-    //random numbers for that
-    public static final double TTAVelocity = 0.5;
-    public static final double TTAAcceleration = 0.5;
-    public static final TrapezoidProfile.Constraints TTAConstraints = new TrapezoidProfile.Constraints(TTAVelocity, TTAAcceleration);
+    
+    @Config public static final double bottomRollerSpeedMultiplier = 0.6;
+    public static final double bottomRollerSpeedAdditive = 0.3;
 
   }
+
 
   public static final class DIO {
-    public static final int transferInProximitySensor = 2;
-    public static final int elevatorTop = 0;
-    public static final int elevatorBottom = 3;
-    public static final int transferOutProximitySensor = 1;
+    public static final int intakeTopSensor = 0;
+
   }
+
 
   public static final class IntakeZoneLimits{
     
