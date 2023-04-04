@@ -10,10 +10,15 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Types;
 import frc.robot.Constants.*;
+import frc.robot.Types.ServoPosition;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
@@ -27,6 +32,7 @@ public class Intake extends SubsystemBase implements Loggable {
   private final RelativeEncoder armEncoder = motorArm.getEncoder();
   private final DigitalInput intakeTopSensor = new DigitalInput(DIO.intakeTopSensor);
   // intake will need a proximity sensor to tell if there is a game piece inside
+  private final Servo ejectServo = new Servo(IntakeConstants.servoPWM);
  
   @Log private double armpos;
   @Log private double armPower;
@@ -114,6 +120,15 @@ public class Intake extends SubsystemBase implements Loggable {
       
     }
 
+    public void flipServo(Types.ServoPosition position) {
+      if(position == ServoPosition.UP){
+        ejectServo.set(180);
+      }
+      else{
+        ejectServo.set(0);
+      }
+    }
+
 
   public void setFlipperSpeed(double speed){
     //moves the entire arm
@@ -179,6 +194,8 @@ public class Intake extends SubsystemBase implements Loggable {
     //set current position to 0.
     armEncoder.setPosition(0);
   }
+
+
 
   @Override
   public void periodic() {

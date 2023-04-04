@@ -82,6 +82,8 @@ public final class Constants{
     @Config public static final double bottomRollerSpeedMultiplier = 0.6;
     public static final double bottomRollerSpeedAdditive = 0.3;
 
+    public static final int servoPWM = 99;
+
   }
 
 
@@ -98,10 +100,6 @@ public final class Constants{
     public static final double bottomLimitOff = 7;
     
   } 
-  public static final class PWM{
-    //NEED ACTUAL PORT VALUE
-    public static final int S1 = 16;
-  }
 
  
 }

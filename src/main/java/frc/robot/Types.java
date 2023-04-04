@@ -18,4 +18,9 @@ public final class Types {
       EXTEND
     }
 
+    public enum ServoPosition {
+      UP,
+      DOWN
+    }
+
 }
