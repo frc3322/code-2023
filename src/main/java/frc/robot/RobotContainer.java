@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -260,10 +259,26 @@ public class RobotContainer implements Loggable{
           intake)
       );
 
-      secondaryController
-      .a()
-      .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.slowIntakeInV),
-          () -> intake.spinIntake(0)));
+    secondaryController
+        .a()
+        .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.slowIntakeInV),
+        () -> intake.spinIntake(0)));
+
+    secondaryController
+        .x()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                    if (!Robot.cameraSelection.getString("defaultValue").equals(Robot.fourbarCamera.getName())){
+                        Robot.cameraSelection.setString(Robot.fourbarCamera.getName());
+                    }
+                    else{
+                        Robot.cameraSelection.setString(Robot.intakeCamera.getName());
+                    }
+                }
+            )
+        );
+
 
 
   }
