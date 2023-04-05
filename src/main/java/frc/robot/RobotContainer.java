@@ -269,11 +269,11 @@ public class RobotContainer implements Loggable{
         .onTrue(
             new InstantCommand(
                 () -> {
-                    if (!Robot.cameraSelection.getString("defaultValue").equals(Robot.fourbarCamera.getName())){
-                        Robot.cameraSelection.setString(Robot.fourbarCamera.getName());
+                    if (Robot.cameraSelection.getString("defaultValue").equals(Robot.fourbarCamera.getName())){
+                        Robot.cameraSelection.setString(Robot.intakeCamera.getName());
                     }
                     else{
-                        Robot.cameraSelection.setString(Robot.intakeCamera.getName());
+                        Robot.cameraSelection.setString(Robot.fourbarCamera.getName());
                     }
                 }
             )
