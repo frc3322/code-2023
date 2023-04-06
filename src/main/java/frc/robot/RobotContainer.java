@@ -277,7 +277,7 @@ public class RobotContainer implements Loggable{
       );
     secondaryController
         .leftStick()
-        .onTrue(led.setLEDStateCommand(LEDStates.YELLOW));
+        .onTrue(led.togglePurpleCommand());
 
     secondaryController
         .rightStick()

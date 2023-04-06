@@ -55,14 +55,14 @@ public class LED extends SubsystemBase {
   public RunCommand statesDefaultCommand(BooleanSupplier slowMode){
     return new RunCommand(() -> {
       switch(currentState){
-        case YELLOW: setLed(LEDConstants.yellowValue);
-        case PURPLE: setLed(LEDConstants.purpleValue);
+        case YELLOW: setLed(LEDConstants.yellowValue); break;
+        case PURPLE: setLed(LEDConstants.purpleValue); break;
         case NORMAL: if(slowMode.getAsBoolean()){
           setLed(LEDConstants.oceanSinelon);
         }else{
           setLed(LEDConstants.blueValue);
         }
-
+        break;
       }
     }, this);
   }
