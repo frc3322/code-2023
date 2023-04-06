@@ -91,7 +91,7 @@ public final class Constants{
   }
 
 
-  public static final class IntakeZoneLimits{
+  public static final class IntakeZoneLimits {
     
     public static final double slowZoneStart = 3;
     public static final double topLimitOff = 2;
@@ -99,5 +99,18 @@ public final class Constants{
     
   }
 
- 
+  public static final class LEDConstants {
+
+    public static final int blinkinPort = 1;
+    
+    public static final double rainbowValue = -0.99;
+    public static final double rainbowPartyValue = -0.97;
+    public static final double rainbowChaseValue = -0.79;
+    public static final double blueValue = 0.83;
+    public static final double purpleValue = 0.91;
+    public static final double yellowValue = 0.69;
+    public static final double oceanSinelon = -0.75;
+
+  }
+
 }
