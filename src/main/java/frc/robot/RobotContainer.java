@@ -43,7 +43,7 @@ public class RobotContainer implements Loggable{
   private final Intake intake = new Intake();
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
-;
+
   private final Brake brake = new Brake();
 
   
@@ -186,7 +186,7 @@ public class RobotContainer implements Loggable{
     // shoot cube mid
     driverController
         .x()
-        .whileTrue(new StartEndCommand(()->intake.spinIntakeTopFaster(IntakeConstants.intakeMidV), ()->intake.spinIntakeBottomFaster(0), intake));
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeMidV), ()->intake.spinIntakeBottomFaster(0), intake));
 
     // Shoot cube high
     // 9.5 otp 10 bototm is good for mis
@@ -199,6 +199,14 @@ public class RobotContainer implements Loggable{
         .rightBumper()
         .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.fastIntakeInV),
             () -> intake.spinIntake(0)));
+
+    driverController
+        .b()
+        .whileTrue(new StartEndCommand(() -> {
+            intake.spinIntakeJustBottom(3);
+            intake.spinIntakeJustTop(3);
+        },
+        () -> intake.spinIntake(0)));
 
 
     // secondary controls timeee
@@ -237,7 +245,13 @@ public class RobotContainer implements Loggable{
             );
             
              
-
+            secondaryController
+            .x()
+            .whileTrue(new StartEndCommand(() -> {
+                intake.spinIntakeJustBottom(3);
+                intake.spinIntakeJustTop(3);
+            },
+            () -> intake.spinIntake(0)));
  
   
     secondaryController
