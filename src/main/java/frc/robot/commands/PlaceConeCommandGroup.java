@@ -26,13 +26,14 @@ public class PlaceConeCommandGroup extends SequentialCommandGroup {
     addCommands(
       new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
       fourbar.createMoveCommand(Types.FourbarPosition.EXTEND),
-      new WaitCommand(2),
+      new WaitCommand(3 ),
       new MoveClawCommand(Types.ClawPosition.OPEN, claw),
       new WaitCommand(0.5),
-      new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
-      new WaitCommand(0.5),
-      fourbar.createMoveCommand(Types.FourbarPosition.RETRACT),
-      new WaitCommand(0.5),
-      new MoveClawCommand(Types.ClawPosition.OPEN, claw));
+      //new MoveClawCommand(Types.ClawPosition.CLOSED, claw),
+      //new WaitCommand(0.5),
+      fourbar.createMoveCommand(Types.FourbarPosition.RETRACT)
+      //new WaitCommand(0.5),
+      //new MoveClawCommand(Types.ClawPosition.OPEN, claw)
+      );
   }
 }

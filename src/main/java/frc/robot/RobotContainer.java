@@ -240,10 +240,10 @@ public class RobotContainer implements Loggable{
      secondaryController
         .povDown()
         .onTrue(
-            new InstantCommand(() -> claw.setClosed(), claw)
+            /*new InstantCommand(() -> claw.setClosed(), claw)
                 .andThen(new WaitCommand(.5))
-                .andThen(
-                    new InstantCommand(() -> fourbar.fourbarDown()))
+                .andThen(*/
+                    new InstantCommand(() -> fourbar.fourbarDown())
         );
     
     //secondary 4 bar out with claw and intake safety
