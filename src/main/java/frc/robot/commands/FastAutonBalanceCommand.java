@@ -29,10 +29,10 @@ public class FastAutonBalanceCommand extends CommandBase{
     private double onChargeStationDegree = 13;
 
     // Angle where the robot can climb at a verly low speed for precision
-    private double shallowClimbDegree = 12;
+    private double shallowClimbDegree = 10; //12
 
     // The robot will attemt to get within positive or negative of this angle
-    private double levelDegree = 4;
+    private double levelDegree = 4.5;
 
     // Intial speed and speed for steepest part of the climb
     private double robotSpeedFast = 4;
@@ -50,7 +50,7 @@ public class FastAutonBalanceCommand extends CommandBase{
     private double pauseWaitTime = 1.8;
 
     //time the robot needs to be level for to exit the command
-    private double endPhaseTime = 1;
+    private double endPhaseTime = 1.5;
     
     public FastAutonBalanceCommand(Drivetrain drivetrain, BiConsumer<Double, Double> output, boolean reversed, Subsystem reqirements) {
         this.drivetrain = drivetrain;
