@@ -14,7 +14,7 @@ public class FastAutonBalanceCommand extends CommandBase{
     private enum FastBalanceStates {
         GROUNDSTATE,
         STEEPCLIMBSTATE,
-        MIDDLECLIMBSTATE,
+        PAUSESTATE,
         REVERSECLIMBSTATE,
         SHALLOWCLIMBSTATE,
         LEVELSTATE,
@@ -26,10 +26,10 @@ public class FastAutonBalanceCommand extends CommandBase{
     private boolean reversed;
 
     // Slightly less than the steepest angle that the robot will reach while climbing
-    private double onChargeStationDegree = 14;
+    private double onChargeStationDegree = 13;
 
     // Angle where the robot can climb at a verly low speed for precision
-    private double shallowClimbDegree = 8;
+    private double shallowClimbDegree = 12;
 
     // The robot will attemt to get within positive or negative of this angle
     private double levelDegree = 4;
@@ -37,14 +37,20 @@ public class FastAutonBalanceCommand extends CommandBase{
     // Intial speed and speed for steepest part of the climb
     private double robotSpeedFast = 4;
 
-    // Speed for phaase of climb where all wheels are touching charge station
+    //Speed the robot climbs at
     private double robotSpeedMid = 2;
 
-    // Speed for rinal part of balancing
-    private double robotSpeedSlow = .6;
+    //Speed during PAUSESTATE
+    private double pauseSpeed = -1;
+
+    // Speed for final part of balancing
+    private double robotSpeedSlow = .7;
+
+    //time the robot pauses when the charge station flips
+    private double pauseWaitTime = 1.8;
 
     //time the robot needs to be level for to exit the command
-    private double endPhaseTime = .5;
+    private double endPhaseTime = 1;
     
     public FastAutonBalanceCommand(Drivetrain drivetrain, BiConsumer<Double, Double> output, boolean reversed, Subsystem reqirements) {
         this.drivetrain = drivetrain;
@@ -57,6 +63,7 @@ public class FastAutonBalanceCommand extends CommandBase{
             robotSpeedFast *= -1;
             robotSpeedMid *= -1;
             robotSpeedSlow *= -1;
+            pauseSpeed *= -1;
         }
         
     }
@@ -86,15 +93,17 @@ public class FastAutonBalanceCommand extends CommandBase{
             
             // switch to middle climb state when the pitch is less steep
             case STEEPCLIMBSTATE: 
-                if (getPitch() < onChargeStationDegree){
-                    state = FastBalanceStates.MIDDLECLIMBSTATE;
+                if (getPitch() < shallowClimbDegree){
+                    state = FastBalanceStates.PAUSESTATE;
                 }
                 break;
             
             // switch to reverse slow when charge station starts to flip
-            case MIDDLECLIMBSTATE:
-                if(getPitch() < shallowClimbDegree){
-                    state = FastBalanceStates.REVERSECLIMBSTATE;
+            case PAUSESTATE:
+                time++;
+                if(time >= secondsToTicks(pauseWaitTime)){
+                    state = FastBalanceStates.LEVELSTATE;
+                    time = 0;
                 }
                 break;
 
@@ -123,7 +132,7 @@ public class FastAutonBalanceCommand extends CommandBase{
                     time = 0;
                 }
                 else {
-                  //  time++;
+                    time++;
                 }
 
                 if (time == secondsToTicks(endPhaseTime)){
@@ -145,10 +154,10 @@ public class FastAutonBalanceCommand extends CommandBase{
                 return robotSpeedFast;
             
             case STEEPCLIMBSTATE:
-                return robotSpeedFast;
-            
-            case MIDDLECLIMBSTATE:
                 return robotSpeedMid;
+            
+            case PAUSESTATE:
+                return pauseSpeed;
             
             case REVERSECLIMBSTATE:
                 return -robotSpeedSlow;
