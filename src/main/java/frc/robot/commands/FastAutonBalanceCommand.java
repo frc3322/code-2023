@@ -69,10 +69,12 @@ public class FastAutonBalanceCommand extends CommandBase{
     }
 
     private double getPitch(){
-        if(reversed){
-            return -drivetrain.getPitch();
-        }
-        return drivetrain.getPitch();
+        // if(reversed){
+        //     return -drivetrain.getPitch();
+        // }
+        // return drivetrain.getPitch();
+
+        return drivetrain.getPitch() * (reversed ? -1.0 : 1.0);
     }
 
     // runs 50 times a second, so one second time is 50 loops of code
