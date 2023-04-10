@@ -58,6 +58,12 @@ public final class Constants{
     
     public static final double kDriveToleranceMeters = 0.4;
     public static final double kDriveRateToleranceMetersPerS =0.1;
+
+    public static final double profiledTurnToAngleMaxAccelDegPerSec = 3;
+    public static final double profiledTurnToAngleMaxVelDegPerSec = 30;
+    public static final double profiledDriveToDistanceMaxAccelMetersPerSec = 0.6;
+    public static final double profiledDriveToDistanceMaxVelPerSec = 5;
+
     //public static final double encoderTicsPerFoot = 6.84;
 
 
