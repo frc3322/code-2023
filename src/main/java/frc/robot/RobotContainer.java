@@ -379,7 +379,6 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
             
             new FastAutonBalanceCommand(
                 drivetrain,
-                drivetrain::tankDriveVolts,
                 false,
                 drivetrain)
 
@@ -418,7 +417,6 @@ private class FastForwardsBalance extends SequentialCommandGroup{
         addCommands(
             new FastAutonBalanceCommand(
                 drivetrain,
-                drivetrain::tankDriveVolts,
                 false,
                 drivetrain)
         );
@@ -430,7 +428,6 @@ private class FastReverseBalance extends SequentialCommandGroup{
         addCommands(
             new FastAutonBalanceCommand(
                 drivetrain,
-                drivetrain::tankDriveVolts,
                 true,
                 drivetrain)
         );

@@ -52,9 +52,9 @@ public class FastAutonBalanceCommand extends CommandBase{
     //time the robot needs to be level for to exit the command
     private double endPhaseTime = 1.5;
     
-    public FastAutonBalanceCommand(Drivetrain drivetrain, BiConsumer<Double, Double> output, boolean reversed, Subsystem reqirements) {
+    public FastAutonBalanceCommand(Drivetrain drivetrain, boolean reversed, Subsystem reqirements) {
         this.drivetrain = drivetrain;
-        this.output = output;
+        this.output = drivetrain::tankDriveVolts;
         this.reversed = reversed;
 
         addRequirements(reqirements);
@@ -137,7 +137,7 @@ public class FastAutonBalanceCommand extends CommandBase{
                     time++;
                 }
 
-                if (time == secondsToTicks(endPhaseTime)){
+                if (time >= secondsToTicks(endPhaseTime)){
                     state = FastBalanceStates.EXITSTATE;
                 }
                 
@@ -188,7 +188,8 @@ public class FastAutonBalanceCommand extends CommandBase{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-      output.accept(FastAutonBalance(), FastAutonBalance());
+        double speed = FastAutonBalance();
+        output.accept(speed, speed);
     }
   
     // Called once the command ends or is interrupted.
