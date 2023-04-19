@@ -269,6 +269,18 @@ public class RobotContainer implements Loggable{
       .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.slowIntakeInV),
           () -> intake.spinIntake(0)));
 
+    secondaryController
+        .axisGreaterThan(3, 0)
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                    if(claw.canGrabCone()){
+                        claw.setClosed();
+                    }
+                },
+                claw
+        ));
+
 
   }
 

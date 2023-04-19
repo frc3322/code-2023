@@ -6,10 +6,12 @@ package frc.robot.subsystems;
 //import com.revrobotics.CANSparkMax;
 //import com.revrobotics.CanSparkMaxLowLevel
 import frc.robot.Constants;
-
+import frc.robot.Constants.DIO;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Types.ClawPosition;
 
@@ -17,6 +19,7 @@ public class Claw extends SubsystemBase {
   /** Creates a new Outtake. */
   private DoubleSolenoid claw = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.CAN.clawExtend, Constants.CAN.clawRetract);
   
+  private DigitalInput clawGrabSensor = new DigitalInput(DIO.clawSensor);
 
   public Claw() {
     //create solenoids to grab cones and cubes
@@ -46,6 +49,10 @@ public class Claw extends SubsystemBase {
       //I don't know if closed should be the default position, but it shuld work for not.
       return ClawPosition.CLOSED;
     }
+
+  public boolean canGrabCone(){
+    return !clawGrabSensor.get();
+  }
 
   @Override
   public void periodic() {
