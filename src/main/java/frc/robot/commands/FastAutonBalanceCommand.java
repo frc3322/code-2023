@@ -47,14 +47,14 @@ public class FastAutonBalanceCommand extends CommandBase{
     private double robotSpeedSlow = .7;
 
     //time the robot pauses when the charge station flips
-    private double pauseWaitTime = .9;
+    private double pauseWaitTime = 1.8;
 
     //time the robot needs to be level for to exit the command
-    private double endPhaseTime = .75;
+    private double endPhaseTime = 1.5;
     
     public FastAutonBalanceCommand(Drivetrain drivetrain, boolean reversed, Subsystem reqirements) {
         this.drivetrain = drivetrain;
-        this.output = drivetrain::tankDriveVolts;
+        this.output = drivetrain::tankDriveVolts; //modified
         this.reversed = reversed;
 
         addRequirements(reqirements);
@@ -137,7 +137,7 @@ public class FastAutonBalanceCommand extends CommandBase{
                     time++;
                 }
 
-                if (time >= secondsToTicks(endPhaseTime)){
+                if (time >= secondsToTicks(endPhaseTime)){ //modified
                     state = FastBalanceStates.EXITSTATE;
                 }
                 
@@ -188,8 +188,8 @@ public class FastAutonBalanceCommand extends CommandBase{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double speed = FastAutonBalance();
-        output.accept(speed, speed);
+       // double speed = FastAutonBalance();
+        output.accept(FastAutonBalance(), FastAutonBalance());
     }
   
     // Called once the command ends or is interrupted.
