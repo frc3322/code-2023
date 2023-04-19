@@ -15,6 +15,7 @@ public class FastAutonBalanceCommand extends CommandBase{
         GROUNDSTATE,
         STEEPCLIMBSTATE,
         PAUSESTATE,
+        BOOSTSTATE,
         REVERSECLIMBSTATE,
         SHALLOWCLIMBSTATE,
         LEVELSTATE,
@@ -29,13 +30,13 @@ public class FastAutonBalanceCommand extends CommandBase{
     private double onChargeStationDegree = 13;
 
     // Angle where the robot can climb at a verly low speed for precision
-    private double shallowClimbDegree = 10; //12
+    private double shallowClimbDegree = 8; //10 //12
 
     //Angle at which the robot has fully flipped
     private double flipDegree = -10;
     
     //Angle that the PAUSESTATE ends at. Only used in non timed pauseState
-    private double pauseEndDegree = -4;
+    private double pauseEndDegree = -8;
 
     // The robot will attemt to get within positive or negative of this angle
     private double levelDegree = 4.5;
@@ -47,13 +48,16 @@ public class FastAutonBalanceCommand extends CommandBase{
     private double robotSpeedMid = 2;
 
     //Speed during PAUSESTATE
-    private double pauseSpeed = -1;
+    private double boostSpeed = -1;
 
     // Speed for final part of balancing
     private double robotSpeedSlow = .7;
 
     //time the robot pauses when the charge station flips
-    private double pauseWaitTime = 1.8;
+    private double pauseWaitTime = 1;
+
+    //time the robot boosts after pause
+    private double boostWaitTime = 1.5;
 
     //time the robot needs to be level for to exit the command
     private double endPhaseTime = 1.5;
@@ -71,18 +75,18 @@ public class FastAutonBalanceCommand extends CommandBase{
             robotSpeedFast *= -1;
             robotSpeedMid *= -1;
             robotSpeedSlow *= -1;
-            pauseSpeed *= -1;
+            boostSpeed *= -1;
         }
         
     }
 
     private double getPitch(){
-        // if(reversed){
-        //     return -drivetrain.getPitch();
-        // }
-        // return drivetrain.getPitch();
+        if(reversed){
+            return -drivetrain.getPitch();
+        }
+        return drivetrain.getPitch();
 
-        return drivetrain.getPitch() * (reversed ? -1.0 : 1.0);
+        //return drivetrain.getPitch() * (reversed ? -1.0 : 1.0);
     }
 
     // runs 50 times a second, so one second time is 50 loops of code
@@ -108,26 +112,23 @@ public class FastAutonBalanceCommand extends CommandBase{
                 }
                 break;
             
-            // switch to reverse slow when charge station starts to flip
+            // stop when charge station starts to flip
             case PAUSESTATE:
                 time++;
                 if(time >= secondsToTicks(pauseWaitTime)){
-                    state = FastBalanceStates.LEVELSTATE;
+                    state = FastBalanceStates.BOOSTSTATE;
                     time = 0;
                 }
                 break;
 
-            //New PAUSESTATE may increase reliability.
-            // case PAUSESTATE:
-            //  if(getPitch() < flipDegree){
-            //      hasFlipped = false;
-            //  }
+            case BOOSTSTATE:
+                time++;
+                if(time >= secondsToTicks(boostWaitTime)){
+                    state = FastBalanceStates.LEVELSTATE;
+                    time = 0;
+                }
+                break;
             
-            //  if(getPitch() > pauseEndDegree){
-            //      state = FastBalanceStates.LEVELSTATE;
-            //  }
-            //  break;
-
             // switch to stop when pitch is greater than the negative level degree
             case REVERSECLIMBSTATE:
                 if (getPitch() > -levelDegree){
@@ -178,7 +179,10 @@ public class FastAutonBalanceCommand extends CommandBase{
                 return robotSpeedMid;
             
             case PAUSESTATE:
-                return pauseSpeed;
+                return 0;
+
+            case BOOSTSTATE:
+                return boostSpeed;
             
             case REVERSECLIMBSTATE:
                 return -robotSpeedSlow;
