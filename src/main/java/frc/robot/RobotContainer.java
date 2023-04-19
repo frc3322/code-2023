@@ -83,9 +83,6 @@ public class RobotContainer implements Loggable{
     autChooser.addOption("place balance", new PlaceBalance());
     autChooser.addOption("ForwardBalance", new ForwardsBalance());
     autChooser.addOption("RevrseBalance", new ReverseBalance());
-    autChooser.addOption("Fast Forwards balance", new FastForwardsBalance());
-    autChooser.addOption("Fast Reverse Balance", new FastReverseBalance());
-    autChooser.addOption("place leave balance", new PlaceLeaveBalance());
     autChooser.addOption("drive distance test", new TestDriveDist());
     autChooser.setDefaultOption("just place", new JustPlace());
     autChooser.setDefaultOption("place cube", new PlaceAndCube());
@@ -382,23 +379,6 @@ private class PlaceBalance extends SequentialCommandGroup {
     }
 }
 
-private class PlaceLeaveBalance extends SequentialCommandGroup {
-    private PlaceLeaveBalance() {
-        addCommands(
-            new PlaceConeCommandGroup(claw, fourbar),
-
-            new DriveToDistanceCommand(-4.8, drivetrain),
-            
-            new FastAutonBalanceCommand(
-                drivetrain,
-                drivetrain::tankDriveVolts,
-                false,
-                drivetrain)
-
-        );
-    }
-}
-
 private class ForwardsBalance extends SequentialCommandGroup{
     private ForwardsBalance(){
         addCommands(
@@ -425,27 +405,4 @@ private class ReverseBalance extends SequentialCommandGroup{
     }
 } 
 
-private class FastForwardsBalance extends SequentialCommandGroup{
-    private FastForwardsBalance() {
-        addCommands(
-            new FastAutonBalanceCommand(
-                drivetrain,
-                drivetrain::tankDriveVolts,
-                false,
-                drivetrain)
-        );
-    }
-}
-
-private class FastReverseBalance extends SequentialCommandGroup{
-    private FastReverseBalance() {
-        addCommands(
-            new FastAutonBalanceCommand(
-                drivetrain,
-                drivetrain::tankDriveVolts,
-                true,
-                drivetrain)
-        );
-    }
-}
 }
