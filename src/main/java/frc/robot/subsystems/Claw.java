@@ -14,12 +14,16 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Types.ClawPosition;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class Claw extends SubsystemBase {
+public class Claw extends SubsystemBase implements Loggable{
   /** Creates a new Outtake. */
   private DoubleSolenoid claw = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.CAN.clawExtend, Constants.CAN.clawRetract);
   
   private DigitalInput clawGrabSensor = new DigitalInput(DIO.clawSensor);
+
+  @Log boolean clawWithinRange;
 
   public Claw() {
     //create solenoids to grab cones and cubes
@@ -57,5 +61,6 @@ public class Claw extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    clawWithinRange = canGrabCone();
   }
 }
