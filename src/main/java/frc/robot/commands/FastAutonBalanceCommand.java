@@ -31,6 +31,9 @@ public class FastAutonBalanceCommand extends CommandBase{
     // Angle where the robot can climb at a verly low speed for precision
     private double shallowClimbDegree = 10; //12
 
+    //Angle at which the robot has fully flipped
+    private double flipDegree = -10;
+    
     //Angle that the PAUSESTATE ends at. Only used in non timed pauseState
     private double pauseEndDegree = -4;
 
@@ -54,6 +57,8 @@ public class FastAutonBalanceCommand extends CommandBase{
 
     //time the robot needs to be level for to exit the command
     private double endPhaseTime = 1.5;
+
+    private boolean hasFlipped = false;
     
     public FastAutonBalanceCommand(Drivetrain drivetrain, BiConsumer<Double, Double> output, boolean reversed, Subsystem reqirements) {
         this.drivetrain = drivetrain;
@@ -114,10 +119,14 @@ public class FastAutonBalanceCommand extends CommandBase{
 
             //New PAUSESTATE may increase reliability.
             // case PAUSESTATE:
-            //     if(getPitch() > pauseEndDegree){
-            //         state = FastBalanceStates.LEVELSTATE;
-            //     }
-            //     break;
+            //  if(getPitch() < flipDegree){
+            //      hasFlipped = false;
+            //  }
+            
+            //  if(getPitch() > pauseEndDegree){
+            //      state = FastBalanceStates.LEVELSTATE;
+            //  }
+            //  break;
 
             // switch to stop when pitch is greater than the negative level degree
             case REVERSECLIMBSTATE:
@@ -190,9 +199,9 @@ public class FastAutonBalanceCommand extends CommandBase{
 
     @Override
     public void initialize() {
-      state = FastBalanceStates.GROUNDSTATE;
-
-      output.accept(0.0, 0.0);
+        state = FastBalanceStates.GROUNDSTATE;
+        hasFlipped = false;
+        output.accept(0.0, 0.0);
     }
   
     // Called every time the scheduler runs while the command is scheduled.
