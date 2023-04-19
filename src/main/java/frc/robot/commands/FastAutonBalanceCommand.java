@@ -48,16 +48,16 @@ public class FastAutonBalanceCommand extends CommandBase{
     private double robotSpeedMid = 2;
 
     //Speed during PAUSESTATE
-    private double boostSpeed = -1;
+    private double boostSpeed = -2;
 
     // Speed for final part of balancing
     private double robotSpeedSlow = .7;
 
     //time the robot pauses when the charge station flips
-    private double pauseWaitTime = 1;
+    private double pauseWaitTime = 2;
 
     //time the robot boosts after pause
-    private double boostWaitTime = 1.5;
+    private double boostWaitTime = 2.8;
 
     //time the robot needs to be level for to exit the command
     private double endPhaseTime = 1.5;
