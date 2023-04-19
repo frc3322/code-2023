@@ -21,7 +21,6 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.AutonBalanceCommand;
 import frc.robot.commands.DriveToDistanceCommand;
-import frc.robot.commands.FastAutonBalanceCommand;
 import frc.robot.commands.MoveClawCommand;
 import frc.robot.commands.TurnToGyroAngleCommand;
 import frc.robot.commands.PlaceConeCommandGroup;
