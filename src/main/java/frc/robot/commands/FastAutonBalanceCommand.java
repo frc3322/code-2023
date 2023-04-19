@@ -60,9 +60,9 @@ public class FastAutonBalanceCommand extends CommandBase{
 
     private boolean hasFlipped = false;
     
-    public FastAutonBalanceCommand(Drivetrain drivetrain, BiConsumer<Double, Double> output, boolean reversed, Subsystem reqirements) {
+    public FastAutonBalanceCommand(Drivetrain drivetrain, boolean reversed, Subsystem reqirements) {
         this.drivetrain = drivetrain;
-        this.output = output;
+        this.output = drivetrain::tankDriveVolts; //modified
         this.reversed = reversed;
 
         addRequirements(reqirements);
@@ -156,7 +156,7 @@ public class FastAutonBalanceCommand extends CommandBase{
                     time++;
                 }
 
-                if (time == secondsToTicks(endPhaseTime)){
+                if (time >= secondsToTicks(endPhaseTime)){ //modified
                     state = FastBalanceStates.EXITSTATE;
                 }
                 
@@ -207,7 +207,8 @@ public class FastAutonBalanceCommand extends CommandBase{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-      output.accept(FastAutonBalance(), FastAutonBalance());
+       // double speed = FastAutonBalance();
+        output.accept(FastAutonBalance(), FastAutonBalance());
     }
   
     // Called once the command ends or is interrupted.
