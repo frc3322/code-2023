@@ -31,6 +31,9 @@ public class FastAutonBalanceCommand extends CommandBase{
     // Angle where the robot can climb at a verly low speed for precision
     private double shallowClimbDegree = 10; //12
 
+    //Angle that the PAUSESTATE ends at. Only used in non timed pauseState
+    private double pauseEndDegree = -4;
+
     // The robot will attemt to get within positive or negative of this angle
     private double levelDegree = 4.5;
 
@@ -108,6 +111,13 @@ public class FastAutonBalanceCommand extends CommandBase{
                     time = 0;
                 }
                 break;
+
+            //New PAUSESTATE may increase reliability.
+            // case PAUSESTATE:
+            //     if(getPitch() > pauseEndDegree){
+            //         state = FastBalanceStates.LEVELSTATE;
+            //     }
+            //     break;
 
             // switch to stop when pitch is greater than the negative level degree
             case REVERSECLIMBSTATE:
