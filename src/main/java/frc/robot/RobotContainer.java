@@ -408,6 +408,8 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
             new PlaceConeCommandGroup(claw, fourbar),
 
             new DriveOverChargeStation(drivetrain), // DriveToDistance(-4.8, drivetrain)
+
+            new WaitCommand(0.25),
             
             new FastAutonBalanceCommand(
                 drivetrain,
