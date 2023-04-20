@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.AutonBalanceCommand;
+import frc.robot.commands.DriveOverChargeStation;
 import frc.robot.commands.DriveToDistanceCommand;
 import frc.robot.commands.FastAutonBalanceCommand;
 import frc.robot.commands.MoveClawCommand;
@@ -375,7 +376,7 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
         addCommands(
             new PlaceConeCommandGroup(claw, fourbar),
 
-            new DriveToDistanceCommand(-4.8, drivetrain),
+            new DriveOverChargeStation(drivetrain),
             
             new FastAutonBalanceCommand(
                 drivetrain,
