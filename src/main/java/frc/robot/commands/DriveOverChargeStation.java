@@ -23,8 +23,8 @@ public class DriveOverChargeStation extends CommandBase {
   private States state = States.START;
 
   private double robotSpeed = -4;
-  private double levelDegree = -5;
-  private double endRunTime = 1.5;
+  private double levelDegree = -4;
+  private double endRunTime = 1; //1.5
 
   private double time;
   
@@ -81,6 +81,7 @@ public class DriveOverChargeStation extends CommandBase {
   @Override
   public void initialize() {
     state = States.START;
+    time = 0;
     output.accept(0.0, 0.0);
   }
 

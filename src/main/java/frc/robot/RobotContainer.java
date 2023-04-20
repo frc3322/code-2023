@@ -409,7 +409,7 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
 
             new DriveOverChargeStation(drivetrain), // DriveToDistance(-4.8, drivetrain)
 
-            new WaitCommand(0.25),
+            new WaitCommand(0.75), //.25
             
             new FastAutonBalanceCommand(
                 drivetrain,
