@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 //arooshwashere
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.Types.FourbarPosition;
 import frc.robot.commands.AutonBalanceCommand;
 import frc.robot.commands.DriveOverChargeStation;
@@ -31,7 +35,8 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Fourbar;
 import frc.robot.subsystems.Intake;
-
+import frc.robot.subsystems.LED;
+import frc.robot.subsystems.LED.LEDStates;
 import frc.robot.subsystems.Brake;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
@@ -45,7 +50,8 @@ public class RobotContainer implements Loggable{
   private final Intake intake = new Intake();
   private final Claw claw = new Claw();
   private final Fourbar fourbar = new Fourbar();
-;
+
+  private final LED led = new LED();
   private final Brake brake = new Brake();
 
   
@@ -58,6 +64,8 @@ public class RobotContainer implements Loggable{
 
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController secondaryController = new CommandXboxController(1);
+
+  private BooleanSupplier slowModeSupplier = () -> drivetrain.getSlowMode();
 
   SendableChooser<Command> autChooser = new SendableChooser<>();
 
@@ -95,6 +103,8 @@ public class RobotContainer implements Loggable{
     SmartDashboard.putData("stupidTurnToAngle", new TurnToGyroAngleCommand(170, drivetrain));
     SmartDashboard.putData("stupid drive distance", new TestDriveDist());
 
+    led.setLed(LEDConstants.blueValue);
+
     // Configure the trigger bindings
     configureBindings();
 
@@ -119,6 +129,7 @@ public class RobotContainer implements Loggable{
 
     // default commands
     drivetrain.setDefaultCommand(driveCommand);
+    led.setDefaultCommand(led.statesDefaultCommand(slowModeSupplier));
   
   
     // driver controller (0) commands
@@ -191,7 +202,7 @@ public class RobotContainer implements Loggable{
     // shoot cube mid
     driverController
         .x()
-        .whileTrue(new StartEndCommand(()->intake.spinIntakeTopFaster(IntakeConstants.intakeMidV), ()->intake.spinIntakeBottomFaster(0), intake));
+        .whileTrue(new StartEndCommand(()->intake.spinIntake(IntakeConstants.intakeMidV), ()->intake.spinIntakeBottomFaster(0), intake));
 
     // Shoot cube high
     // 9.5 otp 10 bototm is good for mis
@@ -204,6 +215,14 @@ public class RobotContainer implements Loggable{
         .rightBumper()
         .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.fastIntakeInV),
             () -> intake.spinIntake(0)));
+
+    driverController
+        .b()
+        .whileTrue(new StartEndCommand(() -> {
+            intake.spinIntakeJustBottom(3);
+            intake.spinIntakeJustTop(3);
+        },
+        () -> intake.spinIntake(0)));
 
 
     // secondary controls timeee
@@ -226,10 +245,10 @@ public class RobotContainer implements Loggable{
      secondaryController
         .povDown()
         .onTrue(
-            new InstantCommand(() -> claw.setClosed(), claw)
+            /*new InstantCommand(() -> claw.setClosed(), claw)
                 .andThen(new WaitCommand(.5))
-                .andThen(
-                    new InstantCommand(() -> fourbar.fourbarDown()))
+                .andThen(*/
+                    new InstantCommand(() -> fourbar.fourbarDown())
         );
     
     //secondary 4 bar out with claw and intake safety
@@ -242,7 +261,13 @@ public class RobotContainer implements Loggable{
             );
             
              
-
+            secondaryController
+            .x()
+            .whileTrue(new StartEndCommand(() -> {
+                intake.spinIntakeJustBottom(3);
+                intake.spinIntakeJustTop(3);
+            },
+            () -> intake.spinIntake(0)));
  
   
     secondaryController
@@ -250,10 +275,10 @@ public class RobotContainer implements Loggable{
         .onTrue(new InstantCommand(
             ()->brake.brakeDown()));
 
-            secondaryController
-            .rightBumper()
-            .onTrue(new InstantCommand(
-                ()->brake.brakeUp()));
+    secondaryController
+    .rightBumper()
+    .onTrue(new InstantCommand(
+        ()->brake.brakeUp()));
 
 
     secondaryController
@@ -264,12 +289,18 @@ public class RobotContainer implements Loggable{
          ()-> intake.spinIntakeTopFaster(0),
           intake)
       );
+    secondaryController
+        .leftStick()
+        .onTrue(led.togglePurpleCommand());
 
       secondaryController
       .a()
       .whileTrue(new StartEndCommand(() -> intake.spinIntake(IntakeConstants.slowIntakeInV),
           () -> intake.spinIntake(0)));
 
+    secondaryController
+        .rightStick()
+        .onTrue(led.toggleYellowCommand());
 
   }
 
