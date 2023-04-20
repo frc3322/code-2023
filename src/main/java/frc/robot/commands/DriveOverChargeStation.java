@@ -24,7 +24,7 @@ public class DriveOverChargeStation extends CommandBase {
 
   private double robotSpeed = -4;
   private double levelDegree = -5;
-  private double endRunTime = .5;
+  private double endRunTime = 1.5;
 
   private double time;
   
@@ -43,20 +43,23 @@ public class DriveOverChargeStation extends CommandBase {
   private double getSpeed(){
     switch(state){
       case START:
-        if(drivetrain.getPitch() > levelDegree){
+        if(drivetrain.getPitch() < levelDegree){
           state = States.CLIMB;
         }
+        break;
       case CLIMB:
-        if(drivetrain.getPitch() < -levelDegree){
+        if(drivetrain.getPitch() > -levelDegree){
           state = States.DESCEND;
         }
+        break;
       case DESCEND:
-        if(Math.abs(drivetrain.getPitch()) < levelDegree){
+        if(Math.abs(drivetrain.getPitch()) > levelDegree){
           time++;
         }
         if(time > secondsToTicks(endRunTime)){
           state = States.END;
         }
+        break;
       case END:
         return 0;
     }
@@ -97,6 +100,6 @@ public class DriveOverChargeStation extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return state == States.END;
   }
 }

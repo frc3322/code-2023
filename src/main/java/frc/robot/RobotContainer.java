@@ -407,7 +407,7 @@ private class PlaceLeaveBalance extends SequentialCommandGroup {
         addCommands(
             new PlaceConeCommandGroup(claw, fourbar),
 
-            new DriveOverChargeStation(drivetrain),
+            new DriveOverChargeStation(drivetrain), // DriveToDistance(-4.8, drivetrain)
             
             new FastAutonBalanceCommand(
                 drivetrain,
