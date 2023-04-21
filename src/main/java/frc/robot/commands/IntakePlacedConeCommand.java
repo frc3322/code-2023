@@ -30,6 +30,8 @@ public class IntakePlacedConeCommand extends CommandBase {
   private double levelDegree = -4;
   private double endRunTime = 1; //1.5
 
+  public double cubeIntakeTime = 2;
+
   private double time;
   
   
@@ -80,7 +82,12 @@ public class IntakePlacedConeCommand extends CommandBase {
                 intake.setFlipperSpeed(intake.calculateIntakeFlipDown());
             }
             intakeDown = intake.atBottom();
-            intake.spinIntake(IntakeConstants.slowIntakeInV);
+            if (time > secondsToTicks(cubeIntakeTime)) {
+                intake.spinIntake(IntakeConstants.slowIntakeInV);
+            }
+            else {
+                intake.spinIntake(0);
+            }
         }
         return robotSpeed;
       case END:
