@@ -82,7 +82,7 @@ public class IntakePlacedConeCommand extends CommandBase {
                 intake.setFlipperSpeed(intake.calculateIntakeFlipDown());
             }
             intakeDown = intake.atBottom();
-            if (time > secondsToTicks(cubeIntakeTime)) {
+            if (time >= secondsToTicks(cubeIntakeTime)) {
                 intake.spinIntake(IntakeConstants.slowIntakeInV);
             }
             else {
