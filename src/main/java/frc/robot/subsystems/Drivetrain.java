@@ -49,6 +49,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   @Log private double speed = -2;
   @Log private double turn = -2;
 
+  private double slowMultiplier = 1;
+
   //Variables to log voltage
   @Log double FLVoltageVal;
   @Log double FRVoltageVal;
@@ -119,6 +121,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   // Setters
+  @Config
+  public void setSlowMultiplier(double multiplier){
+    slowMultiplier = multiplier;
+  }
+
   public void resetGyro() {
     gyro.reset();
   }
@@ -136,8 +143,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public void drive(double speed, double turn) {
     turn = 0.5 * turn + 0.5 * Math.pow(turn, 3);  // Weird math
 
-    this.speed = speed;
-    this.turn = turn;
+    this.speed = speed * slowMultiplier;
+    this.turn = turn * slowMultiplier;
 
    robotDrive.arcadeDrive(accelLimit.calculate(speed), turnLimit.calculate(turn), false);
     //robotDrive.arcadeDrive(speed, turn, false);
